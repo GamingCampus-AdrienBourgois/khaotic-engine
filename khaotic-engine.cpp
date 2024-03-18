@@ -56,10 +56,10 @@ LRESULT CALLBACK WndProc(HWND hWnd,
     LPARAM lParam);
 
 
-int WINAPI WinMain(HINSTANCE hInstance,    //Main windows function
-    HINSTANCE hPrevInstance,
-    LPSTR lpCmdLine,
-    int nShowCmd)
+int WINAPI WinMain(_In_ HINSTANCE hInstance,    //Main windows function
+    _In_opt_ HINSTANCE hPrevInstance,
+    _In_ LPSTR lpCmdLine,
+    _In_ int nShowCmd)
 {
 
     if (!InitializeWindow(hInstance, nShowCmd, Width, Height, true))
@@ -138,7 +138,7 @@ bool InitializeWindow(HINSTANCE hInstance,
     hwnd = CreateWindowEx(
         NULL,
         WndClassName,
-        L"Window Title",
+        L"Khaotic Engine",
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, CW_USEDEFAULT,
         width, height,
@@ -184,10 +184,10 @@ bool InitializeDirect3d11App(HINSTANCE hInstance)
     ZeroMemory(&swapChainDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
 
     swapChainDesc.BufferDesc = bufferDesc;
-    swapChainDesc.SampleDesc.Count = 1;
-    swapChainDesc.SampleDesc.Quality = 0;
+    swapChainDesc.SampleDesc.Count = 4; //multisampling standard
+    swapChainDesc.SampleDesc.Quality = D3D11_STANDARD_MULTISAMPLE_PATTERN;
     swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    swapChainDesc.BufferCount = 1;
+    swapChainDesc.BufferCount = 2; // triple buffering
     swapChainDesc.OutputWindow = hwnd;
     swapChainDesc.Windowed = TRUE;
     swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
