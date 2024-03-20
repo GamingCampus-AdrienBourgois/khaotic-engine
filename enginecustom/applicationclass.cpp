@@ -67,7 +67,7 @@ bool ApplicationClass::Frame()
 bool ApplicationClass::Render()
 {
 	// Clear the buffers to begin the scene.
-	m_Direct3D->BeginScene(0.5f, 0.5f, 0.5f, 1.0f);
+	m_Direct3D->BeginScene(255.0f, 255.0f, 0.0f, 1.0f);
 
 
 	// Present the rendered scene to the screen.
