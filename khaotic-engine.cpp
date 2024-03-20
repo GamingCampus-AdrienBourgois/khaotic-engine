@@ -1,6 +1,3 @@
-
-///////////////**************new**************////////////////////
-
 //Include and link appropriate libraries and headers//
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3d10.lib")
@@ -13,10 +10,10 @@
 #include <DirectXPackedVector.h>
 
 //Global Declarations//
-IDXGISwapChain* SwapChain;
-ID3D11Device* d3d11Device;
-ID3D11DeviceContext* d3d11DevCon;
-ID3D11RenderTargetView* renderTargetView;
+IDXGISwapChain* SwapChain; //SwapChain c'est le buffer qui contient les frames
+ID3D11Device* d3d11Device; //Device c'est le GPU
+ID3D11DeviceContext* d3d11DevCon; //DeviceContext c'est le CPU
+ID3D11RenderTargetView* renderTargetView; //RenderTargetView c'est la surface sur laquelle on dessine
 
 float red = 0.0f;
 float green = 0.0f;
@@ -25,24 +22,18 @@ int colormodr = 1;
 int colormodg = 1;
 int colormodb = 1;
 
-///////////////**************new**************////////////////////
-
-LPCTSTR WndClassName = L"firstwindow";
-HWND hwnd = NULL;
+LPCTSTR WndClassName = L"firstwindow"; //Nom de la fenêtre
+HWND hwnd = NULL; //Handle de la fenêtre
 
 const int Width = 300;
 const int Height = 300;
 
-///////////////**************new**************////////////////////
-
 //Function Prototypes//
-bool InitializeDirect3d11App(HINSTANCE hInstance);
-void ReleaseObjects();
+bool InitializeDirect3d11App(HINSTANCE hInstance); //Initialisation de Direct3D
+void ReleaseObjects(); //Fonction pour libérer les objets
 bool InitScene();
 void UpdateScene();
 void DrawScene();
-
-///////////////**************new**************////////////////////
 
 bool InitializeWindow(HINSTANCE hInstance,
     int ShowWnd,
@@ -69,7 +60,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,    //Main windows function
         return 0;
     }
 
-    ///////////////**************new**************////////////////////
 
     if (!InitializeDirect3d11App(hInstance))    //Initialize Direct3D
     {
@@ -88,8 +78,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,    //Main windows function
     messageloop();
 
     ReleaseObjects();
-
-    ///////////////**************new**************////////////////////
 
     return 0;
 }
@@ -115,18 +103,18 @@ bool InitializeWindow(HINSTANCE hInstance,
 
     WNDCLASSEX wc;
 
-    wc.cbSize = sizeof(WNDCLASSEX);
-    wc.style = CS_HREDRAW | CS_VREDRAW;
-    wc.lpfnWndProc = WndProc;
-    wc.cbClsExtra = NULL;
-    wc.cbWndExtra = NULL;
-    wc.hInstance = hInstance;
-    wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-    wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-    wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 2);
-    wc.lpszMenuName = NULL;
-    wc.lpszClassName = WndClassName;
-    wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
+    wc.cbSize = sizeof(WNDCLASSEX); // taille de la structure
+    wc.style = CS_HREDRAW | CS_VREDRAW; // style de la fenêtre
+    wc.lpfnWndProc = WndProc; // pointeur vers la fonction de la fenêtre
+    wc.cbClsExtra = NULL; // taille de mémoire supplémentaire pour la classe
+    wc.cbWndExtra = NULL; // taille de mémoire supplémentaire pour la fenêtre
+    wc.hInstance = hInstance; // handle de l'instance
+    wc.hIcon = LoadIcon(NULL, IDI_APPLICATION); // handle de l'icone
+    wc.hCursor = LoadCursor(NULL, IDC_ARROW); // handle du curseur
+    wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 2); // handle du fond de la fenêtre
+    wc.lpszMenuName = NULL; 
+    wc.lpszClassName = WndClassName; // nom de la classe
+    wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION); // handle de l'icone de la fenêtre
 
     if (!RegisterClassEx(&wc))
     {
@@ -135,7 +123,7 @@ bool InitializeWindow(HINSTANCE hInstance,
         return 1;
     }
 
-    hwnd = CreateWindowEx(
+    hwnd = CreateWindowEx( // création de la fenêtre
         NULL,
         WndClassName,
         L"Khaotic Engine",
@@ -161,36 +149,34 @@ bool InitializeWindow(HINSTANCE hInstance,
     return true;
 }
 
-///////////////**************new**************////////////////////
-
 bool InitializeDirect3d11App(HINSTANCE hInstance)
 {
     //Describe our Buffer
-    DXGI_MODE_DESC bufferDesc;
+    DXGI_MODE_DESC bufferDesc; // description du buffer
 
-    ZeroMemory(&bufferDesc, sizeof(DXGI_MODE_DESC));
+    ZeroMemory(&bufferDesc, sizeof(DXGI_MODE_DESC)); // vide la mémoire
 
     bufferDesc.Width = Width;
     bufferDesc.Height = Height;
-    bufferDesc.RefreshRate.Numerator = 60;
-    bufferDesc.RefreshRate.Denominator = 1;
-    bufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    bufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-    bufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-
+    bufferDesc.RefreshRate.Numerator = 60; // taux de rafraichissement
+    bufferDesc.RefreshRate.Denominator = 1; // taux de rafraichissement
+    bufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // format des pixels (32 bits)
+    bufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED; // ordre des lignes
+    bufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED; // mise à l'échelle
+    
     //Describe our SwapChain
-    DXGI_SWAP_CHAIN_DESC swapChainDesc;
+    DXGI_SWAP_CHAIN_DESC swapChainDesc; // description du swapchain
 
-    ZeroMemory(&swapChainDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
+    ZeroMemory(&swapChainDesc, sizeof(DXGI_SWAP_CHAIN_DESC)); // vide la mémoire
 
     swapChainDesc.BufferDesc = bufferDesc;
     swapChainDesc.SampleDesc.Count = 4; //multisampling standard
     swapChainDesc.SampleDesc.Quality = D3D11_STANDARD_MULTISAMPLE_PATTERN;
-    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT; // utilisation du buffer pour le rendu
     swapChainDesc.BufferCount = 2; // triple buffering
     swapChainDesc.OutputWindow = hwnd;
     swapChainDesc.Windowed = TRUE;
-    swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+    swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD; 
 
 
     //Create our SwapChain
@@ -202,22 +188,23 @@ bool InitializeDirect3d11App(HINSTANCE hInstance)
     SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&BackBuffer);
 
     //Create our Render Target
-    d3d11Device->CreateRenderTargetView(BackBuffer, NULL, &renderTargetView);
+    d3d11Device->CreateRenderTargetView(BackBuffer, NULL, &renderTargetView); // associe le buffer à la surface de rendu
     BackBuffer->Release();
 
     //Set our Render Target
-    d3d11DevCon->OMSetRenderTargets(1, &renderTargetView, NULL);
+    d3d11DevCon->OMSetRenderTargets(1, &renderTargetView, NULL); // associe la surface de rendu au device context
 
     return true;
 }
 
-void ReleaseObjects()
+void ReleaseObjects() // Fonction pour libérer les objets
 {
     //Release the COM Objects we created
     SwapChain->Release();
     d3d11Device->Release();
     d3d11DevCon->Release();
 }
+
 bool InitScene()
 {
 
@@ -250,11 +237,9 @@ void DrawScene()
     SwapChain->Present(0, 0);
 }
 
-///////////////**************new**************////////////////////
-
 int messageloop() {
     MSG msg;
-    ZeroMemory(&msg, sizeof(MSG));
+    ZeroMemory(&msg, sizeof(MSG)); // vide la mémoire
     while (true)
     {
         BOOL PeekMessageL(
@@ -273,13 +258,9 @@ int messageloop() {
             DispatchMessage(&msg);
         }
         else {
-            ///////////////**************new**************////////////////////
-                        // run game code
 
             UpdateScene();
             DrawScene();
-
-            ///////////////**************new**************////////////////////
         }
     }
     return msg.wParam;
