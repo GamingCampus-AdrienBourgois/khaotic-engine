@@ -16,6 +16,12 @@
     <Filter Include="shader">
       <UniqueIdentifier>{b016e481-576e-4d99-bdde-34cc10c55b1d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="texture">
+      <UniqueIdentifier>{f76f9761-bbbe-42a8-935d-01f1b9172c38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="assets">
+      <UniqueIdentifier>{741e1efe-db9b-48a7-9ecb-4c34a696f40e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -42,6 +48,12 @@
     <ClCompile Include="Cameraclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="textureshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="textureclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="systemclass.h">
@@ -65,6 +77,12 @@
     <ClInclude Include="Cameraclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="textureshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="textureclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -74,5 +92,16 @@
     <None Include="Color.vs">
       <Filter>shader</Filter>
     </None>
+    <None Include="texture.vs">
+      <Filter>texture</Filter>
+    </None>
+    <None Include="texture.ps">
+      <Filter>texture</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="stone01.tga">
+      <Filter>assets</Filter>
+    </Image>
   </ItemGroup>
 </Project>
