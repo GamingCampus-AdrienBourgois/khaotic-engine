@@ -36,6 +36,12 @@
     <ClCompile Include="Colorshaderclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="modelclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Cameraclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="systemclass.h">
@@ -53,16 +59,20 @@
     <ClInclude Include="Colorshaderclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="modelclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Cameraclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Color.ps.hlsl">
+    <None Include="Color.ps">
       <Filter>shader</Filter>
-    </FxCompile>
-    <FxCompile Include="Color.vs.hlsl">
+    </None>
+    <None Include="Color.vs">
       <Filter>shader</Filter>
-    </FxCompile>
+    </None>
   </ItemGroup>
 </Project>
