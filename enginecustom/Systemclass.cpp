@@ -53,6 +53,7 @@ bool SystemClass::Initialize()
 
 	ImGui_ImplWin32_Init(m_hwnd);
 	ImGui_ImplDX11_Init(m_Application->GetDirect3D()->GetDevice(), m_Application->GetDirect3D()->GetDeviceContext());
+	ImGui::StyleColorsDark();
 
 	return true;
 }
@@ -137,6 +138,14 @@ bool SystemClass::Frame()
 		return false;
 	}
 
+	// Do the frame processing for the application class object.
+	result = m_Application->Frame();
+	if (!result)
+	{
+		return false;
+	}
+
+	// Start the Dear ImGui frame
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
@@ -147,15 +156,12 @@ bool SystemClass::Frame()
 	ImGui::SliderFloat("Slider", &value, 0.0f, 1.0f);
 	ImGui::End();
 
+	// Assemble Together Draw Data
 	ImGui::Render();
+	// Render Draw Data
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
-	// Do the frame processing for the application class object.
-	result = m_Application->Frame();
-	if (!result)
-	{
-		return false;
-	}
+	this->m_Application->GetDirect3D()->m_swapChain->Present(0, NULL);
 
 	return true;
 }
@@ -296,6 +302,11 @@ void SystemClass::ShutdownWindows()
 
 	// Release the pointer to this class.
 	ApplicationHandle = NULL;
+
+	//Releases COM references that ImGui was given on setup
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 
 	return;
 }

@@ -39,6 +39,7 @@ private:
 	CameraClass* m_Camera;
 	ModelClass* m_Model;
 	ColorShaderClass* m_ColorShader;
+	IDXGISwapChain* m_swapChain;
 };
 
 #endif
