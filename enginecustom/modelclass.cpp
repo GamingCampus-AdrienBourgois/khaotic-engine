@@ -92,24 +92,27 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 
 	// Create the index array.
 	indices = new unsigned long[m_indexCount];
+
 	// Load the vertex array with data.
-	vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // Bottom left.
+	// Triangle 1
+	vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // Bottom Left.
 	vertices[0].texture = XMFLOAT2(0.0f, 1.0f);
 
 	vertices[1].position = XMFLOAT3(1.0f, 1.0f, 0.0f);  // Top Right.
-	vertices[1].texture = XMFLOAT2(0.5f, 0.0f);
+	vertices[1].texture = XMFLOAT2(1.0f, 0.0f);
 
-	vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // Bottom right.
+	vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // Bottom Right.
 	vertices[2].texture = XMFLOAT2(1.0f, 1.0f);
 
-	vertices[3].position = XMFLOAT3(-1.0f, 1.0f, 0.0f);  // Top left.
-	vertices[3].texture = XMFLOAT2(0.0f, 1.0f);
+	// Triangle 2
+	vertices[3].position = XMFLOAT3(-1.0f, 1.0f, 0.0f);  // Top Left.
+	vertices[3].texture = XMFLOAT2(0.0f, 0.0f);
 
-	vertices[4].position = XMFLOAT3(1.0f, 1.0f, 0.0f);  // Top right.
-	vertices[4].texture = XMFLOAT2(0.5f, 0.0f);
+	vertices[4].position = XMFLOAT3(1.0f, 1.0f, 0.0f);  // Top Right.
+	vertices[4].texture = XMFLOAT2(1.0f, 0.0f);
 
-	vertices[5].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // Bottom left.
-	vertices[5].texture = XMFLOAT2(1.0f, 1.0f);
+	vertices[5].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // Bottom Left.
+	vertices[5].texture = XMFLOAT2(0.0f, 1.0f);
 
 	// Load the index array with data.
 	indices[0] = 0;  // Bottom left.
