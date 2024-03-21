@@ -25,6 +25,7 @@ public:
 	ApplicationClass();
 	ApplicationClass(const ApplicationClass&);
 	~ApplicationClass();
+	D3DClass* GetDirect3D();
 
 	bool Initialize(int, int, HWND);
 	void Shutdown();

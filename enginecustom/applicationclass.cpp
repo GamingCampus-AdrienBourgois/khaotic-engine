@@ -153,3 +153,8 @@ bool ApplicationClass::Render()
 
 	return true;
 }
+
+D3DClass* ApplicationClass::GetDirect3D()
+{
+	return m_Direct3D;
+}

@@ -1,4 +1,6 @@
 #include "systemclass.h"
+#include <iostream>
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 SystemClass::SystemClass()
 {
@@ -36,11 +38,21 @@ bool SystemClass::Initialize()
 	// Create and initialize the application class object.  This object will handle rendering all the graphics for this application.
 	m_Application = new ApplicationClass;
 
+	// Initialize the application object.
+
 	result = m_Application->Initialize(screenWidth, screenHeight, m_hwnd);
 	if (!result)
 	{
 		return false;
 	}
+
+	// Initialize imgui
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+
+	ImGui_ImplWin32_Init(m_hwnd);
+	ImGui_ImplDX11_Init(m_Application->GetDirect3D()->GetDevice(), m_Application->GetDirect3D()->GetDeviceContext());
 
 	return true;
 }
@@ -61,6 +73,11 @@ void SystemClass::Shutdown()
 		delete m_Input;
 		m_Input = 0;
 	}
+
+	// Shutdown imgui
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 
 	// Shutdown the window.
 	ShutdownWindows();
@@ -111,6 +128,7 @@ void SystemClass::Run()
 bool SystemClass::Frame()
 {
 	bool result;
+	float value = 0.0f;
 
 
 	// Check if the user pressed escape and wants to exit the application.
@@ -118,6 +136,19 @@ bool SystemClass::Frame()
 	{
 		return false;
 	}
+
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
+	//ImGui Widget
+	ImGui::Begin("Khaotic Engine", NULL);
+	ImGui::Text("Salam");
+	ImGui::SliderFloat("Slider", &value, 0.0f, 1.0f);
+	ImGui::End();
+
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 	// Do the frame processing for the application class object.
 	result = m_Application->Frame();
@@ -131,6 +162,12 @@ bool SystemClass::Frame()
 
 LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
+
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, umsg, wparam, lparam))
+	{
+		return true;
+	}
+
 	switch (umsg)
 	{
 		// Check if a key has been pressed on the keyboard.
