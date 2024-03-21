@@ -26,7 +26,7 @@ bool TextureClass::Initialize(ID3D11Device * device, ID3D11DeviceContext * devic
 	unsigned int rowPitch;
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 	// Load the targa image data into memory.
-	result = LoadTarga32Bit(filename);
+	result = LoadTarga(filename);
 	if (!result)
 	{
 		return false;
@@ -109,7 +109,7 @@ ID3D11ShaderResourceView* TextureClass::GetTexture()
 	return m_textureView;
 }
 
-bool TextureClass::LoadTarga32Bit(char* filename)
+bool TextureClass::LoadTarga(char* filename)
 {
 	int error, bpp, imageSize, index, i, j, k;
 	FILE* filePtr;
@@ -138,13 +138,13 @@ bool TextureClass::LoadTarga32Bit(char* filename)
 	bpp = (int)targaFileHeader.bpp;
 
 	// Check that it is 32 bit and not 24 bit.
-	if (bpp != 32)
+	if (bpp != 32 && bpp != 24)
 	{
 		return false;
 	}
 
 	// Calculate the size of the 32 bit image data.
-	imageSize = m_width * m_height * 4;
+	imageSize = m_width * m_height * (bpp / 8);
 
 	// Allocate memory for the targa image data.
 	targaImage = new unsigned char[imageSize];
@@ -170,7 +170,7 @@ bool TextureClass::LoadTarga32Bit(char* filename)
 	index = 0;
 
 	// Initialize the index into the targa image data.
-	k = (m_width * m_height * 4) - (m_width * 4);
+	k = (m_width * m_height * (bpp / 8)) - (m_width * (bpp / 8));
 
 	// Now copy the targa image data into the targa destination array in the correct order since the targa format is stored upside down and also is not in RGBA order.
 	for (j = 0; j < m_height; j++)
@@ -180,15 +180,18 @@ bool TextureClass::LoadTarga32Bit(char* filename)
 			m_targaData[index + 0] = targaImage[k + 2];  // Red.
 			m_targaData[index + 1] = targaImage[k + 1];  // Green.
 			m_targaData[index + 2] = targaImage[k + 0];  // Blue
-			m_targaData[index + 3] = targaImage[k + 3];  // Alpha
+			if (bpp == 32)
+			{
+				m_targaData[index + 3] = targaImage[k + 3];  // Alpha
+			}
 
 			// Increment the indexes into the targa data.
-			k += 4;
-			index += 4;
+			k += (bpp / 8);
+			index += (bpp / 8);
 		}
 
 		// Set the targa image data index back to the preceding row at the beginning of the column since its reading it in upside down.
-		k -= (m_width * 8);
+		k -= (m_width * (bpp / 8) * 2);
 	}
 
 	// Release the targa image data now that it was copied into the destination array.
