@@ -98,6 +98,9 @@
     <None Include="texture.ps">
       <Filter>texture</Filter>
     </None>
+    <None Include="Light.vs">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="stone01.tga">
