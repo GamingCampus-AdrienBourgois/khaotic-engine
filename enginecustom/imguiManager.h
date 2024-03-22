@@ -20,6 +20,8 @@ public:
 
 	// Widgets
 	void WidgetSpeedSlider(float* speed);
+	void WidgetButton();
+	void WidgetFPS();
 
 private:
 	ImGuiIO* io;

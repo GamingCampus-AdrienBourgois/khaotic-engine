@@ -150,6 +150,8 @@ bool SystemClass::Frame()
 	float speed = m_Application->GetSpeed();
 	m_imguiManager->WidgetSpeedSlider(&speed);
 	m_Application->SetSpeed(speed);
+	m_imguiManager->WidgetButton();
+	m_imguiManager->WidgetFPS();
 
 	ImGui::End();
 

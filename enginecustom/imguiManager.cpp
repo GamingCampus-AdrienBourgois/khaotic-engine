@@ -46,3 +46,18 @@ void imguiManager::WidgetSpeedSlider(float* speed)
 {
 	ImGui::SliderFloat("Speed", speed, 0.0f, 100.0f);
 }
+
+void imguiManager::WidgetButton()
+{
+	static int counter = 0;
+
+	if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+		counter++;
+	ImGui::SameLine();
+	ImGui::Text("counter = %d", counter);
+}
+
+void imguiManager::WidgetFPS()
+{
+	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io->Framerate, io->Framerate);
+}
