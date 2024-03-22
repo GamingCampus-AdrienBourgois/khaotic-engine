@@ -505,3 +505,138 @@ void D3DClass::ResetViewport()
 
 	return;
 }
+
+void D3DClass::ReleaseResources()
+{
+	// libere la vue
+	if (m_renderTargetView)
+	{
+		m_renderTargetView->Release();
+		m_renderTargetView = 0;
+	}
+
+	// libere le buffer de profondeur
+	if (m_depthStencilBuffer)
+	{
+		m_depthStencilBuffer->Release();
+		m_depthStencilBuffer = 0;
+	}
+
+	// libere la vue de profondeur
+	if (m_depthStencilView)
+	{
+		m_depthStencilView->Release();
+		m_depthStencilView = 0;
+	}
+}
+
+bool D3DClass::RecreateResources()
+{
+	HRESULT result;
+	ID3D11Texture2D* backBufferPtr;
+	D3D11_TEXTURE2D_DESC depthBufferDesc;
+	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+
+	// Recréez la vue de rendu.
+	result = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	result = m_device->CreateRenderTargetView(backBufferPtr, NULL, &m_renderTargetView);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	backBufferPtr->Release();
+	backBufferPtr = 0;
+
+	// Recréez le tampon de profondeur et la vue de profondeur.
+	ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
+	depthBufferDesc.Width = m_viewport.Width;
+	depthBufferDesc.Height = m_viewport.Height;
+	depthBufferDesc.MipLevels = 1;
+	depthBufferDesc.ArraySize = 1;
+	depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthBufferDesc.SampleDesc.Count = 1;
+	depthBufferDesc.SampleDesc.Quality = 0;
+	depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthBufferDesc.CPUAccessFlags = 0;
+	depthBufferDesc.MiscFlags = 0;
+
+	result = m_device->CreateTexture2D(&depthBufferDesc, NULL, &m_depthStencilBuffer);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
+	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	depthStencilViewDesc.Texture2D.MipSlice = 0;
+
+	result = m_device->CreateDepthStencilView(m_depthStencilBuffer, &depthStencilViewDesc, &m_depthStencilView);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Liez la vue de rendu et le tampon de profondeur à la pipeline de rendu de sortie.
+	m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
+
+	return true;
+}
+
+
+bool D3DClass::SetFullscreen(bool fullscreen)
+{
+	HRESULT result;
+
+	ReleaseResources();
+
+	// Definie les options de plein ecran
+	DXGI_MODE_DESC newScreenSize;
+	ZeroMemory(&newScreenSize, sizeof(newScreenSize));
+	newScreenSize.Width = 1920;
+	newScreenSize.Height = 1080;
+	newScreenSize.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+
+	// Redimensionne la cible
+	result = m_swapChain->ResizeTarget(&newScreenSize);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Change le mode d'affichage
+	result = m_swapChain->SetFullscreenState(fullscreen, NULL);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Recréez les ressources
+	if (!RecreateResources())
+	{
+		return false;
+	}
+
+	// Informez ImGui du changement de taille de la fenêtre
+	ImGui::GetIO().DisplaySize = ImVec2((float)newScreenSize.Width, (float)newScreenSize.Height);
+
+	// Libérez les anciens objets de rendu ImGui
+	ImGui_ImplDX11_InvalidateDeviceObjects();
+
+	// Recréez les objets de rendu ImGui
+	ImGui_ImplDX11_CreateDeviceObjects();
+
+	return true;
+}
+
+IDXGISwapChain* D3DClass::GetSwapChain()
+{
+	return m_swapChain;
+}

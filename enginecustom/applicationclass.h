@@ -14,7 +14,6 @@
 /////////////
 // GLOBALS //
 /////////////
-const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.3f;
@@ -30,6 +29,10 @@ public:
 	bool Initialize(int, int, HWND);
 	void Shutdown();
 	bool Frame();
+	void SetFullscreen(bool fullscreen);
+	bool GetFullscreen() const;
+	int GetScreenWidth() const;
+	int GetScreenHeight() const;
 
 private:
 	bool Render();
@@ -40,6 +43,7 @@ private:
 	ModelClass* m_Model;
 	ColorShaderClass* m_ColorShader;
 	IDXGISwapChain* m_swapChain;
+	bool m_fullscreen = false;
 };
 
 #endif

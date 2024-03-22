@@ -6,6 +6,7 @@ SystemClass::SystemClass()
 {
 	m_Input = 0;
 	m_Application = 0;
+	m_imguiManager = 0;
 }
 
 SystemClass::SystemClass(const SystemClass& other)
@@ -27,6 +28,9 @@ bool SystemClass::Initialize()
 	screenWidth = 0;
 	screenHeight = 0;
 
+	// Create and initialize the application class object.  This object will handle rendering all the graphics for this application.
+	m_Application = new ApplicationClass;
+
 	// Initialize the windows api.
 	InitializeWindows(screenWidth, screenHeight);
 
@@ -35,11 +39,6 @@ bool SystemClass::Initialize()
 
 	m_Input->Initialize();
 
-	// Create and initialize the application class object.  This object will handle rendering all the graphics for this application.
-	m_Application = new ApplicationClass;
-
-	// Initialize the application object.
-
 	result = m_Application->Initialize(screenWidth, screenHeight, m_hwnd);
 	if (!result)
 	{
@@ -47,13 +46,8 @@ bool SystemClass::Initialize()
 	}
 
 	// Initialize imgui
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-
-	ImGui_ImplWin32_Init(m_hwnd);
-	ImGui_ImplDX11_Init(m_Application->GetDirect3D()->GetDevice(), m_Application->GetDirect3D()->GetDeviceContext());
-	ImGui::StyleColorsDark();
+	m_imguiManager = new imguiManager;
+	m_imguiManager->Initialize(m_hwnd, m_Application->GetDirect3D()->GetDevice(), m_Application->GetDirect3D()->GetDeviceContext());
 
 	return true;
 }
@@ -76,9 +70,12 @@ void SystemClass::Shutdown()
 	}
 
 	// Shutdown imgui
-	ImGui_ImplDX11_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
+	if (m_imguiManager)
+	{
+		m_imguiManager->Shutdown();
+		delete m_imguiManager;
+		m_imguiManager = 0;
+	}
 
 	// Shutdown the window.
 	ShutdownWindows();
@@ -146,20 +143,23 @@ bool SystemClass::Frame()
 	}
 
 	// Start the Dear ImGui frame
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
+	m_imguiManager->NewFrame();
 
 	//ImGui Widget
 	ImGui::Begin("Khaotic Engine", NULL);
-	ImGui::Text("Salam");
-	ImGui::SliderFloat("Slider", &value, 0.0f, 1.0f);
+
+	bool fullscreen = m_Application->GetFullscreen();
+	m_imguiManager->WidgetFullscreenBox(&fullscreen);
+	if (fullscreen != m_Application->GetFullscreen())
+	{
+		m_Application->SetFullscreen(fullscreen);
+		m_Application->GetDirect3D()->SetFullscreen(fullscreen);
+	}
+
 	ImGui::End();
 
-	// Assemble Together Draw Data
-	ImGui::Render();
-	// Render Draw Data
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	//render imgui
+	m_imguiManager->Render();
 
 	this->m_Application->GetDirect3D()->m_swapChain->Present(0, NULL);
 
@@ -214,7 +214,7 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	m_hinstance = GetModuleHandle(NULL);
 
 	// Give the application a name.
-	m_applicationName = L"Engine";
+	m_applicationName = L"Khaotic Engine";
 
 	// Setup the windows class with default settings.
 	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
@@ -238,7 +238,7 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
 	// Setup the screen settings depending on whether it is running in full screen or in windowed mode.
-	if (FULL_SCREEN)
+	if (m_Application->GetFullscreen())
 	{
 		// If full screen set the screen to maximum size of the users desktop and 32bit.
 		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
@@ -267,7 +267,7 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 
 	// Create the window with the screen settings and get the handle to it.
 	m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
-		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
+		WS_CLIPSIBLINGS | WS_CLIPCHILDREN ,
 		posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL);
 
 	// Bring the window up on the screen and set it as main focus.
@@ -276,7 +276,7 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	SetFocus(m_hwnd);
 
 	// Hide the mouse cursor.
-	ShowCursor(false);
+	ShowCursor(true);
 
 	return;
 }
@@ -287,7 +287,7 @@ void SystemClass::ShutdownWindows()
 	ShowCursor(true);
 
 	// Fix the display settings if leaving full screen mode.
-	if (FULL_SCREEN)
+	if (m_Application->GetFullscreen())
 	{
 		ChangeDisplaySettings(NULL, 0);
 	}
@@ -334,5 +334,26 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 	{
 		return ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
 	}
+	}
+}
+
+void SystemClass::SetScreen(bool fullscreen)
+{
+	if (fullscreen)
+	{
+		DEVMODE dmScreenSettings;
+		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
+		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
+		dmScreenSettings.dmPelsWidth = (unsigned long)GetSystemMetrics(SM_CXSCREEN); // donne la largeur de l'écran en pixel
+		dmScreenSettings.dmPelsHeight = (unsigned long)GetSystemMetrics(SM_CYSCREEN); // donne la hauteur de l'écran en pixel
+		dmScreenSettings.dmBitsPerPel = 32;
+		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+
+
+		ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
+	}
+	else
+	{
+		ChangeDisplaySettings(NULL, 0);
 	}
 }

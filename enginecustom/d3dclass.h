@@ -18,6 +18,7 @@
 //////////////
 #include <d3d11.h>
 #include <directxmath.h>
+#include "imguiManager.h"
 using namespace DirectX;
 
 
@@ -40,6 +41,7 @@ public:
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetDeviceContext();
 	IDXGISwapChain* m_swapChain;
+	IDXGISwapChain* GetSwapChain();
 
 	void GetProjectionMatrix(XMMATRIX&);
 	void GetWorldMatrix(XMMATRIX&);
@@ -49,6 +51,10 @@ public:
 
 	void SetBackBufferRenderTarget();
 	void ResetViewport();
+
+	void ReleaseResources();
+	bool SetFullscreen(bool fullscreen);
+	bool RecreateResources();
 
 private:
 	bool m_vsync_enabled;

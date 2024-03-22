@@ -2,12 +2,9 @@
 #define _SYSTEMCLASS_H_
 #define WIN32_LEAN_AND_MEAN
 
-#include <windows.h>
 #include "inputclass.h"
 #include "applicationclass.h"
-#include "imgui.h"
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx11.h"
+#include "imguiManager.h"
 
 class SystemClass
 {
@@ -19,6 +16,7 @@ public:
 	bool Initialize();
 	void Shutdown();
 	void Run();
+	void SetScreen(bool fullscreen);
 
 	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 
@@ -34,6 +32,7 @@ private:
 
 	InputClass* m_Input;
 	ApplicationClass* m_Application;
+	imguiManager* m_imguiManager;
 };
 
 

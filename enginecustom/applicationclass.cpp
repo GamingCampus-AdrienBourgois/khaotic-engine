@@ -31,7 +31,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Create and initialize the Direct3D object.
 	m_Direct3D = new D3DClass;
 
-	result = m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
+	result = m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, m_fullscreen, SCREEN_DEPTH, SCREEN_NEAR);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize Direct3D", L"Error", MB_OK);
@@ -157,4 +157,24 @@ bool ApplicationClass::Render()
 D3DClass* ApplicationClass::GetDirect3D()
 {
 	return m_Direct3D;
+}
+
+void ApplicationClass::SetFullscreen(bool fullscreen)
+{
+	m_fullscreen = fullscreen;
+}
+
+bool ApplicationClass::GetFullscreen() const
+{
+	return m_fullscreen;
+}
+
+int ApplicationClass::GetScreenWidth() const
+{
+	return GetSystemMetrics(SM_CXSCREEN);
+}
+
+int ApplicationClass::GetScreenHeight() const
+{
+	return GetSystemMetrics(SM_CYSCREEN);
 }
