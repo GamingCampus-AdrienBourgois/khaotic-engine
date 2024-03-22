@@ -125,5 +125,16 @@
     <None Include="Color.vs">
       <Filter>shader</Filter>
     </None>
+    <None Include="light.vs">
+      <Filter>texture</Filter>
+    </None>
+    <None Include="light.ps">
+      <Filter>texture</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="stone01.tga">
+      <Filter>assets</Filter>
+    </Image>
   </ItemGroup>
 </Project>
