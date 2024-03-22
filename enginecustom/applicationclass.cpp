@@ -33,7 +33,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	result = m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, m_fullscreen, SCREEN_DEPTH, SCREEN_NEAR);
+	result = m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize Direct3D.", L"Error", MB_OK);
@@ -131,9 +131,8 @@ bool ApplicationClass::Frame()
 	static float rotation = 0.0f;
 	bool result;
 
-
 	// Update the rotation variable each frame.
-	rotation -= 0.0174532925f * 0.1f;
+	rotation -= 0.0174532925f * speed;
 	if (rotation < 0.0f)
 	{
 		rotation += 360.0f;
@@ -188,16 +187,6 @@ bool ApplicationClass::Render(float rotation)
 D3DClass* ApplicationClass::GetDirect3D()
 {
 	return m_Direct3D;
-}
-
-void ApplicationClass::SetFullscreen(bool fullscreen)
-{
-	m_fullscreen = fullscreen;
-}
-
-bool ApplicationClass::GetFullscreen() const
-{
-	return m_fullscreen;
 }
 
 int ApplicationClass::GetScreenWidth() const

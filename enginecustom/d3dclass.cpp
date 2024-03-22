@@ -590,52 +590,6 @@ bool D3DClass::RecreateResources()
 	return true;
 }
 
-
-bool D3DClass::SetFullscreen(bool fullscreen)
-{
-	HRESULT result;
-
-	ReleaseResources();
-
-	// Definie les options de plein ecran
-	DXGI_MODE_DESC newScreenSize;
-	ZeroMemory(&newScreenSize, sizeof(newScreenSize));
-	newScreenSize.Width = 1920;
-	newScreenSize.Height = 1080;
-	newScreenSize.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-
-	// Redimensionne la cible
-	result = m_swapChain->ResizeTarget(&newScreenSize);
-	if (FAILED(result))
-	{
-		return false;
-	}
-
-	// Change le mode d'affichage
-	result = m_swapChain->SetFullscreenState(fullscreen, NULL);
-	if (FAILED(result))
-	{
-		return false;
-	}
-
-	// Recréez les ressources
-	if (!RecreateResources())
-	{
-		return false;
-	}
-
-	// Informez ImGui du changement de taille de la fenêtre
-	ImGui::GetIO().DisplaySize = ImVec2((float)newScreenSize.Width, (float)newScreenSize.Height);
-
-	// Libérez les anciens objets de rendu ImGui
-	ImGui_ImplDX11_InvalidateDeviceObjects();
-
-	// Recréez les objets de rendu ImGui
-	ImGui_ImplDX11_CreateDeviceObjects();
-
-	return true;
-}
-
 IDXGISwapChain* D3DClass::GetSwapChain()
 {
 	return m_swapChain;

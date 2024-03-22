@@ -14,6 +14,7 @@
 /////////////
 // GLOBALS //
 /////////////
+const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.3f;
@@ -33,10 +34,12 @@ public:
 	bool Initialize(int, int, HWND);
 	void Shutdown();
 	bool Frame();
-	void SetFullscreen(bool fullscreen);
-	bool GetFullscreen() const;
+
 	int GetScreenWidth() const;
 	int GetScreenHeight() const;
+
+	float GetSpeed() const { return speed; };
+	void SetSpeed(float speed) { this->speed = speed; };
 
 private:
 	bool Render(float);
@@ -46,9 +49,9 @@ private:
 	CameraClass* m_Camera;
 	ModelClass* m_Model;
 	IDXGISwapChain* m_swapChain;
-	bool m_fullscreen = false;
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
+	float speed = 0.1f;
 };
 
 #endif

@@ -126,7 +126,6 @@ void SystemClass::Run()
 bool SystemClass::Frame()
 {
 	bool result;
-	float value = 0.0f;
 
 
 	// Check if the user pressed escape and wants to exit the application.
@@ -148,13 +147,9 @@ bool SystemClass::Frame()
 	//ImGui Widget
 	ImGui::Begin("Khaotic Engine", NULL);
 
-	bool fullscreen = m_Application->GetFullscreen();
-	m_imguiManager->WidgetFullscreenBox(&fullscreen);
-	if (fullscreen != m_Application->GetFullscreen())
-	{
-		m_Application->SetFullscreen(fullscreen);
-		m_Application->GetDirect3D()->SetFullscreen(fullscreen);
-	}
+	float speed = m_Application->GetSpeed();
+	m_imguiManager->WidgetSpeedSlider(&speed);
+	m_Application->SetSpeed(speed);
 
 	ImGui::End();
 
@@ -238,7 +233,7 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
 	// Setup the screen settings depending on whether it is running in full screen or in windowed mode.
-	if (m_Application->GetFullscreen())
+	if (FULL_SCREEN)
 	{
 		// If full screen set the screen to maximum size of the users desktop and 32bit.
 		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
@@ -287,7 +282,7 @@ void SystemClass::ShutdownWindows()
 	ShowCursor(true);
 
 	// Fix the display settings if leaving full screen mode.
-	if (m_Application->GetFullscreen())
+	if (FULL_SCREEN)
 	{
 		ChangeDisplaySettings(NULL, 0);
 	}
@@ -334,26 +329,5 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 	{
 		return ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
 	}
-	}
-}
-
-void SystemClass::SetScreen(bool fullscreen)
-{
-	if (fullscreen)
-	{
-		DEVMODE dmScreenSettings;
-		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
-		dmScreenSettings.dmSize = sizeof(dmScreenSettings);
-		dmScreenSettings.dmPelsWidth = (unsigned long)GetSystemMetrics(SM_CXSCREEN); // donne la largeur de l'écran en pixel
-		dmScreenSettings.dmPelsHeight = (unsigned long)GetSystemMetrics(SM_CYSCREEN); // donne la hauteur de l'écran en pixel
-		dmScreenSettings.dmBitsPerPel = 32;
-		dmScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
-
-
-		ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
-	}
-	else
-	{
-		ChangeDisplaySettings(NULL, 0);
 	}
 }

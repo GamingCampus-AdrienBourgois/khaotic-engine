@@ -53,7 +53,6 @@ public:
 	void ResetViewport();
 
 	void ReleaseResources();
-	bool SetFullscreen(bool fullscreen);
 	bool RecreateResources();
 
 private:

@@ -42,7 +42,7 @@ void imguiManager::NewFrame()
 	ImGui::NewFrame();
 }
 
-void imguiManager::WidgetFullscreenBox(bool* fullscreen)
+void imguiManager::WidgetSpeedSlider(float* speed)
 {
-	ImGui::Checkbox("Fullscreen", fullscreen);
+	ImGui::SliderFloat("Speed", speed, 0.0f, 100.0f);
 }

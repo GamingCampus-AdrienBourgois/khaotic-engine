@@ -17,7 +17,9 @@ public:
 	void Shutdown();
 	void Render();
 	void NewFrame();
-	void WidgetFullscreenBox(bool* fullscreen);
+
+	// Widgets
+	void WidgetSpeedSlider(float* speed);
 
 private:
 	ImGuiIO* io;

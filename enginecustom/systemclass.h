@@ -16,7 +16,6 @@ public:
 	bool Initialize();
 	void Shutdown();
 	void Run();
-	void SetScreen(bool fullscreen);
 
 	LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 
