@@ -22,6 +22,7 @@ public:
 	void WidgetSpeedSlider(float* speed);
 	void WidgetButton();
 	void WidgetFPS();
+	void WidgetFullscreen(bool* fullscreen);
 
 private:
 	ImGuiIO* io;

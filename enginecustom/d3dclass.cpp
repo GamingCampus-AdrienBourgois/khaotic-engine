@@ -594,3 +594,59 @@ IDXGISwapChain* D3DClass::GetSwapChain()
 {
 	return m_swapChain;
 }
+
+void D3DClass::ResizeSwapChain(int newWidth, int newHeight)
+{
+	HRESULT result;
+
+	// Release existing DirectX resources
+	m_renderTargetView->Release();
+	m_depthStencilBuffer->Release();
+
+	// Resize the swap chain
+	m_swapChain->ResizeBuffers(0, newWidth, newHeight, DXGI_FORMAT_UNKNOWN, 0);
+	if (FAILED(m_swapChain))
+	{
+		MessageBox(NULL, L"Failed to resize swap chain buffers", L"Error", MB_OK);
+		return;
+	}
+
+	// Recreate the render target view
+	ID3D11Texture2D* backBuffer;
+	m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
+	m_device->CreateRenderTargetView(backBuffer, NULL, &m_renderTargetView);
+	backBuffer->Release();
+
+	// Recreate the depth/stencil buffer and view
+	D3D11_TEXTURE2D_DESC depthBufferDesc;
+	ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
+	depthBufferDesc.Width = newWidth;
+	depthBufferDesc.Height = newHeight;
+	depthBufferDesc.MipLevels = 1;
+	depthBufferDesc.ArraySize = 1;
+	depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthBufferDesc.SampleDesc.Count = 1;
+	depthBufferDesc.SampleDesc.Quality = 0;
+	depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthBufferDesc.CPUAccessFlags = 0;
+	depthBufferDesc.MiscFlags = 0;
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+	ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
+	depthStencilViewDesc.Format = depthBufferDesc.Format;
+	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	depthStencilViewDesc.Texture2D.MipSlice = 0;
+
+
+	// Other depthStencilDesc settings...
+	m_device->CreateTexture2D(&depthBufferDesc, NULL, &m_depthStencilBuffer);
+	m_device->CreateDepthStencilView(m_depthStencilBuffer, &depthStencilViewDesc, &m_depthStencilView);
+
+	// Set the new render target and depth/stencil views for rendering
+	m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
+	// Update the viewport
+	m_viewport.Width = static_cast<float>(newWidth);
+	m_viewport.Height = static_cast<float>(newHeight);
+	m_deviceContext->RSSetViewports(1, &m_viewport);
+}

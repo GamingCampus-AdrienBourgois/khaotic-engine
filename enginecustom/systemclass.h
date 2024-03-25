@@ -32,6 +32,10 @@ private:
 	InputClass* m_Input;
 	ApplicationClass* m_Application;
 	imguiManager* m_imguiManager;
+
+	int m_initialWindowWidth;
+	int m_initialWindowHeight;
+	bool m_isDirect3DInitialized;
 };
 
 

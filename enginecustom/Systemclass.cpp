@@ -27,22 +27,33 @@ bool SystemClass::Initialize()
 	// Initialize the width and height of the screen to zero before sending the variables into the function.
 	screenWidth = 0;
 	screenHeight = 0;
-
-	// Create and initialize the application class object.  This object will handle rendering all the graphics for this application.
-	m_Application = new ApplicationClass;
+	
+	m_initialWindowWidth = 0;
+	m_initialWindowHeight = 0;
+	m_isDirect3DInitialized = false;
 
 	// Initialize the windows api.
 	InitializeWindows(screenWidth, screenHeight);
 
 	// Create and initialize the input object.  This object will be used to handle reading the keyboard input from the user.
 	m_Input = new InputClass;
-
 	m_Input->Initialize();
+
+	// Create and initialize the application class object.  This object will handle rendering all the graphics for this application.
+	m_Application = new ApplicationClass;
 
 	result = m_Application->Initialize(screenWidth, screenHeight, m_hwnd);
 	if (!result)
 	{
 		return false;
+	}
+
+	m_isDirect3DInitialized = true;
+
+	// If we received a WM_SIZE message before Direct3D was initialized, resize the swap chain now
+	if (m_initialWindowWidth > 0 && m_initialWindowHeight > 0)
+	{
+		m_Application->GetDirect3D()->ResizeSwapChain(m_initialWindowWidth, m_initialWindowHeight);
 	}
 
 	// Initialize imgui
@@ -188,6 +199,22 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 		m_Input->KeyUp((unsigned int)wparam);
 		return 0;
 	}
+	case WM_SIZE:
+	{
+		int newWidth = LOWORD(lparam);
+		int newHeight = HIWORD(lparam);
+
+		// If Direct3D is initialized, update the swap chain. Otherwise, store the window dimensions
+		if (m_isDirect3DInitialized && m_Application && m_Application->GetDirect3D())
+		{
+			m_Application->GetDirect3D()->ResizeSwapChain(newWidth, newHeight);
+		}
+		else
+		{
+			m_initialWindowWidth = newWidth;
+			m_initialWindowHeight = newHeight;
+		}
+	}
 
 	// Any other messages send to the default message handler as our application won't make use of them.
 	default:
@@ -264,7 +291,7 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 
 	// Create the window with the screen settings and get the handle to it.
 	m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
-		WS_CLIPSIBLINGS | WS_CLIPCHILDREN ,
+		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
 		posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL);
 
 	// Bring the window up on the screen and set it as main focus.
