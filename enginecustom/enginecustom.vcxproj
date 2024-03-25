@@ -22,6 +22,7 @@
   <ItemGroup>
     <ClCompile Include="applicationclass.cpp" />
     <ClCompile Include="Cameraclass.cpp" />
+    <ClCompile Include="Client.cpp" />
     <ClCompile Include="Colorshaderclass.cpp" />
     <ClCompile Include="d3dclass.cpp" />
     <ClCompile Include="imguiManager.cpp" />
@@ -37,6 +38,8 @@
     <ClCompile Include="lightshaderclass.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="modelclass.cpp" />
+    <ClCompile Include="NetworkManager.cpp" />
+    <ClCompile Include="Server.cpp" />
     <ClCompile Include="Systemclass.cpp" />
     <ClCompile Include="textureclass.cpp" />
   </ItemGroup>
@@ -44,6 +47,7 @@
     <ClInclude Include="..\..\dx11win10tut06_src\source\lightclass.h" />
     <ClInclude Include="applicationclass.h" />
     <ClInclude Include="Cameraclass.h" />
+    <ClInclude Include="Client.h" />
     <ClInclude Include="Colorshaderclass.h" />
     <ClInclude Include="d3dclass.h" />
     <ClInclude Include="imguiManager.h" />
@@ -57,7 +61,10 @@
     <ClInclude Include="include\imstb_truetype.h" />
     <ClInclude Include="inputclass.h" />
     <ClInclude Include="lightshaderclass.h" />
+    <ClInclude Include="Message.h" />
     <ClInclude Include="modelclass.h" />
+    <ClInclude Include="NetworkManager.h" />
+    <ClInclude Include="Server.h" />
     <ClInclude Include="systemclass.h" />
     <ClInclude Include="textureclass.h" />
   </ItemGroup>
