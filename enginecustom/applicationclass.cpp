@@ -55,7 +55,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera->SetRotation(0.0f, 0.0f, 10.0f);
 
 	// Set the file name of the model.
-	strcpy_s(modelFilename, "cube.obj");
+	strcpy_s(modelFilename, "cylinder.obj");
 
 	strcpy_s(outputModelFilename, "output.txt");
 

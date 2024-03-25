@@ -344,24 +344,37 @@ void ModelClass::ConvertObjToTxt(const std::string& inputFilename, const std::st
 			normals.push_back(normal);
 		}
 		else if (prefix == "f") {
-			ModelType v;
+			std::vector<int> posIndices, texIndices, normIndices;
 			char slash; // To skip slashes
 			int posIndex, texIndex, normIndex;
 
-			for (int i = 0; i < 3; ++i) { // For each vertex of the face
-				if (!(iss >> posIndex >> slash >> texIndex >> slash >> normIndex)) { break; }
+			// Read all indices of the face
+			while (iss >> posIndex >> slash >> texIndex >> slash >> normIndex) {
+				posIndices.push_back(posIndex);
+				texIndices.push_back(texIndex);
+				normIndices.push_back(normIndex);
+			}
 
-				// .obj indices start at 1, so subtract 1 to get 0-based indices
-				v.x = positions[posIndex - 1].x;
-				v.y = positions[posIndex - 1].y;
-				v.z = positions[posIndex - 1].z;
-				v.tu = texCoords[texIndex - 1].x;
-				v.tv = texCoords[texIndex - 1].y;
-				v.nx = normals[normIndex - 1].x;
-				v.ny = normals[normIndex - 1].y;
-				v.nz = normals[normIndex - 1].z;
+			// For each triangle in the face
+			for (size_t i = 1; i < posIndices.size() - 1; ++i) {
+				ModelType v[3]; // Vertices of the triangle
 
-				vertices.push_back(v);
+				// Indices of the vertices of the triangle
+				int indices[3] = { 0, i, i + 1 };
+
+				for (int j = 0; j < 3; ++j) {
+					// .obj indices start at 1, so subtract 1 to get 0-based indices
+					v[j].x = positions[posIndices[indices[j]] - 1].x;
+					v[j].y = positions[posIndices[indices[j]] - 1].y;
+					v[j].z = positions[posIndices[indices[j]] - 1].z;
+					v[j].tu = texCoords[texIndices[indices[j]] - 1].x;
+					v[j].tv = texCoords[texIndices[indices[j]] - 1].y;
+					v[j].nx = normals[normIndices[indices[j]] - 1].x;
+					v[j].ny = normals[normIndices[indices[j]] - 1].y;
+					v[j].nz = normals[normIndices[indices[j]] - 1].z;
+
+					vertices.push_back(v[j]);
+				}
 			}
 		}
 	}
