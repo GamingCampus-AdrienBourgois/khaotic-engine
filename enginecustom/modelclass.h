@@ -8,6 +8,9 @@
 #include <d3d11.h>
 #include <directxmath.h>
 #include <fstream>
+#include <sstream>
+#include <vector>
+#include <string>
 using namespace DirectX;
 using namespace std;
 
@@ -38,13 +41,30 @@ private:
 		float nx, ny, nz;
 	};
 
+	struct Vertex {
+		float x, y, z;
+	};
+
+	struct Texture {
+		float u, v;
+	};
+
+	struct Normal {
+		float nx, ny, nz;
+	};
+
+	struct Face {
+		int v1, v2, v3;
+		int t1, t2, t3;
+		int n1, n2, n3;
+	};
 
 public:
 	ModelClass();
 	ModelClass(const ModelClass&);
 	~ModelClass();
 
-	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, char*, char*);
+	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, char*, char*, char*);
 	void Shutdown();
 	void Render(ID3D11DeviceContext*);
 
@@ -61,6 +81,8 @@ private:
 
 	bool LoadModel(char*);
 	void ReleaseModel();
+
+	void ConvertObjToTxt(const std::string&, const std::string&);
 
 private:
 	ID3D11Buffer* m_vertexBuffer, * m_indexBuffer;

@@ -19,12 +19,14 @@ ModelClass::~ModelClass()
 {
 }
 
-bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* modelFilename, char* textureFilename)
+bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* modelFilename, char* outputModelFilename, char* textureFilename)
 {
 	bool result;
 
+	ConvertObjToTxt(modelFilename, outputModelFilename);
+
 	// Load in the model data.
-	result = LoadModel(modelFilename);
+	result = LoadModel(outputModelFilename);
 	if (!result)
 	{
 		return false;
@@ -308,6 +310,71 @@ bool ModelClass::LoadModel(char* filename)
 	fin.close();
 
 	return true;
+}
+
+void ModelClass::ConvertObjToTxt(const std::string& inputFilename, const std::string& outputFilename) {
+	std::ifstream inputFile(inputFilename);
+	std::ofstream outputFile(outputFilename);
+
+	std::string line;
+	std::vector<XMFLOAT3> positions;
+	std::vector<XMFLOAT2> texCoords;
+	std::vector<XMFLOAT3> normals;
+	std::vector<ModelType> vertices;
+
+	while (std::getline(inputFile, line)) {
+		std::istringstream iss(line);
+		std::string prefix;
+
+		if (!(iss >> prefix)) { break; }
+
+		if (prefix == "v") {
+			XMFLOAT3 pos;
+			if (!(iss >> pos.x >> pos.y >> pos.z)) { break; }
+			positions.push_back(pos);
+		}
+		else if (prefix == "vt") {
+			XMFLOAT2 texCoord;
+			if (!(iss >> texCoord.x >> texCoord.y)) { break; }
+			texCoords.push_back(texCoord);
+		}
+		else if (prefix == "vn") {
+			XMFLOAT3 normal;
+			if (!(iss >> normal.x >> normal.y >> normal.z)) { break; }
+			normals.push_back(normal);
+		}
+		else if (prefix == "f") {
+			ModelType v;
+			char slash; // To skip slashes
+			int posIndex, texIndex, normIndex;
+
+			for (int i = 0; i < 3; ++i) { // For each vertex of the face
+				if (!(iss >> posIndex >> slash >> texIndex >> slash >> normIndex)) { break; }
+
+				// .obj indices start at 1, so subtract 1 to get 0-based indices
+				v.x = positions[posIndex - 1].x;
+				v.y = positions[posIndex - 1].y;
+				v.z = positions[posIndex - 1].z;
+				v.tu = texCoords[texIndex - 1].x;
+				v.tv = texCoords[texIndex - 1].y;
+				v.nx = normals[normIndex - 1].x;
+				v.ny = normals[normIndex - 1].y;
+				v.nz = normals[normIndex - 1].z;
+
+				vertices.push_back(v);
+			}
+		}
+	}
+
+	// Write to output file in the desired format
+	outputFile << "Vertex Count: " << vertices.size() << "\n\n";
+	outputFile << "Data:\n\n";
+
+	for (const ModelType& v : vertices) {
+		outputFile << v.x << " " << v.y << " " << v.z << " ";
+		outputFile << v.tu << " " << v.tv << " ";
+		outputFile << v.nx << " " << v.ny << " " << v.nz << "\n";
+	}
 }
 
 void ModelClass::ReleaseModel()

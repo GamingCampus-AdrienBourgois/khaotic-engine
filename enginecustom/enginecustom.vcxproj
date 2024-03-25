@@ -45,6 +45,7 @@
     <ClInclude Include="textureclass.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="cube.mtl" />
     <None Include="light.ps" />
     <None Include="light.vs" />
     <None Include="packages.config" />
@@ -72,6 +73,16 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="cube.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cylinder.obj">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="cube.obj">
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
