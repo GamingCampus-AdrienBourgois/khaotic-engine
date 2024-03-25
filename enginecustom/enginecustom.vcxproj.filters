@@ -83,10 +83,10 @@
     <ClInclude Include="textureclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\dx11win10tut06_src\source\lightclass.h">
+    <ClInclude Include="lightshaderclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="lightshaderclass.h">
+    <ClInclude Include="lightclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
