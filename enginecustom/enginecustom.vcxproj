@@ -85,7 +85,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Hollow_Cylinder_v1.obj">
+    <None Include="sphere.obj">
       <FileType>Document</FileType>
     </None>
   </ItemGroup>
