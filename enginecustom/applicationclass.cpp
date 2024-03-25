@@ -235,3 +235,8 @@ void ApplicationClass::AddCube()
 
 	m_cubes.push_back(newCube);
 }
+
+void ApplicationClass::SelectedObject(int mouseX, int mouseY)
+{
+	// TODO: Implement this function
+}

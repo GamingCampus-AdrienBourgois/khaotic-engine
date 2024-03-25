@@ -25,6 +25,7 @@ public:
 	void WidgetButton();
 	void WidgetFPS();
 	void WidgetAddObject(ApplicationClass* app);
+	void WidgetSelectedObject(ApplicationClass* app);
 
 private:
 	ImGuiIO* io;

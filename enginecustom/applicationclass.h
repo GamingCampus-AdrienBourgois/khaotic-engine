@@ -45,6 +45,8 @@ public:
 	void AddCube();
 	int GetCubeCount() const { return m_cubes.size(); };
 
+	void SelectedObject(int mouseX, int mouseY);
+
 private:
 	bool Render(float);
 
@@ -57,6 +59,7 @@ private:
 	LightClass* m_Light;
 	float speed = 0.1f;
 	std::vector<Object*> m_cubes;
+	Object* m_SelectedObject;
 };
 
 #endif
