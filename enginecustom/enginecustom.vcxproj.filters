@@ -110,4 +110,9 @@
       <Filter>assets</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="cube.txt">
+      <Filter>assets</Filter>
+    </Text>
+  </ItemGroup>
 </Project>
