@@ -1,4 +1,5 @@
 #include "imguiManager.h"
+#include "applicationclass.h"
 
 imguiManager::imguiManager()
 {
@@ -62,7 +63,15 @@ void imguiManager::WidgetFPS()
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io->Framerate, io->Framerate);
 }
 
-void imguiManager::WidgetFullscreen(bool* fullscreen)
+void imguiManager::WidgetAddObject(ApplicationClass* app)
 {
-	ImGui::Checkbox("Fullscreen", fullscreen);
+	if (ImGui::CollapsingHeader("Objects"))
+	{
+		if (ImGui::Button("Add Cube"))
+		{
+			app->AddCube();
+		}
+		ImGui::SameLine();
+		ImGui::Text("Number of cubes: %d", app->GetCubeCount());
+	}
 }

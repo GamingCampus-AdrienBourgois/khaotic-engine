@@ -7,9 +7,10 @@
 ///////////////////////
 #include "d3dclass.h"
 #include "cameraclass.h"
-#include "modelclass.h"
+#include "object.h"
 #include "lightshaderclass.h"
 #include "lightclass.h"
+#include <vector>
 
 /////////////
 // GLOBALS //
@@ -41,6 +42,9 @@ public:
 	float GetSpeed() const { return speed; };
 	void SetSpeed(float speed) { this->speed = speed; };
 
+	void AddCube();
+	int GetCubeCount() const { return m_cubes.size(); };
+
 private:
 	bool Render(float);
 
@@ -52,6 +56,7 @@ private:
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
 	float speed = 0.1f;
+	std::vector<Object*> m_cubes;
 };
 
 #endif

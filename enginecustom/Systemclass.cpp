@@ -163,6 +163,7 @@ bool SystemClass::Frame()
 	m_Application->SetSpeed(speed);
 	m_imguiManager->WidgetButton();
 	m_imguiManager->WidgetFPS();
+	m_imguiManager->WidgetAddObject(m_Application);
 
 	ImGui::End();
 

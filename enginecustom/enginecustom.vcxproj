@@ -37,6 +37,7 @@
     <ClCompile Include="lightshaderclass.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="modelclass.cpp" />
+    <ClCompile Include="object.cpp" />
     <ClCompile Include="Systemclass.cpp" />
     <ClCompile Include="textureclass.cpp" />
   </ItemGroup>
@@ -58,6 +59,7 @@
     <ClInclude Include="inputclass.h" />
     <ClInclude Include="lightshaderclass.h" />
     <ClInclude Include="modelclass.h" />
+    <ClInclude Include="object.h" />
     <ClInclude Include="systemclass.h" />
     <ClInclude Include="textureclass.h" />
   </ItemGroup>

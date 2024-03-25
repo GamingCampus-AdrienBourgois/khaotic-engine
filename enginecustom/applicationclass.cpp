@@ -126,6 +126,14 @@ void ApplicationClass::Shutdown()
 		m_Direct3D = 0;
 	}
 
+	// Libérez la mémoire pour chaque cube
+	for (auto cube : m_cubes)
+	{
+		cube->Shutdown();
+		delete cube;
+	}
+	m_cubes.clear();
+
 	return;
 }
 
@@ -170,34 +178,22 @@ bool ApplicationClass::Render(float rotation)
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 
-	// Render the first cube
-	scaleMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);
-	rotateMatrix = XMMatrixRotationX(rotation);
-	translateMatrix = XMMatrixTranslation(-2.0f, 0.0f, 0.0f);
-	srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
-	worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
-
-	m_Model->Render(m_Direct3D->GetDeviceContext());
-	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(),
-		m_Light->GetDirection(), m_Light->GetDiffuseColor());
-	if (!result)
+	for (auto cube : m_cubes)
 	{
-		return false;
-	}
+		cube->Render(m_Direct3D->GetDeviceContext());
 
-	// Render the second cube
-	scaleMatrix = XMMatrixScaling(1.5f, 1.5f, 1.5f);
-	rotateMatrix = XMMatrixRotationY(rotation);
-	translateMatrix = XMMatrixTranslation(2.0f, 0.0f, 0.0f);
-	srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
-	worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+		scaleMatrix = cube->GetScaleMatrix();
+		rotateMatrix = XMMatrixRotationY(rotation);
+		translateMatrix = cube->GetTranslateMatrix();
+		srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
+		worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
-	m_Model->Render(m_Direct3D->GetDeviceContext());
-	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(),
-		m_Light->GetDirection(), m_Light->GetDiffuseColor());
-	if (!result)
-	{
-		return false;
+		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), cube->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, cube->GetTexture(),
+						m_Light->GetDirection(), m_Light->GetDiffuseColor());
+		if (!result)
+		{
+			return false;
+		}
 	}
 
 	// Present the rendered scene to the screen.
@@ -219,4 +215,23 @@ int ApplicationClass::GetScreenWidth() const
 int ApplicationClass::GetScreenHeight() const
 {
 	return GetSystemMetrics(SM_CYSCREEN);
+}
+
+void ApplicationClass::AddCube()
+{
+	char modelFilename[128];
+	char textureFilename[128];
+
+	// Set the file name of the model.
+	strcpy_s(modelFilename, "cube.txt");
+
+	// Set the name of the texture file that we will be loading.
+	strcpy_s(textureFilename, "stone01.tga");
+
+	Object* newCube = new Object();
+	newCube->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename);
+
+	newCube->SetTranslateMatrix(XMMatrixTranslation(0.0f, 0.0f, 0.0f));
+
+	m_cubes.push_back(newCube);
 }

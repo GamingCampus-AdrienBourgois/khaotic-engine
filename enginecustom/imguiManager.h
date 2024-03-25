@@ -7,6 +7,8 @@
 #include <imgui_impl_win32.h>
 #include <windows.h>
 
+class ApplicationClass;
+
 class imguiManager
 {
 public:
@@ -22,7 +24,7 @@ public:
 	void WidgetSpeedSlider(float* speed);
 	void WidgetButton();
 	void WidgetFPS();
-	void WidgetFullscreen(bool* fullscreen);
+	void WidgetAddObject(ApplicationClass* app);
 
 private:
 	ImGuiIO* io;
