@@ -1,0 +1,37 @@
+#pragma once
+////////////////////////////////////////////////////////////////////////////////
+// Filename: lightclass.h
+////////////////////////////////////////////////////////////////////////////////
+#ifndef _LIGHTCLASS_H_
+#define _LIGHTCLASS_H_
+
+
+//////////////
+// INCLUDES //
+//////////////
+#include <directxmath.h>
+using namespace DirectX;
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Class name: LightClass
+////////////////////////////////////////////////////////////////////////////////
+class LightClass
+{
+public:
+    LightClass();
+    LightClass(const LightClass&);
+    ~LightClass();
+
+    void SetDirection(float, float, float);
+    void SetDiffuseColor(float, float, float, float);
+
+    XMFLOAT3 GetDirection();
+    XMFLOAT4 GetDiffuseColor();
+
+private:
+    XMFLOAT4 m_diffuseColor;
+    XMFLOAT3 m_direction;
+};
+
+#endif

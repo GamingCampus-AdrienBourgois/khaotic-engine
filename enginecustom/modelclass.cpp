@@ -97,22 +97,28 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	// Triangle 1
 	vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // Bottom Left.
 	vertices[0].texture = XMFLOAT2(0.0f, 1.0f);
+	vertices[0].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
 
 	vertices[1].position = XMFLOAT3(1.0f, 1.0f, 0.0f);  // Top Right.
 	vertices[1].texture = XMFLOAT2(1.0f, 0.0f);
+	vertices[1].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
 
 	vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // Bottom Right.
 	vertices[2].texture = XMFLOAT2(1.0f, 1.0f);
+	vertices[2].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
 
 	// Triangle 2
 	vertices[3].position = XMFLOAT3(-1.0f, 1.0f, 0.0f);  // Top Left.
 	vertices[3].texture = XMFLOAT2(0.0f, 0.0f);
+	vertices[3].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
 
 	vertices[4].position = XMFLOAT3(1.0f, 1.0f, 0.0f);  // Top Right.
 	vertices[4].texture = XMFLOAT2(1.0f, 0.0f);
+	vertices[4].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
 
 	vertices[5].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // Bottom Left.
 	vertices[5].texture = XMFLOAT2(0.0f, 1.0f);
+	vertices[5].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
 
 	// Load the index array with data.
 	indices[0] = 0;  // Bottom left.
