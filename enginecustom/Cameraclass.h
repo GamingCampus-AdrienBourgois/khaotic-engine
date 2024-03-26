@@ -29,7 +29,7 @@ public:
 	XMFLOAT3 GetRotation();
 
 	void Render();
-	void GetViewMatrix(XMMATRIX&);
+	XMMATRIX GetViewMatrix();
 
 private:
 	float m_positionX, m_positionY, m_positionZ;

@@ -293,6 +293,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	result = m_device->CreateDepthStencilView(m_depthStencilBuffer, &depthStencilViewDesc, &m_depthStencilView);
 	if (FAILED(result))
 	{
+		MessageBox(hwnd, L"Could not create the depth stencil view.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -423,6 +424,8 @@ void D3DClass::BeginScene(float red, float green, float blue, float alpha)
 	// Clear the back buffer.
 	m_deviceContext->ClearRenderTargetView(m_renderTargetView, color);
 
+
+
 	// Clear the depth buffer.
 	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
@@ -460,10 +463,9 @@ ID3D11DeviceContext* D3DClass::GetDeviceContext()
 }
 
 
-void D3DClass::GetProjectionMatrix(XMMATRIX& projectionMatrix)
+XMMATRIX D3DClass::GetProjectionMatrix()
 {
-	projectionMatrix = m_projectionMatrix;
-	return;
+	return m_projectionMatrix;
 }
 
 
@@ -530,88 +532,9 @@ void D3DClass::ReleaseResources()
 	}
 }
 
-bool D3DClass::RecreateResources()
+// Reset the resources for the swap chain
+void D3DClass::ResetResources(int newWidth, int newHeight)
 {
-	HRESULT result;
-	ID3D11Texture2D* backBufferPtr;
-	D3D11_TEXTURE2D_DESC depthBufferDesc;
-	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
-
-	// Recréez la vue de rendu.
-	result = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr);
-	if (FAILED(result))
-	{
-		return false;
-	}
-
-	result = m_device->CreateRenderTargetView(backBufferPtr, NULL, &m_renderTargetView);
-	if (FAILED(result))
-	{
-		return false;
-	}
-
-	backBufferPtr->Release();
-	backBufferPtr = 0;
-
-	// Recréez le tampon de profondeur et la vue de profondeur.
-	ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
-	depthBufferDesc.Width = m_viewport.Width;
-	depthBufferDesc.Height = m_viewport.Height;
-	depthBufferDesc.MipLevels = 1;
-	depthBufferDesc.ArraySize = 1;
-	depthBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	depthBufferDesc.SampleDesc.Count = 1;
-	depthBufferDesc.SampleDesc.Quality = 0;
-	depthBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	depthBufferDesc.CPUAccessFlags = 0;
-	depthBufferDesc.MiscFlags = 0;
-
-	result = m_device->CreateTexture2D(&depthBufferDesc, NULL, &m_depthStencilBuffer);
-	if (FAILED(result))
-	{
-		return false;
-	}
-
-	ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
-	depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	depthStencilViewDesc.Texture2D.MipSlice = 0;
-
-	result = m_device->CreateDepthStencilView(m_depthStencilBuffer, &depthStencilViewDesc, &m_depthStencilView);
-	if (FAILED(result))
-	{
-		return false;
-	}
-
-	// Liez la vue de rendu et le tampon de profondeur à la pipeline de rendu de sortie.
-	m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
-
-	return true;
-}
-
-IDXGISwapChain* D3DClass::GetSwapChain()
-{
-	return m_swapChain;
-}
-
-void D3DClass::ResizeSwapChain(int newWidth, int newHeight)
-{
-	HRESULT result;
-
-	// Release existing DirectX resources
-	m_renderTargetView->Release();
-	m_depthStencilBuffer->Release();
-
-	// Resize the swap chain
-	m_swapChain->ResizeBuffers(0, newWidth, newHeight, DXGI_FORMAT_UNKNOWN, 0);
-	if (FAILED(m_swapChain))
-	{
-		MessageBox(NULL, L"Failed to resize swap chain buffers", L"Error", MB_OK);
-		return;
-	}
-
-	// Recreate the render target view
 	ID3D11Texture2D* backBuffer;
 	m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
 	m_device->CreateRenderTargetView(backBuffer, NULL, &m_renderTargetView);
@@ -638,13 +561,38 @@ void D3DClass::ResizeSwapChain(int newWidth, int newHeight)
 	depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
 	depthStencilViewDesc.Texture2D.MipSlice = 0;
 
-
 	// Other depthStencilDesc settings...
 	m_device->CreateTexture2D(&depthBufferDesc, NULL, &m_depthStencilBuffer);
 	m_device->CreateDepthStencilView(m_depthStencilBuffer, &depthStencilViewDesc, &m_depthStencilView);
 
 	// Set the new render target and depth/stencil views for rendering
 	m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
+}
+
+IDXGISwapChain* D3DClass::GetSwapChain()
+{
+	return m_swapChain;
+}
+
+void D3DClass::ResizeSwapChain(int newWidth, int newHeight)
+{
+	HRESULT result;
+
+	// Release existing DirectX resources
+	ReleaseResources();
+	m_deviceContext->Flush();
+
+	// Resize the swap chain
+	result = m_swapChain->ResizeBuffers(0, newWidth, newHeight, DXGI_FORMAT_UNKNOWN, 0);
+	if (FAILED(result))
+	{
+		MessageBox(NULL, L"Failed to resize the swap chain.", L"Error", MB_OK);
+		return;
+	}
+
+	// Reset the resources
+	ResetResources(newWidth, newHeight);
+	
 	// Update the viewport
 	m_viewport.Width = static_cast<float>(newWidth);
 	m_viewport.Height = static_cast<float>(newHeight);

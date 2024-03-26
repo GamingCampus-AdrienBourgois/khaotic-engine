@@ -163,7 +163,7 @@ bool ApplicationClass::Frame()
 
 bool ApplicationClass::Render(float rotation)
 {
-	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, rotateMatrix, translateMatrix, scaleMatrix, srMatrix;
+	XMMATRIX worldMatrix, rotateMatrix, translateMatrix, scaleMatrix, srMatrix;
 	bool result;
 
 
@@ -175,8 +175,6 @@ bool ApplicationClass::Render(float rotation)
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
 	m_Direct3D->GetWorldMatrix(worldMatrix);
-	m_Camera->GetViewMatrix(viewMatrix);
-	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 
 	for (auto cube : m_cubes)
 	{
@@ -188,7 +186,7 @@ bool ApplicationClass::Render(float rotation)
 		srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
 		worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
-		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), cube->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, cube->GetTexture(),
+		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), cube->GetIndexCount(), worldMatrix, m_Camera->GetViewMatrix(), m_Direct3D->GetProjectionMatrix(), cube->GetTexture(),
 						m_Light->GetDirection(), m_Light->GetDiffuseColor());
 		if (!result)
 		{
@@ -234,9 +232,4 @@ void ApplicationClass::AddCube()
 	newCube->SetTranslateMatrix(XMMatrixTranslation(0.0f, 0.0f, 0.0f));
 
 	m_cubes.push_back(newCube);
-}
-
-void ApplicationClass::SelectedObject(int mouseX, int mouseY)
-{
-	// TODO: Implement this function
 }

@@ -44,7 +44,7 @@ public:
 	IDXGISwapChain* GetSwapChain();
 	void ResizeSwapChain(int, int);
 
-	void GetProjectionMatrix(XMMATRIX&);
+	XMMATRIX GetProjectionMatrix();
 	void GetWorldMatrix(XMMATRIX&);
 	void GetOrthoMatrix(XMMATRIX&);
 
@@ -54,7 +54,7 @@ public:
 	void ResetViewport();
 
 	void ReleaseResources();
-	bool RecreateResources();
+	void ResetResources(int newWidth, int newHeight);
 
 private:
 	bool m_vsync_enabled;

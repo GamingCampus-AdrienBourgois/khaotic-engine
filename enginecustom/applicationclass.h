@@ -45,8 +45,6 @@ public:
 	void AddCube();
 	int GetCubeCount() const { return m_cubes.size(); };
 
-	void SelectedObject(int mouseX, int mouseY);
-
 private:
 	bool Render(float);
 

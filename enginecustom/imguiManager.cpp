@@ -75,29 +75,3 @@ void imguiManager::WidgetAddObject(ApplicationClass* app)
 		ImGui::Text("Number of cubes: %d", app->GetCubeCount());
 	}
 }
-
-void imguiManager::WidgetSelectedObject(ApplicationClass* app)
-{
-	Object* selectedObject = app->SelectedObject();
-	if (selectedObject)
-	{
-		if (ImGui::CollapsingHeader("Selected Object"))
-		{
-			XMFLOAT3 position, rotation, scale;
-			// Get the current position, rotation, and scale of the object
-			XMStoreFloat3(&position, selectedObject->GetTranslateMatrix().r[3]);
-			XMStoreFloat3(&rotation, selectedObject->GetRotateMatrix().r[3]);
-			XMStoreFloat3(&scale, selectedObject->GetScaleMatrix().r[3]);
-
-			// Create ImGui controls to modify these values
-			ImGui::InputFloat3("Position", &position.x);
-			ImGui::InputFloat3("Rotation", &rotation.x);
-			ImGui::InputFloat3("Scale", &scale.x);
-
-			// Update the object's matrices with the new values
-			selectedObject->SetTranslateMatrix(XMMatrixTranslationFromVector(XMLoadFloat3(&position)));
-			selectedObject->SetRotateMatrix(XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&rotation)));
-			selectedObject->SetScaleMatrix(XMMatrixScalingFromVector(XMLoadFloat3(&scale)));
-		}
-	}
-}
