@@ -23,6 +23,7 @@ ApplicationClass::~ApplicationClass()
 bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 	char modelFilename[128];
+	char outputModelFilename[128];
 	char textureFilename[128];
 	bool result;
 
@@ -54,7 +55,9 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera->SetRotation(0.0f, 0.0f, 0.0f);
 
 	// Set the file name of the model.
-	strcpy_s(modelFilename, "cube.txt");
+	strcpy_s(modelFilename, "sphere.obj");
+
+	strcpy_s(outputModelFilename, "output.txt");
 
 	// Set the name of the texture file that we will be loading.
 	strcpy_s(textureFilename, "stone01.tga");
@@ -62,7 +65,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Create and initialize the model object.
 	m_Model = new ModelClass;
 
-	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename);
+	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, outputModelFilename, textureFilename);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
@@ -108,6 +111,14 @@ void ApplicationClass::Shutdown()
 		m_LightShader = 0;
 	}
 
+	// Release the light shader object.
+	if (m_LightShader)
+	{
+		m_LightShader->Shutdown();
+		delete m_LightShader;
+		m_LightShader = 0;
+	}
+
 	// Release the model object.
 	if (m_Model)
 	{
@@ -138,8 +149,10 @@ void ApplicationClass::Shutdown()
 bool ApplicationClass::Frame()
 {
 	static float rotation = 0.0f;
+	static float x = 2.f;
+	static float y = 0.f;
+	static float z = 0.f;
 	bool result;
-
 
 	// Update the rotation variable each frame.
 	rotation -= 0.0174532925f * 0.1f;
@@ -148,8 +161,17 @@ bool ApplicationClass::Frame()
 		rotation += 360.0f;
 	}
 
+	// Update the x position variable each frame.
+	x -= 0.0174532925f * 0.54672f;
+
+	y -= 0.0174532925f * 0.8972f;
+
+	// Update the z position variable each frame.
+	z -= 0.0174532925f * 0.8972f;
+
+
 	// Render the graphics scene.
-	result = Render(rotation);
+	result = Render(rotation, x, y, z);
 	if (!result)
 	{
 		return false;
@@ -159,7 +181,7 @@ bool ApplicationClass::Frame()
 }
 
 
-bool ApplicationClass::Render(float rotation)
+bool ApplicationClass::Render(float rotation, float x, float y, float z)
 {
 	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, rotateMatrix, translateMatrix, scaleMatrix, srMatrix;
 	bool result;
@@ -175,12 +197,12 @@ bool ApplicationClass::Render(float rotation)
 	m_Direct3D->GetWorldMatrix(worldMatrix);
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
-
 	rotateMatrix = XMMatrixRotationY(rotation);  // Build the rotation matrix.
 	translateMatrix = XMMatrixTranslation(0.0f, 0.0f, 0.0f);  // Build the translation matrix.
 
 	// Multiply them together to create the final world transformation matrix.
 	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
+
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
