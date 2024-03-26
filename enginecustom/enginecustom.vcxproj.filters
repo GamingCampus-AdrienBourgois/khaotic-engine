@@ -122,6 +122,12 @@
     <None Include="Light.ps">
       <Filter>shader</Filter>
     </None>
+    <None Include="sphere.obj">
+      <Filter>assets</Filter>
+    </None>
+    <None Include="sphere2.obj">
+      <Filter>assets</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="stone01.tga">

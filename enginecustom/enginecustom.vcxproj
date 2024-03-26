@@ -74,17 +74,12 @@
     <Text Include="cube.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="cylinder.obj">
-      <FileType>Document</FileType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="cube.obj">
-      <FileType>Document</FileType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="sphere.obj">
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="sphere2.obj">
       <FileType>Document</FileType>
     </None>
   </ItemGroup>
