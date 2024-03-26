@@ -36,7 +36,6 @@ public:
 
 private:
 	bool Render(float, float, float, float);
-
 private:
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;

@@ -57,6 +57,12 @@
     <ClCompile Include="lightclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="Lightshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Lightclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="systemclass.h">
@@ -89,6 +95,12 @@
     <ClInclude Include="lightshaderclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="Lightshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Lightclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -103,6 +115,12 @@
     </None>
     <None Include="light.ps">
       <Filter>texture</Filter>
+    </None>
+    <None Include="Light.vs">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="Light.ps">
+      <Filter>shader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

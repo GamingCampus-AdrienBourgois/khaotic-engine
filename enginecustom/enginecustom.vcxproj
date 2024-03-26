@@ -25,8 +25,8 @@
     <ClCompile Include="Colorshaderclass.cpp" />
     <ClCompile Include="d3dclass.cpp" />
     <ClCompile Include="inputclass.cpp" />
-    <ClCompile Include="lightclass.cpp" />
-    <ClCompile Include="lightshaderclass.cpp" />
+    <ClCompile Include="Lightclass.cpp" />
+    <ClCompile Include="Lightshaderclass.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="modelclass.cpp" />
     <ClCompile Include="Systemclass.cpp" />
@@ -39,15 +39,15 @@
     <ClInclude Include="Colorshaderclass.h" />
     <ClInclude Include="d3dclass.h" />
     <ClInclude Include="inputclass.h" />
-    <ClInclude Include="lightshaderclass.h" />
+    <ClInclude Include="Lightclass.h" />
+    <ClInclude Include="Lightshaderclass.h" />
     <ClInclude Include="modelclass.h" />
     <ClInclude Include="systemclass.h" />
     <ClInclude Include="textureclass.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="cube.mtl" />
-    <None Include="light.ps" />
-    <None Include="light.vs" />
+    <None Include="Light.ps" />
+    <None Include="Light.vs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

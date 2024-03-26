@@ -86,7 +86,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
-
+	
 	return true;
 }
 
@@ -98,6 +98,14 @@ void ApplicationClass::Shutdown()
 	{
 		delete m_Light;
 		m_Light = 0;
+	}
+
+	// Release the light shader object.
+	if (m_LightShader)
+	{
+		m_LightShader->Shutdown();
+		delete m_LightShader;
+		m_LightShader = 0;
 	}
 
 	// Release the light shader object.
@@ -142,7 +150,6 @@ bool ApplicationClass::Frame()
 	static float y = 0.f;
 	static float z = 0.f;
 	bool result;
-
 
 	// Update the rotation variable each frame.
 	rotation -= 0.0174532925f * 0.1f;
