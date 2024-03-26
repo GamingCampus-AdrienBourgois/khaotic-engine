@@ -90,3 +90,31 @@ XMVECTOR Object::GetScale()
 	float scaleZ = XMVectorGetX(XMVector3Length(XMVectorSet(matrix._31, matrix._32, matrix._33, 0.0f)));
 	return XMVectorSet(scaleX, scaleY, scaleZ, 0.0f);
 }
+
+void Object::SetPosition(XMVECTOR position)
+{
+	XMFLOAT4X4 matrix;
+	XMStoreFloat4x4(&matrix, m_worldMatrix);
+	matrix._41 = XMVectorGetX(position);
+	matrix._42 = XMVectorGetY(position);
+	matrix._43 = XMVectorGetZ(position);
+	m_worldMatrix = XMLoadFloat4x4(&matrix);
+}
+
+void Object::SetRotation(XMVECTOR rotation)
+{
+	XMFLOAT4X4 matrix;
+	XMStoreFloat4x4(&matrix, m_rotateMatrix);
+	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(XMVectorGetX(rotation), XMVectorGetY(rotation), XMVectorGetZ(rotation));
+	m_rotateMatrix = rotationMatrix;
+}
+
+void Object::SetScale(XMVECTOR scale)
+{
+	XMFLOAT4X4 matrix;
+	XMStoreFloat4x4(&matrix, m_scaleMatrix);
+	matrix._11 = XMVectorGetX(scale);
+	matrix._22 = XMVectorGetY(scale);
+	matrix._33 = XMVectorGetZ(scale);
+	m_scaleMatrix = XMLoadFloat4x4(&matrix);
+}

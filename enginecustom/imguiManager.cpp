@@ -89,9 +89,23 @@ void imguiManager::WidgetObjectWindow(ApplicationClass* app)
 			XMVECTOR position = object->GetPosition();
 			XMVECTOR rotation = object->GetRotation();
 			XMVECTOR scale = object->GetScale();
-			ImGui::Text("Position: %.2f %.2f %.2f", XMVectorGetX(position), XMVectorGetY(position), XMVectorGetZ(position));
-			ImGui::Text("Rotation: %.2f %.2f %.2f", XMVectorGetX(rotation), XMVectorGetY(rotation), XMVectorGetZ(rotation));
-			ImGui::Text("Scale: %.2f %.2f %.2f", XMVectorGetX(scale), XMVectorGetY(scale), XMVectorGetZ(scale));
+			float pos[3] = { XMVectorGetX(position), XMVectorGetY(position), XMVectorGetZ(position) };
+			if (ImGui::DragFloat3("Position", pos))
+			{
+				object->SetPosition(XMVectorSet(pos[0], pos[1], pos[2], 0.0f));
+			}
+
+			float rot[3] = { XMVectorGetX(rotation), XMVectorGetY(rotation), XMVectorGetZ(rotation) };
+			if (ImGui::DragFloat3("Rotation", rot))
+			{
+				object->SetRotation(XMVectorSet(rot[0], rot[1], rot[2], 0.0f));
+			}
+
+			float scl[3] = { XMVectorGetX(scale), XMVectorGetY(scale), XMVectorGetZ(scale) };
+			if (ImGui::DragFloat3("Scale", scl))
+			{
+				object->SetScale(XMVectorSet(scl[0], scl[1], scl[2], 0.0f));
+			}
 		}
 		index++;
 	}
