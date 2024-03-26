@@ -33,14 +33,14 @@ bool LightShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
     bool result;
 
     // Set the filename of the vertex shader.
-    error = wcscpy_s(vsFilename, 128, L"../Engine/light.vs");
+    error = wcscpy_s(vsFilename, 128, L"./Light.vs");
     if (error != 0)
     {
         return false;
     }
 
     // Set the filename of the pixel shader.
-    error = wcscpy_s(psFilename, 128, L"../Engine/light.ps");
+    error = wcscpy_s(psFilename, 128, L"./Light.ps");
     if (error != 0)
     {
         return false;

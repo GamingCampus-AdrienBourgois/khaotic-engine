@@ -88,8 +88,8 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Create and initialize the light object.
 	m_Light = new LightClass;
 
-	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
+	m_Light->SetDiffuseColor(1.0f, 0.0f, 0.0f, 1.0f);
+	m_Light->SetDirection(0.0f, 1.0f, 0.0f);
 	
 	return true;
 }
