@@ -62,3 +62,31 @@ XMMATRIX Object::GetWorldMatrix()
 {
 	return m_worldMatrix;
 }
+
+XMVECTOR Object::GetPosition()
+{
+	XMFLOAT4X4 matrix;
+	XMStoreFloat4x4(&matrix, m_worldMatrix);
+	return XMVectorSet(matrix._41, matrix._42, matrix._43, 0.0f);
+}
+
+XMVECTOR Object::GetRotation()
+{
+	XMFLOAT4X4 matrix;
+	XMStoreFloat4x4(&matrix, m_rotateMatrix);
+	float rotationX = atan2f(matrix._32, matrix._33);
+	float rotationY = atan2f(-matrix._31, sqrtf(matrix._32 * matrix._32 + matrix._33 * matrix._33));
+	float rotationZ = atan2f(matrix._21, matrix._11);
+	return XMVectorSet(rotationX, rotationY, rotationZ, 0.0f);
+}
+
+
+XMVECTOR Object::GetScale()
+{
+	XMFLOAT4X4 matrix;
+	XMStoreFloat4x4(&matrix, m_scaleMatrix);
+	float scaleX = XMVectorGetX(XMVector3Length(XMVectorSet(matrix._11, matrix._12, matrix._13, 0.0f)));
+	float scaleY = XMVectorGetX(XMVector3Length(XMVectorSet(matrix._21, matrix._22, matrix._23, 0.0f)));
+	float scaleZ = XMVectorGetX(XMVector3Length(XMVectorSet(matrix._31, matrix._32, matrix._33, 0.0f)));
+	return XMVectorSet(scaleX, scaleY, scaleZ, 0.0f);
+}

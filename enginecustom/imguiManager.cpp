@@ -1,5 +1,6 @@
 #include "imguiManager.h"
 #include "applicationclass.h"
+#include <string>
 
 imguiManager::imguiManager()
 {
@@ -74,4 +75,26 @@ void imguiManager::WidgetAddObject(ApplicationClass* app)
 		ImGui::SameLine();
 		ImGui::Text("Number of cubes: %d", app->GetCubeCount());
 	}
+}
+
+void imguiManager::WidgetObjectWindow(ApplicationClass* app)
+{
+	ImGui::Begin("Objects");
+	int index = 0;
+	for (auto object : app->GetCubes())
+	{
+		std::string headerName = "Object " + std::to_string(index);
+		if (ImGui::CollapsingHeader(headerName.c_str()))
+		{
+			XMVECTOR position = object->GetPosition();
+			XMVECTOR rotation = object->GetRotation();
+			XMVECTOR scale = object->GetScale();
+			ImGui::Text("Position: %.2f %.2f %.2f", XMVectorGetX(position), XMVectorGetY(position), XMVectorGetZ(position));
+			ImGui::Text("Rotation: %.2f %.2f %.2f", XMVectorGetX(rotation), XMVectorGetY(rotation), XMVectorGetZ(rotation));
+			ImGui::Text("Scale: %.2f %.2f %.2f", XMVectorGetX(scale), XMVectorGetY(scale), XMVectorGetZ(scale));
+		}
+		index++;
+	}
+	
+	ImGui::End();
 }

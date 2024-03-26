@@ -26,6 +26,8 @@ public:
 	void WidgetFPS();
 	void WidgetAddObject(ApplicationClass* app);
 
+	void WidgetObjectWindow(ApplicationClass* app);
+
 private:
 	ImGuiIO* io;
 };

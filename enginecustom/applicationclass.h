@@ -44,6 +44,7 @@ public:
 
 	void AddCube();
 	int GetCubeCount() const { return m_cubes.size(); };
+	std::vector<Object*> GetCubes() const { return m_cubes; };
 
 private:
 	bool Render(float);

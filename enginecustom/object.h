@@ -13,11 +13,19 @@ public:
 	void SetSRMatrix(XMMATRIX srMatrix);
 	void SetWorldMatrix(XMMATRIX worldMatrix);
 
+	void SetPosition(XMVECTOR position);
+	void SetRotation(XMVECTOR rotation);
+	void SetScale(XMVECTOR scale);
+
 	XMMATRIX GetScaleMatrix();
 	XMMATRIX GetRotateMatrix();
 	XMMATRIX GetTranslateMatrix();
 	XMMATRIX GetSRMatrix();
 	XMMATRIX GetWorldMatrix();
+
+	XMVECTOR GetPosition();
+	XMVECTOR GetRotation();
+	XMVECTOR GetScale();
 
 private:
 	XMMATRIX m_scaleMatrix;
