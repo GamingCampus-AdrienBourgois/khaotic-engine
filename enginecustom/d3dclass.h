@@ -40,6 +40,7 @@ public:
 
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetDeviceContext();
+	XMMATRIX GetProjectionMatrix(XMMATRIX& projectionMatrix);
 	IDXGISwapChain* m_swapChain;
 	IDXGISwapChain* GetSwapChain();
 	void ResizeSwapChain(int, int);
