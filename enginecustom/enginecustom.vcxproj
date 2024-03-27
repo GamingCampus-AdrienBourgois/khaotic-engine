@@ -30,9 +30,11 @@
     <ClCompile Include="Lightshaderclass.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="modelclass.cpp" />
+    <ClCompile Include="Spriteclass.cpp" />
     <ClCompile Include="Systemclass.cpp" />
     <ClCompile Include="textureclass.cpp" />
     <ClCompile Include="textureshaderclass.cpp" />
+    <ClCompile Include="Timerclass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\dx11win10tut06_src\source\lightclass.h" />
@@ -45,9 +47,11 @@
     <ClInclude Include="Lightclass.h" />
     <ClInclude Include="Lightshaderclass.h" />
     <ClInclude Include="modelclass.h" />
+    <ClInclude Include="Spriteclass.h" />
     <ClInclude Include="systemclass.h" />
     <ClInclude Include="textureclass.h" />
     <ClInclude Include="textureshaderclass.h" />
+    <ClInclude Include="Timerclass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Light.ps" />
@@ -76,19 +80,10 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="stone01.tga" />
+    <Image Include="wall.tga" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="cube.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="cylinder.obj">
-      <FileType>Document</FileType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="cube.obj">
-      <FileType>Document</FileType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="sphere.obj">

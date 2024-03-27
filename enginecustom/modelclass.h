@@ -64,7 +64,7 @@ public:
 	ModelClass(const ModelClass&);
 	~ModelClass();
 
-	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, char*, char*, char*);
+	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, char*, char*);
 	void Shutdown();
 	void Render(ID3D11DeviceContext*);
 
@@ -81,8 +81,6 @@ private:
 
 	bool LoadModel(char*);
 	void ReleaseModel();
-
-	void ConvertObjToTxt(const std::string&, const std::string&);
 
 private:
 	ID3D11Buffer* m_vertexBuffer, * m_indexBuffer;

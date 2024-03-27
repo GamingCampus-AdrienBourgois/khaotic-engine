@@ -19,14 +19,12 @@ ModelClass::~ModelClass()
 {
 }
 
-bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* modelFilename, char* outputModelFilename, char* textureFilename)
+bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* modelFilename, char* textureFilename)
 {
 	bool result;
 
-	ConvertObjToTxt(modelFilename, outputModelFilename);
-
 	// Load in the model data.
-	result = LoadModel(outputModelFilename);
+	result = LoadModel(modelFilename);
 	if (!result)
 	{
 		return false;
@@ -91,7 +89,7 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
-
+	int i;
 
 	// Create the vertex array.
 	vertices = new VertexType[m_vertexCount];
@@ -100,7 +98,7 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	indices = new unsigned long[m_indexCount];
 
 	// Load the vertex array and index array with data.
-	for (int i = 0; i < m_vertexCount; i++)
+	for (i = 0; i < m_vertexCount; i++)
 	{
 		vertices[i].position = XMFLOAT3(m_model[i].x, m_model[i].y, m_model[i].z);
 		vertices[i].texture = XMFLOAT2(m_model[i].tu, m_model[i].tv);
@@ -108,31 +106,6 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 
 		indices[i] = i;
 	}
-
-
-	//// Create the vertex array.
-	//vertices = new VertexType[m_vertexCount];
-
-	//// Create the index array.
-	//indices = new unsigned long[m_indexCount];
-
-	//// Load the vertex array with data.
-	//vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // Bottom left.
-	//vertices[0].texture = XMFLOAT2(0.0f, 1.0f);
-	//vertices[0].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
-
-	//vertices[1].position = XMFLOAT3(0.0f, 1.0f, 0.0f);  // Top middle.
-	//vertices[1].texture = XMFLOAT2(0.5f, 0.0f);
-	//vertices[1].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
-
-	//vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // Bottom right.
-	//vertices[2].texture = XMFLOAT2(1.0f, 1.0f);
-	//vertices[2].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
-
-	//// Load the index array with data.
-	//indices[0] = 0;  // Bottom left.
-	//indices[1] = 1;  // Top middle.
-	//indices[2] = 2;  // Bottom right.
 
 	// Set up the description of the static vertex buffer.
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -310,84 +283,6 @@ bool ModelClass::LoadModel(char* filename)
 	fin.close();
 
 	return true;
-}
-
-void ModelClass::ConvertObjToTxt(const std::string& inputFilename, const std::string& outputFilename) {
-	std::ifstream inputFile(inputFilename);
-	std::ofstream outputFile(outputFilename);
-
-	std::string line;
-	std::vector<XMFLOAT3> positions;
-	std::vector<XMFLOAT2> texCoords;
-	std::vector<XMFLOAT3> normals;
-	std::vector<ModelType> vertices;
-
-	while (std::getline(inputFile, line)) {
-		std::istringstream iss(line);
-		std::string prefix;
-
-		if (!(iss >> prefix)) { break; }
-
-		if (prefix == "v") {
-			XMFLOAT3 pos;
-			if (!(iss >> pos.x >> pos.y >> pos.z)) { break; }
-			positions.push_back(pos);
-		}
-		else if (prefix == "vt") {
-			XMFLOAT2 texCoord;
-			if (!(iss >> texCoord.x >> texCoord.y)) { break; }
-			texCoords.push_back(texCoord);
-		}
-		else if (prefix == "vn") {
-			XMFLOAT3 normal;
-			if (!(iss >> normal.x >> normal.y >> normal.z)) { break; }
-			normals.push_back(normal);
-		}
-		else if (prefix == "f") {
-			std::vector<int> posIndices, texIndices, normIndices;
-			char slash; // To skip slashes
-			int posIndex, texIndex, normIndex;
-
-			// Read all indices of the face
-			while (iss >> posIndex >> slash >> texIndex >> slash >> normIndex) {
-				posIndices.push_back(posIndex);
-				texIndices.push_back(texIndex);
-				normIndices.push_back(normIndex);
-			}
-
-			// For each triangle in the face
-			for (size_t i = 1; i < posIndices.size() - 1; ++i) {
-				ModelType v[3]; // Vertices of the triangle
-
-				// Indices of the vertices of the triangle
-				int indices[3] = { 0, i, i + 1 };
-
-				for (int j = 0; j < 3; ++j) {
-					// .obj indices start at 1, so subtract 1 to get 0-based indices
-					v[j].x = positions[posIndices[indices[j]] - 1].x;
-					v[j].y = positions[posIndices[indices[j]] - 1].y;
-					v[j].z = positions[posIndices[indices[j]] - 1].z;
-					v[j].tu = texCoords[texIndices[indices[j]] - 1].x;
-					v[j].tv = texCoords[texIndices[indices[j]] - 1].y;
-					v[j].nx = normals[normIndices[indices[j]] - 1].x;
-					v[j].ny = normals[normIndices[indices[j]] - 1].y;
-					v[j].nz = normals[normIndices[indices[j]] - 1].z;
-
-					vertices.push_back(v[j]);
-				}
-			}
-		}
-	}
-
-	// Write to output file in the desired format
-	outputFile << "Vertex Count: " << vertices.size() << "\n\n";
-	outputFile << "Data:\n\n";
-
-	for (const ModelType& v : vertices) {
-		outputFile << v.x << " " << v.y << " " << v.z << " ";
-		outputFile << v.tu << " " << v.tv << " ";
-		outputFile << v.nx << " " << v.ny << " " << v.nz << "\n";
-	}
 }
 
 void ModelClass::ReleaseModel()

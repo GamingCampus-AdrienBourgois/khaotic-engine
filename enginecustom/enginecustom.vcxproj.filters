@@ -63,6 +63,18 @@
     <ClCompile Include="Lightclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="bitmapclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="textureshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Spriteclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Timerclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="systemclass.h">
@@ -101,6 +113,18 @@
     <ClInclude Include="Lightclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="bitmapclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="textureshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Spriteclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Timerclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -122,8 +146,20 @@
     <None Include="Light.ps">
       <Filter>shader</Filter>
     </None>
+    <None Include="texture.ps">
+      <Filter>texture</Filter>
+    </None>
+    <None Include="texture.vs">
+      <Filter>texture</Filter>
+    </None>
+    <None Include="sphere.obj">
+      <Filter>assets</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="wall.tga">
+      <Filter>assets</Filter>
+    </Image>
     <Image Include="stone01.tga">
       <Filter>assets</Filter>
     </Image>

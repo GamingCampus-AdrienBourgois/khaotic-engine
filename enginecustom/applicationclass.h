@@ -12,6 +12,8 @@
 #include "lightclass.h"
 #include "bitmapclass.h"
 #include "textureshaderclass.h"
+#include "spriteclass.h"
+#include "timerclass.h"
 
 /////////////
 // GLOBALS //
@@ -46,6 +48,8 @@ private:
 	LightClass* m_Light;
 	TextureShaderClass* m_TextureShader;
 	BitmapClass* m_Bitmap;
+	SpriteClass* m_Sprite;
+    TimerClass* m_Timer;
 };
 
 #endif
