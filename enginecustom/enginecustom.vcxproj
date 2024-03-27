@@ -29,24 +29,28 @@
     <ClCompile Include="lightshaderclass.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="modelclass.cpp" />
+    <ClCompile Include="Multitextureshaderclass.cpp" />
     <ClCompile Include="Systemclass.cpp" />
     <ClCompile Include="textureclass.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\dx11win10tut06_src\source\lightclass.h" />
     <ClInclude Include="applicationclass.h" />
     <ClInclude Include="Cameraclass.h" />
     <ClInclude Include="Colorshaderclass.h" />
     <ClInclude Include="d3dclass.h" />
     <ClInclude Include="inputclass.h" />
+    <ClInclude Include="lightclass.h" />
     <ClInclude Include="lightshaderclass.h" />
     <ClInclude Include="modelclass.h" />
+    <ClInclude Include="Multitextureshaderclass.h" />
     <ClInclude Include="systemclass.h" />
     <ClInclude Include="textureclass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="light.ps" />
     <None Include="light.vs" />
+    <None Include="Multitexture.ps" />
+    <None Include="Multitexture.vs" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -68,6 +72,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="moss01.tga" />
+    <Image Include="papier.tga" />
     <Image Include="stone01.tga" />
   </ItemGroup>
   <ItemGroup>

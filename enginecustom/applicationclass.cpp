@@ -3,7 +3,8 @@
 ApplicationClass::ApplicationClass()
 {
 	m_Direct3D = 0;
-	m_Camera = 0;
+	m_Camera = 0; 
+	m_MultiTextureShader = 0;
 	m_Model = 0;
 	m_LightShader = 0;
 	m_Light = 0;
@@ -22,8 +23,7 @@ ApplicationClass::~ApplicationClass()
 
 bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
-	char modelFilename[128];
-	char textureFilename[128];
+	char modelFilename[128], textureFilename1[128], textureFilename2[128];
 	bool result;
 
 
@@ -53,21 +53,33 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
 	m_Camera->SetRotation(0.0f, 0.0f, 10.0f);
 
+	// Create and initialize the multitexture shader object.
+	m_MultiTextureShader = new MultiTextureShaderClass;
+
+	result = m_MultiTextureShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the multitexture shader object.", L"Error", MB_OK);
+		return false;
+	}
+
 	// Set the file name of the model.
 	strcpy_s(modelFilename, "cube.txt");
 
-	// Set the name of the texture file that we will be loading.
-	strcpy_s(textureFilename, "stone01.tga");
+	// Set the file name of the textures.
+	strcpy_s(textureFilename1, "stone01.tga");
+	strcpy_s(textureFilename2, "moss01.tga");
 
 	// Create and initialize the model object.
 	m_Model = new ModelClass;
 
-	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename);
+	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}
+
 
 	// Create and initialize the light shader object.
 	m_LightShader = new LightShaderClass;
@@ -81,8 +93,9 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Create and initialize the light object.
 	m_Light = new LightClass;
 
+	m_Light->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
+	m_Light->SetDirection(1.0f, 0.0f, 0.0f);
 
 	return true;
 }
@@ -111,6 +124,14 @@ void ApplicationClass::Shutdown()
 		m_Model->Shutdown();
 		delete m_Model;
 		m_Model = 0;
+	}
+
+	// Release the multitexture shader object.
+	if (m_MultiTextureShader)
+	{
+		m_MultiTextureShader->Shutdown();
+		delete m_MultiTextureShader;
+		m_MultiTextureShader = 0;
 	}
 
 	// Release the camera object.
@@ -161,7 +182,6 @@ bool ApplicationClass::Render(float rotation)
 	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
 	bool result;
 
-
 	// Clear the buffers to begin the scene.
 	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -175,18 +195,28 @@ bool ApplicationClass::Render(float rotation)
 	// Rotate the world matrix by the rotation value so that the triangle will spin.
 	worldMatrix = XMMatrixRotationY(rotation);
 
-	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	// Render the model using the multitexture shader.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
 	// Render the model using the light shader.
-	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(),
-		m_Light->GetDirection(), m_Light->GetDiffuseColor());
+	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
+		m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
 	if (!result)
 	{
 		return false;
 	}
+
+	// Render the model using the multitexture shader.
+	result = m_MultiTextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0), m_Model->GetTexture(1));
+	if (!result)
+	{
+		return false;
+	}
+
 	// Present the rendered scene to the screen.
 	m_Direct3D->EndScene();
 
 	return true;
 }
+

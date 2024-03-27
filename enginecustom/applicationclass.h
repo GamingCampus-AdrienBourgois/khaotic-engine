@@ -10,6 +10,8 @@
 #include "modelclass.h"
 #include "lightshaderclass.h"
 #include "lightclass.h"
+#include "multitextureshaderclass.h"
+#include "modelclass.h"
 
 /////////////
 // GLOBALS //
@@ -40,9 +42,10 @@ private:
 private:
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
-	ModelClass* m_Model;
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
+	MultiTextureShaderClass* m_MultiTextureShader;
+	ModelClass* m_Model;
 };
 
 #endif
