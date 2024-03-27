@@ -125,7 +125,7 @@
     <None Include="sphere.obj">
       <Filter>assets</Filter>
     </None>
-    <None Include="sphere2.obj">
+    <None Include="cube.obj">
       <Filter>assets</Filter>
     </None>
   </ItemGroup>
@@ -133,10 +133,8 @@
     <Image Include="stone01.tga">
       <Filter>assets</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="cube.txt">
+    <Image Include="diamond.tga">
       <Filter>assets</Filter>
-    </Text>
+    </Image>
   </ItemGroup>
 </Project>

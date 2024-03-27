@@ -51,11 +51,11 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -15.0f);
 	m_Camera->SetRotation(0.0f, 0.0f, 0.0f);
 
 	// Set the file name of the model.
-	strcpy_s(modelFilename, "sphere.obj");
+	strcpy_s(modelFilename, "cube.obj");
 
 	strcpy_s(outputModelFilename, "output.txt");
 
@@ -88,7 +88,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetDirection(1.0f, 0.0f, 1.0f);
 	m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetSpecularPower(32.0f);
+	m_Light->SetSpecularPower(1000.0f);
 
 	return true;
 }
