@@ -69,6 +69,21 @@
     <ClCompile Include="include\imgui_widgets.cpp">
       <Filter>Fichiers sources\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="imguiManager.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="lightclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="lightshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="object.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="textureclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="systemclass.h">
@@ -116,6 +131,21 @@
     <ClInclude Include="include\backends\imgui_impl_win32.h">
       <Filter>Fichiers d%27en-tête\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\dx11win10tut06_src\source\lightclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="imguiManager.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="lightshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="object.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="textureclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -125,21 +155,13 @@
     <None Include="Color.vs">
       <Filter>shader</Filter>
     </None>
-    <None Include="light.vs">
-      <Filter>texture</Filter>
-    </None>
-    <None Include="light.ps">
-      <Filter>texture</Filter>
-    </None>
+    <None Include="light.ps" />
+    <None Include="light.vs" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="stone01.tga">
-      <Filter>assets</Filter>
-    </Image>
+    <Image Include="stone01.tga" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="cube.txt">
-      <Filter>assets</Filter>
-    </Text>
+    <Text Include="cube.txt" />
   </ItemGroup>
 </Project>

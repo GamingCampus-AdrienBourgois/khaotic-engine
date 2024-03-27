@@ -99,7 +99,6 @@ void SystemClass::Run()
 	MSG msg;
 	bool done, result;
 
-
 	// Initialize the message structure.
 	ZeroMemory(&msg, sizeof(MSG));
 
@@ -165,6 +164,7 @@ bool SystemClass::Frame()
 	m_imguiManager->WidgetFPS();
 	m_imguiManager->WidgetAddObject(m_Application);
 	m_imguiManager->WidgetObjectWindow(m_Application);
+	m_imguiManager->WidgetTestTerrain(m_Application);
 
 	ImGui::End();
 

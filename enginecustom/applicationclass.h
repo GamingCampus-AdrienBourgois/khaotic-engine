@@ -43,8 +43,11 @@ public:
 	void SetSpeed(float speed) { this->speed = speed; };
 
 	void AddCube();
+	void DeleteCube(int index);
 	int GetCubeCount() const { return m_cubes.size(); };
 	std::vector<Object*> GetCubes() const { return m_cubes; };
+
+	void GenerateTerrain();
 
 private:
 	bool Render(float);

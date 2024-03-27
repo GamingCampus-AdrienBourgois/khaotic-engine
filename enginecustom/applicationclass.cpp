@@ -49,7 +49,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	// Set the initial position of the camera.
 	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
-	m_Camera->SetRotation(0.0f, 0.0f, 10.0f);
+	m_Camera->SetRotation(0.0f, 0.0f, 0.0f);
 
 	// Set the file name of the model.
 	strcpy_s(modelFilename, "cube.txt");
@@ -80,7 +80,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Light = new LightClass;
 
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
+	m_Light->SetDirection(0.0f, -1.0f, 1.0f);
 
 	return true;
 }
@@ -166,7 +166,6 @@ bool ApplicationClass::Render(float rotation)
 	XMMATRIX worldMatrix, rotateMatrix, translateMatrix, scaleMatrix, srMatrix;
 	bool result;
 
-
 	// Clear the buffers to begin the scene.
 	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
@@ -181,7 +180,15 @@ bool ApplicationClass::Render(float rotation)
 		cube->Render(m_Direct3D->GetDeviceContext());
 
 		scaleMatrix = cube->GetScaleMatrix();
-		rotateMatrix = XMMatrixRotationY(rotation);
+
+		if (cube->m_demoSpinning)
+			rotateMatrix = XMMatrixRotationY(rotation);
+		else
+		{
+			rotateMatrix = cube->GetRotateMatrix();
+		}
+
+
 		translateMatrix = cube->GetTranslateMatrix();
 		srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
 		worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
@@ -215,7 +222,7 @@ int ApplicationClass::GetScreenHeight() const
 	return GetSystemMetrics(SM_CYSCREEN);
 }
 
-void ApplicationClass::AddCube()
+void ApplicationClass::GenerateTerrain()
 {
 	char modelFilename[128];
 	char textureFilename[128];
@@ -226,10 +233,48 @@ void ApplicationClass::AddCube()
 	// Set the name of the texture file that we will be loading.
 	strcpy_s(textureFilename, "stone01.tga");
 
+	// Create cube objects to fill a 10x10 grid of cubes
+	for (int i = -10; i < 10; i++)
+	{
+		for (int j = -10; j < 10; j++)
+		{
+			Object* newCube = new Object();
+			newCube->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename);
+
+			newCube->SetTranslateMatrix(XMMatrixTranslation(i * 2.0f, -4.0f, j * 2.0f));
+
+			m_cubes.push_back(newCube);
+		}
+	}
+	
+}
+
+void ApplicationClass::AddCube()
+{
+	char modelFilename[128];
+	char textureFilename[128];
+
+	// Set the file name of the model.
+	strcpy_s(modelFilename, "cube.txt");
+
+	// Set the name of the texture file that we will be loading.
+	strcpy_s(textureFilename, "stone01.tga");
+	static int cubeCount = 0;
+	float position = cubeCount * 2.0f;
 	Object* newCube = new Object();
 	newCube->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename);
 
-	newCube->SetTranslateMatrix(XMMatrixTranslation(0.0f, 0.0f, 0.0f));
+	newCube->SetTranslateMatrix(XMMatrixTranslation(position, 0.0f, 0.0f));
 
 	m_cubes.push_back(newCube);
+}
+
+void ApplicationClass::DeleteCube(int index)
+{
+	if (index < m_cubes.size())
+	{
+		m_cubes[index]->Shutdown();
+		delete m_cubes[index];
+		m_cubes.erase(m_cubes.begin() + index);
+	}
 }

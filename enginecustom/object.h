@@ -27,6 +27,9 @@ public:
 	XMVECTOR GetRotation();
 	XMVECTOR GetScale();
 
+public :
+	bool m_demoSpinning = false;
+
 private:
 	XMMATRIX m_scaleMatrix;
 	XMMATRIX m_rotateMatrix;

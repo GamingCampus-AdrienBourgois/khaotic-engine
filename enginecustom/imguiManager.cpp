@@ -81,34 +81,63 @@ void imguiManager::WidgetObjectWindow(ApplicationClass* app)
 {
 	ImGui::Begin("Objects");
 	int index = 0;
-	for (auto object : app->GetCubes())
+	for (auto& object : app->GetCubes())
 	{
 		std::string headerName = "Object " + std::to_string(index);
 		if (ImGui::CollapsingHeader(headerName.c_str()))
 		{
+
 			XMVECTOR position = object->GetPosition();
 			XMVECTOR rotation = object->GetRotation();
 			XMVECTOR scale = object->GetScale();
 			float pos[3] = { XMVectorGetX(position), XMVectorGetY(position), XMVectorGetZ(position) };
-			if (ImGui::DragFloat3("Position", pos))
+			std::string posLabel = "Position##" + std::to_string(index);
+			if (ImGui::DragFloat3(posLabel.c_str(), pos))
 			{
 				object->SetPosition(XMVectorSet(pos[0], pos[1], pos[2], 0.0f));
 			}
 
 			float rot[3] = { XMVectorGetX(rotation), XMVectorGetY(rotation), XMVectorGetZ(rotation) };
-			if (ImGui::DragFloat3("Rotation", rot))
+			std::string rotLabel = "Rotation##" + std::to_string(index);
+			if (ImGui::DragFloat3(rotLabel.c_str(), rot))
 			{
 				object->SetRotation(XMVectorSet(rot[0], rot[1], rot[2], 0.0f));
 			}
 
 			float scl[3] = { XMVectorGetX(scale), XMVectorGetY(scale), XMVectorGetZ(scale) };
-			if (ImGui::DragFloat3("Scale", scl))
+			std::string sclLabel = "Scale##" + std::to_string(index);
+			if (ImGui::DragFloat3(sclLabel.c_str(), scl))
 			{
 				object->SetScale(XMVectorSet(scl[0], scl[1], scl[2], 0.0f));
 			}
+
+			ImGui::Separator();
+
+			// Delete button
+			std::string deleteLabel = "Delete##" + std::to_string(index);
+			if (ImGui::Button(deleteLabel.c_str()))
+			{
+				app->DeleteCube(index);
+			}
+
+			ImGui::Separator();
+
+			// Demo spinning
+			std::string demoLabel = "Demo spinning##" + std::to_string(index);
+			ImGui::Checkbox(demoLabel.c_str(), &object->m_demoSpinning);
 		}
 		index++;
 	}
 	
 	ImGui::End();
+}
+
+void imguiManager::WidgetTestTerrain(ApplicationClass* app)
+{
+	ImGui::Separator();
+
+	if (ImGui::Button("Generate Terrain"))
+	{
+		app->GenerateTerrain();
+	}
 }

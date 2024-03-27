@@ -66,7 +66,7 @@ XMMATRIX Object::GetWorldMatrix()
 XMVECTOR Object::GetPosition()
 {
 	XMFLOAT4X4 matrix;
-	XMStoreFloat4x4(&matrix, m_worldMatrix);
+	XMStoreFloat4x4(&matrix, m_translateMatrix);
 	return XMVectorSet(matrix._41, matrix._42, matrix._43, 0.0f);
 }
 
@@ -94,11 +94,11 @@ XMVECTOR Object::GetScale()
 void Object::SetPosition(XMVECTOR position)
 {
 	XMFLOAT4X4 matrix;
-	XMStoreFloat4x4(&matrix, m_worldMatrix);
+	XMStoreFloat4x4(&matrix, m_translateMatrix);
 	matrix._41 = XMVectorGetX(position);
 	matrix._42 = XMVectorGetY(position);
 	matrix._43 = XMVectorGetZ(position);
-	m_worldMatrix = XMLoadFloat4x4(&matrix);
+	m_translateMatrix = XMLoadFloat4x4(&matrix);
 }
 
 void Object::SetRotation(XMVECTOR rotation)
