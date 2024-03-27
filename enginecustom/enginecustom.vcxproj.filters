@@ -136,8 +136,5 @@
     <Image Include="diamond.tga">
       <Filter>assets</Filter>
     </Image>
-    <Image Include="wall_512_1_05.tga">
-      <Filter>assets</Filter>
-    </Image>
   </ItemGroup>
 </Project>
