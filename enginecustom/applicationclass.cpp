@@ -60,7 +60,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	strcpy_s(outputModelFilename, "output.txt");
 
 	// Set the name of the texture file that we will be loading.
-	strcpy_s(textureFilename, "stone01.tga");
+	strcpy_s(textureFilename, "wall_512_1_05.tga");
 
 	// Create and initialize the model object.
 	m_Model = new ModelClass;

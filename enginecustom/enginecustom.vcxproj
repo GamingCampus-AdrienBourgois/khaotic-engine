@@ -70,6 +70,7 @@
   <ItemGroup>
     <Image Include="diamond.tga" />
     <Image Include="stone01.tga" />
+    <Image Include="wall_512_1_05.tga" />
   </ItemGroup>
   <ItemGroup>
     <None Include="sphere.obj">
