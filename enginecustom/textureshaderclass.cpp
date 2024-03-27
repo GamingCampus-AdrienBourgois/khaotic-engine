@@ -59,15 +59,26 @@ void TextureShaderClass::Shutdown()
 	return;
 }
 
+<<<<<<< Updated upstream:enginecustom/textureshaderclass.cpp
 bool TextureShaderClass::Render(ID3D11DeviceContext * deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
 	XMMATRIX projectionMatrix, ID3D11ShaderResourceView * texture)
+=======
+
+bool LightShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
+							  ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 ambiantColor, XMFLOAT4 diffuseColor)
+>>>>>>> Stashed changes:enginecustom/lightshaderclass.cpp
 {
 	bool result;
 
 
 	// Set the shader parameters that it will use for rendering.
+<<<<<<< Updated upstream:enginecustom/textureshaderclass.cpp
 	result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture);
 	if (!result)
+=======
+	result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, lightDirection, ambiantColor, diffuseColor);
+	if(!result)
+>>>>>>> Stashed changes:enginecustom/lightshaderclass.cpp
 	{
 		return false;
 	}
@@ -296,8 +307,14 @@ void TextureShaderClass::OutputShaderErrorMessage(ID3D10Blob * errorMessage, HWN
 	return;
 }
 
+<<<<<<< Updated upstream:enginecustom/textureshaderclass.cpp
 bool TextureShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
 	XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture)
+=======
+
+bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, 
+										   ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 ambiantColor, XMFLOAT4 diffuseColor)
+>>>>>>> Stashed changes:enginecustom/lightshaderclass.cpp
 {
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -336,6 +353,34 @@ bool TextureShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 	// Set shader texture resource in the pixel shader.
 	deviceContext->PSSetShaderResources(0, 1, &texture);
 
+<<<<<<< Updated upstream:enginecustom/textureshaderclass.cpp
+=======
+	// Lock the light constant buffer so it can be written to.
+	result = deviceContext->Map(m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	if(FAILED(result))
+	{
+		return false;
+	}
+
+	// Get a pointer to the data in the constant buffer.
+	dataPtr2 = (LightBufferType*)mappedResource.pData;
+
+	// Copy the lighting variables into the constant buffer.
+	dataPtr2->ambientColor = ambiantColor;
+	dataPtr2->diffuseColor = diffuseColor;
+	dataPtr2->lightDirection = lightDirection;
+	dataPtr2->padding = 0.0f;
+
+	// Unlock the constant buffer.
+	deviceContext->Unmap(m_lightBuffer, 0);
+
+	// Set the position of the light constant buffer in the pixel shader.
+	bufferNumber = 0;
+
+	// Finally set the light constant buffer in the pixel shader with the updated values.
+	deviceContext->PSSetConstantBuffers(bufferNumber, 1, &m_lightBuffer);
+
+>>>>>>> Stashed changes:enginecustom/lightshaderclass.cpp
 	return true;
 }
 

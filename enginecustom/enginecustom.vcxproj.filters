@@ -60,6 +60,9 @@
     <ClCompile Include="Lightclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="Alphamapshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="systemclass.h">
@@ -89,10 +92,20 @@
     <ClInclude Include="textureclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+<<<<<<< Updated upstream
     <ClInclude Include="Lightshaderclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Lightclass.h">
+=======
+    <ClInclude Include="lightshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="lightclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Alphamapshaderclass.h">
+>>>>>>> Stashed changes
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

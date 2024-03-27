@@ -8,6 +8,7 @@ ApplicationClass::ApplicationClass()
 	m_TextureShader = 0;
 	m_LightShader = 0;
 	m_Light = 0;
+	m_AlphaMapShader = 0;
 }
 
 
@@ -23,7 +24,12 @@ ApplicationClass::~ApplicationClass()
 
 bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
+<<<<<<< Updated upstream
 	char textureFilename[128];
+=======
+	char modelFilename[128];
+	char textureFilename1[128], textureFilename2[128], textureFilename3[128];
+>>>>>>> Stashed changes
 	bool result;
 
 
@@ -51,14 +57,40 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	// Set the initial position of the camera.
 	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
+<<<<<<< Updated upstream
 	m_Camera->SetRotation(0.0f, 0.0f, 0.0f);
+=======
+	m_Camera->SetRotation(0.0f, 0.0f, 10.0f);
+
+	// Create and initialize the alpha map shader object.
+	m_AlphaMapShader = new AlphaMapShaderClass;
+
+	result = m_AlphaMapShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the alpha map shader object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Set the file name of the model.
+	strcpy_s(modelFilename, "cube.txt");
+
+	// Set the name of the texture file that we will be loading.
+	strcpy_s(textureFilename1, "stone01.tga");
+	strcpy_s(textureFilename2, "dirt.tga");
+	strcpy_s(textureFilename3, "gradient.tga");
+>>>>>>> Stashed changes
 
 	// Create and initialize the model object.
 	m_Model = new ModelClass;
 	// Set the name of the texture file that we will be loading.
 	strcpy_s(textureFilename, "stone01.tga");
 
+<<<<<<< Updated upstream
 	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), textureFilename);
+=======
+	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2, textureFilename3);
+>>>>>>> Stashed changes
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
@@ -88,9 +120,16 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Create and initialize the light object.
 	m_Light = new LightClass;
 
+<<<<<<< Updated upstream
 	m_Light->SetDiffuseColor(1.0f, 0.0f, 0.0f, 1.0f);
 	m_Light->SetDirection(0.0f, 1.0f, 0.0f);
 	
+=======
+	m_Light->SetAmbientColor(0.05f, 0.05f, 0.05f, 1.0f);
+	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
+	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
+
+>>>>>>> Stashed changes
 	return true;
 }
 
@@ -118,6 +157,14 @@ void ApplicationClass::Shutdown()
 		delete m_TextureShader;
 		m_TextureShader = 0;
 	}
+
+	// Release the alpha map shader object.
+    if(m_AlphaMapShader)
+    {
+        m_AlphaMapShader->Shutdown();
+        delete m_AlphaMapShader;
+        m_AlphaMapShader = 0;
+    }
 
 	// Release the model object.
 	if (m_Model)
@@ -206,12 +253,17 @@ bool ApplicationClass::Render(float rotation)
 
 	// Render the model using the light shader.
 	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(),
-		m_Light->GetDirection(), m_Light->GetDiffuseColor());
+		m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
 	if (!result)
 	{
 		return false;
 	}
 
+<<<<<<< Updated upstream
+=======
+	
+
+>>>>>>> Stashed changes
 	// Present the rendered scene to the screen.
 	m_Direct3D->EndScene();
 

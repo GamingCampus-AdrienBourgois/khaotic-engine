@@ -18,7 +18,11 @@ ModelClass::~ModelClass()
 {
 }
 
+<<<<<<< Updated upstream
 bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFilename)
+=======
+bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* modelFilename, char* textureFilename1, char* textureFilename2, char* textureFilename3)
+>>>>>>> Stashed changes
 {
 	bool result;
 
@@ -30,7 +34,7 @@ bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 		return false;
 	}
 	// Load the texture for this model.
-	result = LoadTexture(device, deviceContext, textureFilename);
+	result = LoadTexture(device, deviceContext, textureFilename1, textureFilename2, textureFilename3);
 	if (!result)
 	{
 		return false;
@@ -221,15 +225,27 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	return;
 }
 
-bool ModelClass::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* filename)
+bool ModelClass::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* filename1, char* filename2, char* filename3)
 {
 	bool result;
 
 
 	// Create and initialize the texture object.
-	m_Texture = new TextureClass;
+	m_Texture = new TextureClass[3];
 
-	result = m_Texture->Initialize(device, deviceContext, filename);
+	result = m_Texture[0].Initialize(device, deviceContext, filename1);
+	if (!result)
+	{
+		return false;
+	}
+
+	result = m_Texture[1].Initialize(device, deviceContext, filename2);
+	if (!result)
+	{
+		return false;
+	}
+
+	result = m_Texture[2].Initialize(device, deviceContext, filename3);
 	if (!result)
 	{
 		return false;
@@ -244,6 +260,9 @@ void ModelClass::ReleaseTexture()
 	if (m_Texture)
 	{
 		m_Texture->Shutdown();
+		m_Texture[0].Shutdown();
+		m_Texture[1].Shutdown();
+		m_Texture[2].Shutdown();
 		delete m_Texture;
 		m_Texture = 0;
 	}

@@ -29,9 +29,24 @@ public:
     XMFLOAT3 GetDirection();
     XMFLOAT4 GetDiffuseColor();
 
+<<<<<<< Updated upstream:enginecustom/Lightclass.h
 private:
     XMFLOAT4 m_diffuseColor;
     XMFLOAT3 m_direction;
+=======
+	void SetAmbientColor(float, float, float, float);
+	void SetDiffuseColor(float, float, float, float);
+	void SetDirection(float, float, float);
+	
+	XMFLOAT4 GetAmbientColor();
+	XMFLOAT4 GetDiffuseColor();
+	XMFLOAT3 GetDirection();
+	
+private:
+	XMFLOAT4 m_ambientColor;
+	XMFLOAT4 m_diffuseColor;
+	XMFLOAT3 m_direction;
+>>>>>>> Stashed changes:enginecustom/lightclass.h
 };
 
 #endif

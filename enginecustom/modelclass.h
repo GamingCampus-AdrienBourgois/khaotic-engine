@@ -34,7 +34,11 @@ public:
 	ModelClass(const ModelClass&);
 	~ModelClass();
 
+<<<<<<< Updated upstream
 	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, char*);
+=======
+	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, char*, char*, char*, char*);
+>>>>>>> Stashed changes
 	void Shutdown();
 	void Render(ID3D11DeviceContext*);
 
@@ -46,7 +50,7 @@ private:
 	bool InitializeBuffers(ID3D11Device*);
 	void ShutdownBuffers();
 	void RenderBuffers(ID3D11DeviceContext*);
-	bool LoadTexture(ID3D11Device*, ID3D11DeviceContext*, char*);
+	bool LoadTexture(ID3D11Device*, ID3D11DeviceContext*, char*, char*, char*);
 	void ReleaseTexture();
 
 private:

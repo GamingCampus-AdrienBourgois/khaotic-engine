@@ -20,6 +20,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Alphamapshaderclass.cpp" />
     <ClCompile Include="applicationclass.cpp" />
     <ClCompile Include="Cameraclass.cpp" />
     <ClCompile Include="Colorshaderclass.cpp" />
@@ -34,13 +35,22 @@
     <ClCompile Include="textureshaderclass.cpp" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< Updated upstream
+=======
+    <ClInclude Include="Alphamapshaderclass.h" />
+>>>>>>> Stashed changes
     <ClInclude Include="applicationclass.h" />
     <ClInclude Include="Cameraclass.h" />
     <ClInclude Include="Colorshaderclass.h" />
     <ClInclude Include="d3dclass.h" />
     <ClInclude Include="inputclass.h" />
+<<<<<<< Updated upstream
     <ClInclude Include="Lightclass.h" />
     <ClInclude Include="Lightshaderclass.h" />
+=======
+    <ClInclude Include="lightclass.h" />
+    <ClInclude Include="lightshaderclass.h" />
+>>>>>>> Stashed changes
     <ClInclude Include="modelclass.h" />
     <ClInclude Include="systemclass.h" />
     <ClInclude Include="textureclass.h" />

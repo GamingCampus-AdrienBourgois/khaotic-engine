@@ -26,6 +26,17 @@ private:
 		XMMATRIX projection;
 	};
 
+<<<<<<< Updated upstream:enginecustom/textureshaderclass.h
+=======
+	struct LightBufferType
+	{
+		XMFLOAT4 ambientColor;
+		XMFLOAT4 diffuseColor;
+		XMFLOAT3 lightDirection;
+		float padding;  // Added extra padding so structure is a multiple of 16 for CreateBuffer function requirements.
+	};
+
+>>>>>>> Stashed changes:enginecustom/lightshaderclass.h
 public:
 	TextureShaderClass();
 	TextureShaderClass(const TextureShaderClass&);
@@ -33,14 +44,23 @@ public:
 
 	bool Initialize(ID3D11Device*, HWND);
 	void Shutdown();
+<<<<<<< Updated upstream:enginecustom/textureshaderclass.h
 	bool Render(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*);
+=======
+	
+	bool Render(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, XMFLOAT3, XMFLOAT4, XMFLOAT4);
+>>>>>>> Stashed changes:enginecustom/lightshaderclass.h
 
 private:
 	bool InitializeShader(ID3D11Device*, HWND, WCHAR*, WCHAR*);
 	void ShutdownShader();
 	void OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*);
 
+<<<<<<< Updated upstream:enginecustom/textureshaderclass.h
 	bool SetShaderParameters(ID3D11DeviceContext*, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*);
+=======
+	bool SetShaderParameters(ID3D11DeviceContext*, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, XMFLOAT3, XMFLOAT4, XMFLOAT4);
+>>>>>>> Stashed changes:enginecustom/lightshaderclass.h
 	void RenderShader(ID3D11DeviceContext*, int);
 
 private:
