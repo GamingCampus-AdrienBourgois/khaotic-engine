@@ -90,11 +90,6 @@
   <ItemGroup>
     <Text Include="cube.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="sphere.obj">
-      <FileType>Document</FileType>
-    </None>
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
