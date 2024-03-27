@@ -144,13 +144,21 @@ void ApplicationClass::Shutdown()
 		m_Direct3D = 0;
 	}
 
-	// Lib�rez la m�moire pour chaque cube
+	// Liberez la memoire pour chaque cube
 	for (auto cube : m_cubes)
 	{
 		cube->Shutdown();
 		delete cube;
 	}
 	m_cubes.clear();
+
+	// Liberez la memoire pour chaque cube du terrain
+	for (auto cube : m_terrainCubes)
+	{
+		cube->Shutdown();
+		delete cube;
+	}
+	m_terrainCubes.clear();
 
 	return;
 }
@@ -228,8 +236,27 @@ bool ApplicationClass::Render(float rotation)
 		srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
 		worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
-    result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(),
+		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(),
                                    diffuseColor, lightPosition);
+		if (!result)
+		{
+			return false;
+		}
+	}
+
+	// Render terrainCube
+	for (auto cube : m_terrainCubes)
+	{
+		cube->Render(m_Direct3D->GetDeviceContext());
+
+		scaleMatrix = cube->GetScaleMatrix();
+		rotateMatrix = cube->GetRotateMatrix();
+		translateMatrix = cube->GetTranslateMatrix();
+		srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
+		worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+
+		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(),
+						diffuseColor, lightPosition);
 		if (!result)
 		{
 			return false;
@@ -278,9 +305,13 @@ void ApplicationClass::GenerateTerrain()
 
 			newCube->SetTranslateMatrix(XMMatrixTranslation(i * 2.0f, -4.0f, j * 2.0f));
 
-			m_cubes.push_back(newCube);
+			m_terrainCubes.push_back(newCube);
 		}
 	}
+
+	// Combine all the cubes into a single model
+	// TODO: Uncomment this line when you have implemented the CombineModels function in ModelClass
+	//m_Model->CombineModels(m_terrainCubes);
 	
 }
 

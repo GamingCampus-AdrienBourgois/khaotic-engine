@@ -61,6 +61,7 @@ private:
 	LightClass* m_Light;
 	float speed = 0.1f;
 	std::vector<Object*> m_cubes;
+	std::vector<Object*> m_terrainCubes;
 	Object* m_SelectedObject;
 	LightClass* m_Lights;
 	int m_numLights;
