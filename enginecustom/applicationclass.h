@@ -11,7 +11,10 @@
 #include "lightshaderclass.h"
 #include "lightclass.h"
 #include "multitextureshaderclass.h"
-#include "modelclass.h"
+#include "bitmapclass.h"
+#include "textureshaderclass.h"
+#include "spriteclass.h"
+#include "timerclass.h"
 
 /////////////
 // GLOBALS //
@@ -37,8 +40,7 @@ public:
 	bool Frame();
 
 private:
-	bool Render(float);
-
+	bool Render(float, float, float, float);
 private:
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
@@ -46,6 +48,10 @@ private:
 	LightClass* m_Light;
 	MultiTextureShaderClass* m_MultiTextureShader;
 	ModelClass* m_Model;
+	TextureShaderClass* m_TextureShader;
+	BitmapClass* m_Bitmap;
+	SpriteClass* m_Sprite;
+    TimerClass* m_Timer;
 };
 
 #endif

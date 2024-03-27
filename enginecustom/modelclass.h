@@ -8,6 +8,9 @@
 #include <d3d11.h>
 #include <directxmath.h>
 #include <fstream>
+#include <sstream>
+#include <vector>
+#include <string>
 using namespace DirectX;
 using namespace std;
 
@@ -38,6 +41,23 @@ private:
 		float nx, ny, nz;
 	};
 
+	struct Vertex {
+		float x, y, z;
+	};
+
+	struct Texture {
+		float u, v;
+	};
+
+	struct Normal {
+		float nx, ny, nz;
+	};
+
+	struct Face {
+		int v1, v2, v3;
+		int t1, t2, t3;
+		int n1, n2, n3;
+	};
 
 public:
 	ModelClass();

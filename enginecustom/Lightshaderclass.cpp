@@ -39,19 +39,13 @@ bool LightShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
         return false;
     }
 
-	// Set the filename of the vertex shader.
-	error = wcscpy_s(vsFilename, 128, L"light.vs");
-	if (error != 0)
-	{
-		return false;
-	}
+    // Set the filename of the pixel shader.
+    error = wcscpy_s(psFilename, 128, L"./Light.ps");
+    if (error != 0)
+    {
+        return false;
+    }
 
-	// Set the filename of the pixel shader.
-	error = wcscpy_s(psFilename, 128, L"light.ps");
-	if (error != 0)
-	{
-		return false;
-	}
     // Initialize the vertex and pixel shaders.
     result = InitializeShader(device, hwnd, vsFilename, psFilename);
     if (!result)
@@ -72,17 +66,17 @@ void LightShaderClass::Shutdown()
 }
 
 bool LightShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
-	ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 ambientColor, XMFLOAT4 diffuseColor)
+    ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor)
 {
     bool result;
 
 
-	// Set the shader parameters that it will use for rendering.
-	result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, lightDirection, ambientColor, diffuseColor);
-	if(!result)
-	{
-		return false;
-	}
+    // Set the shader parameters that it will use for rendering.
+    result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, lightDirection, diffuseColor);
+    if (!result)
+    {
+        return false;
+    }
 
     // Now render the prepared buffers with the shader.
     RenderShader(deviceContext, indexCount);
@@ -345,9 +339,8 @@ void LightShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND h
     return;
 }
 
-
 bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
-	ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 ambientColor, XMFLOAT4 diffuseColor)
+    ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor)
 {
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -398,11 +391,10 @@ bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
     // Get a pointer to the data in the constant buffer.
     dataPtr2 = (LightBufferType*)mappedResource.pData;
 
-	// Copy the lighting variables into the constant buffer.
-	dataPtr2->ambientColor = ambientColor;
-	dataPtr2->diffuseColor = diffuseColor;
-	dataPtr2->lightDirection = lightDirection;
-	dataPtr2->padding = 0.0f;
+    // Copy the lighting variables into the constant buffer.
+    dataPtr2->diffuseColor = diffuseColor;
+    dataPtr2->lightDirection = lightDirection;
+    dataPtr2->padding = 0.0f;
 
     // Unlock the constant buffer.
     deviceContext->Unmap(m_lightBuffer, 0);
