@@ -59,6 +59,8 @@ private:
 	float speed = 0.1f;
 	std::vector<Object*> m_cubes;
 	Object* m_SelectedObject;
+	LightClass* m_Lights;
+	int m_numLights;
 };
 
 #endif

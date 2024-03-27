@@ -6,7 +6,7 @@ ApplicationClass::ApplicationClass()
 	m_Camera = 0;
 	m_Model = 0;
 	m_LightShader = 0;
-	m_Light = 0;
+	m_Lights = 0;
 }
 
 
@@ -48,7 +48,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
+	m_Camera->SetPosition(0.0f, 2.0f, -12.0f);
 	m_Camera->SetRotation(0.0f, 0.0f, 10.0f);
 
 	// Set the file name of the model.
@@ -76,6 +76,24 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize the light shader object.", L"Error", MB_OK);
 		return false;
 	}
+	// Set the number of lights we will use.
+	m_numLights = 4;
+
+	// Create and initialize the light objects array.
+	m_Lights = new LightClass[m_numLights];
+
+	// Manually set the color and position of each light.
+	m_Lights[0].SetDiffuseColor(1.0f, 0.0f, 0.0f, 1.0f);  // Red
+	m_Lights[0].SetPosition(-3.0f, 1.0f, 3.0f);
+
+	m_Lights[1].SetDiffuseColor(0.0f, 1.0f, 0.0f, 1.0f);  // Green
+	m_Lights[1].SetPosition(3.0f, 1.0f, 3.0f);
+
+	m_Lights[2].SetDiffuseColor(0.0f, 0.0f, 1.0f, 1.0f);  // Blue
+	m_Lights[2].SetPosition(-3.0f, 1.0f, -3.0f);
+
+	m_Lights[3].SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);  // White
+	m_Lights[3].SetPosition(3.0f, 1.0f, -3.0f);
 	// Create and initialize the light object.
 	m_Light = new LightClass;
 
@@ -89,10 +107,10 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 void ApplicationClass::Shutdown()
 {
 	// Release the light object.
-	if (m_Light)
+	if (m_Lights)
 	{
-		delete m_Light;
-		m_Light = 0;
+		delete m_Lights;
+		m_Lights = 0;
 	}
 
 	// Release the light shader object.
@@ -163,7 +181,9 @@ bool ApplicationClass::Frame()
 
 bool ApplicationClass::Render(float rotation)
 {
-	XMMATRIX worldMatrix, rotateMatrix, translateMatrix, scaleMatrix, srMatrix;
+	XMMATRIX worldMatrix, rotateMatrix, translateMatrix, scaleMatrix, srMatrix, viewMatrix, projectionMatrix;;
+	XMFLOAT4 diffuseColor[4], lightPosition[4];
+	int i;
 	bool result;
 
 
@@ -175,6 +195,21 @@ bool ApplicationClass::Render(float rotation)
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
 	m_Direct3D->GetWorldMatrix(worldMatrix);
+	viewMatrix = m_Camera->GetViewMatrix();
+	m_Direct3D->GetProjectionMatrix(projectionMatrix);
+
+	// Get the light properties.
+	for (i = 0; i < m_numLights; i++)
+	{
+		// Create the diffuse color array from the four light colors.
+		diffuseColor[i] = m_Lights[i].GetDiffuseColor();
+
+		// Create the light position array from the four light positions.
+		lightPosition[i] = m_Lights[i].GetPosition();
+	}
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
 
 	for (auto cube : m_cubes)
 	{
@@ -186,8 +221,8 @@ bool ApplicationClass::Render(float rotation)
 		srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
 		worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
-		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), cube->GetIndexCount(), worldMatrix, m_Camera->GetViewMatrix(), m_Direct3D->GetProjectionMatrix(), cube->GetTexture(),
-						m_Light->GetDirection(), m_Light->GetDiffuseColor());
+    result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(),
+                                   diffuseColor, lightPosition);
 		if (!result)
 		{
 			return false;
