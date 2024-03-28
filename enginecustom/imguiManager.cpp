@@ -132,12 +132,25 @@ void imguiManager::WidgetObjectWindow(ApplicationClass* app)
 	ImGui::End();
 }
 
-void imguiManager::WidgetTestTerrain(ApplicationClass* app)
+void imguiManager::WidgetTerrainWindow(ApplicationClass* app)
 {
+	ImGui::Begin("Terrain");
+
+	ImGui::Text("Number of terrain cubes: %d", app->GetTerrainCubeCount());
+
 	ImGui::Separator();
 
 	if (ImGui::Button("Generate Terrain"))
 	{
 		app->GenerateTerrain();
 	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Delete All Terrain Cubes"))
+	{
+		app->DeleteTerrain();
+	}
+
+	ImGui::End();
 }

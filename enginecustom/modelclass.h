@@ -23,7 +23,7 @@ using namespace std;
 ////////////////////////////////////////////////////////////////////////////////
 class ModelClass
 {
-private:
+protected:
 
 	struct VertexType
 	{
@@ -65,10 +65,11 @@ private:
 
 private:
 	ID3D11Buffer* m_vertexBuffer, * m_indexBuffer;
-	int m_vertexCount, m_indexCount;
 	TextureClass* m_Texture;
 
+protected:
 	ModelType* m_model;
+	int m_vertexCount, m_indexCount;
 };
 
 #endif

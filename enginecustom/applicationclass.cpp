@@ -244,7 +244,7 @@ bool ApplicationClass::Render(float rotation)
 		}
 	}
 
-	// Render terrainCube
+	// Render terrainCube after all the cubes have been combined
 	for (auto cube : m_terrainCubes)
 	{
 		cube->Render(m_Direct3D->GetDeviceContext());
@@ -262,6 +262,8 @@ bool ApplicationClass::Render(float rotation)
 			return false;
 		}
 	}
+
+
 
 	// Present the rendered scene to the screen.
 	m_Direct3D->EndScene();
@@ -309,9 +311,7 @@ void ApplicationClass::GenerateTerrain()
 		}
 	}
 
-	// Combine all the cubes into a single model
-	// TODO: Uncomment this line when you have implemented the CombineModels function in ModelClass
-	//m_Model->CombineModels(m_terrainCubes);
+	
 	
 }
 
@@ -343,4 +343,14 @@ void ApplicationClass::DeleteCube(int index)
 		delete m_cubes[index];
 		m_cubes.erase(m_cubes.begin() + index);
 	}
+}
+
+void ApplicationClass::DeleteTerrain()
+{
+	for (auto cube : m_terrainCubes)
+	{
+		cube->Shutdown();
+		delete cube;
+	}
+	m_terrainCubes.clear();
 }

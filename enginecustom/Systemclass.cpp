@@ -164,7 +164,7 @@ bool SystemClass::Frame()
 	m_imguiManager->WidgetFPS();
 	m_imguiManager->WidgetAddObject(m_Application);
 	m_imguiManager->WidgetObjectWindow(m_Application);
-	m_imguiManager->WidgetTestTerrain(m_Application);
+	m_imguiManager->WidgetTerrainWindow(m_Application);
 
 	ImGui::End();
 

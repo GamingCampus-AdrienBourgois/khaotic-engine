@@ -36,4 +36,5 @@ private:
 	XMMATRIX m_translateMatrix;
 	XMMATRIX m_srMatrix;
 	XMMATRIX m_worldMatrix;
+
 };

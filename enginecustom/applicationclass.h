@@ -45,9 +45,13 @@ public:
 	void AddCube();
 	void DeleteCube(int index);
 	int GetCubeCount() const { return m_cubes.size(); };
+	int GetTerrainCubeCount() const { return m_terrainCubes.size(); };
 	std::vector<Object*> GetCubes() const { return m_cubes; };
+	std::vector<Object*> GetTerrainCubes() const { return m_terrainCubes; };
 
 	void GenerateTerrain();
+	void DeleteTerrain();
+	
 
 private:
 	bool Render(float);
@@ -60,11 +64,11 @@ private:
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
 	float speed = 0.1f;
-	std::vector<Object*> m_cubes;
-	std::vector<Object*> m_terrainCubes;
 	Object* m_SelectedObject;
 	LightClass* m_Lights;
 	int m_numLights;
+	std::vector<Object*> m_cubes;
+	std::vector<Object*> m_terrainCubes;
 };
 
 #endif
