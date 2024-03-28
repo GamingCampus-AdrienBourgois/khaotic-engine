@@ -52,6 +52,8 @@ private:
 	BitmapClass* m_Bitmap;
 	SpriteClass* m_Sprite;
     TimerClass* m_Timer;
+	LightClass* m_Lights;
+	int m_numLights;
 };
 
 #endif
