@@ -14,6 +14,7 @@
 #include "bitmapclass.h"
 #include "textureshaderclass.h"
 #include "spriteclass.h"
+#include "fogshaderclass.h"
 #include "timerclass.h"
 
 /////////////
@@ -41,6 +42,7 @@ public:
 
 private:
 	bool Render(float, float, float, float);
+
 private:
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
@@ -51,6 +53,7 @@ private:
 	TextureShaderClass* m_TextureShader;
 	BitmapClass* m_Bitmap;
 	SpriteClass* m_Sprite;
+	FogShaderClass* m_FogShader;
     TimerClass* m_Timer;
 };
 

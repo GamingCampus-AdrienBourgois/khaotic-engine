@@ -25,6 +25,7 @@
     <ClCompile Include="Cameraclass.cpp" />
     <ClCompile Include="Colorshaderclass.cpp" />
     <ClCompile Include="d3dclass.cpp" />
+    <ClCompile Include="fogshaderclass.cpp" />
     <ClCompile Include="inputclass.cpp" />
     <ClCompile Include="Lightclass.cpp" />
     <ClCompile Include="Lightshaderclass.cpp" />
@@ -43,6 +44,7 @@
     <ClInclude Include="Cameraclass.h" />
     <ClInclude Include="Colorshaderclass.h" />
     <ClInclude Include="d3dclass.h" />
+    <ClInclude Include="fogshaderclass.h" />
     <ClInclude Include="inputclass.h" />
     <ClInclude Include="lightclass.h" />
     <ClInclude Include="lightshaderclass.h" />
@@ -55,6 +57,8 @@
     <ClInclude Include="Timerclass.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="fog.ps" />
+    <None Include="fog.vs" />
     <None Include="light.ps" />
     <None Include="light.vs" />
     <None Include="Multitexture.ps" />

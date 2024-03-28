@@ -1,172 +1,62 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Fichiers sources">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Fichiers d%27en-tête">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Fichiers de ressources">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="shader">
-      <UniqueIdentifier>{b016e481-576e-4d99-bdde-34cc10c55b1d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="texture">
-      <UniqueIdentifier>{f76f9761-bbbe-42a8-935d-01f1b9172c38}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="assets">
-      <UniqueIdentifier>{741e1efe-db9b-48a7-9ecb-4c34a696f40e}</UniqueIdentifier>
-    </Filter>
+    <ClCompile Include="applicationclass.cpp" />
+    <ClCompile Include="bitmapclass.cpp" />
+    <ClCompile Include="Cameraclass.cpp" />
+    <ClCompile Include="Colorshaderclass.cpp" />
+    <ClCompile Include="d3dclass.cpp" />
+    <ClCompile Include="inputclass.cpp" />
+    <ClCompile Include="Lightclass.cpp" />
+    <ClCompile Include="Lightshaderclass.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="modelclass.cpp" />
+    <ClCompile Include="Multitextureshaderclass.cpp" />
+    <ClCompile Include="Spriteclass.cpp" />
+    <ClCompile Include="Systemclass.cpp" />
+    <ClCompile Include="textureclass.cpp" />
+    <ClCompile Include="textureshaderclass.cpp" />
+    <ClCompile Include="Timerclass.cpp" />
+    <ClCompile Include="fogshaderclass.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Systemclass.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="inputclass.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="applicationclass.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="d3dclass.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Colorshaderclass.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="modelclass.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Cameraclass.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="textureclass.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="lightshaderclass.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="lightclass.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Multitextureshaderclass.cpp">
-    <ClCompile Include="bitmapclass.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="textureshaderclass.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Spriteclass.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Timerclass.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
+    <ClInclude Include="applicationclass.h" />
+    <ClInclude Include="bitmapclass.h" />
+    <ClInclude Include="Cameraclass.h" />
+    <ClInclude Include="Colorshaderclass.h" />
+    <ClInclude Include="d3dclass.h" />
+    <ClInclude Include="inputclass.h" />
+    <ClInclude Include="lightclass.h" />
+    <ClInclude Include="lightshaderclass.h" />
+    <ClInclude Include="modelclass.h" />
+    <ClInclude Include="Multitextureshaderclass.h" />
+    <ClInclude Include="Spriteclass.h" />
+    <ClInclude Include="systemclass.h" />
+    <ClInclude Include="textureclass.h" />
+    <ClInclude Include="textureshaderclass.h" />
+    <ClInclude Include="Timerclass.h" />
+    <ClInclude Include="fogshaderclass.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="systemclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="inputclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="applicationclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="d3dclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Colorshaderclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="modelclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Cameraclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="textureclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="lightshaderclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Multitextureshaderclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="lightclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Lightshaderclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Lightclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="bitmapclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="textureshaderclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Spriteclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Timerclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
+    <Image Include="moss01.tga" />
+    <Image Include="papier.tga" />
+    <Image Include="stone01.tga" />
+    <Image Include="wall.tga" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="Color.ps">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="Color.vs">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="light.vs">
-      <Filter>texture</Filter>
-    </None>
-    <None Include="light.ps">
-      <Filter>texture</Filter>
-    </None>
-    <None Include="Multitexture.vs" />
+    <None Include="light.ps" />
+    <None Include="light.vs" />
     <None Include="Multitexture.ps" />
-    <None Include="texture.ps">
-      <Filter>texture</Filter>
-    </None>
-    <None Include="texture.vs">
-      <Filter>texture</Filter>
-    </None>
-    <None Include="sphere.obj">
-      <Filter>assets</Filter>
-    </None>
+    <None Include="Multitexture.vs" />
+    <None Include="packages.config" />
+    <None Include="texture.ps" />
+    <None Include="texture.vs" />
+    <None Include="Color.ps" />
+    <None Include="Color.vs" />
+    <None Include="fog.vs" />
+    <None Include="fog.ps" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="wall.tga">
-      <Filter>assets</Filter>
-    </Image>
-    <Image Include="stone01.tga">
-      <Filter>assets</Filter>
-    </Image>
-    <Image Include="papier.tga">
-      <Filter>assets</Filter>
-    </Image>
-    <Image Include="moss01.tga">
-      <Filter>assets</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="cube.txt">
-      <Filter>assets</Filter>
-    </Text>
+    <Text Include="cube.txt" />
   </ItemGroup>
 </Project>

@@ -11,6 +11,7 @@ ApplicationClass::ApplicationClass()
 	m_TextureShader = 0;
 	m_Bitmap = 0;
 	m_Sprite = 0;
+	m_FogShader = 0;
 	m_Timer = 0;
 }
 
@@ -130,23 +131,32 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	// Create and initialize the fog shader object.
+	m_FogShader = new FogShaderClass;
 
-	// Create and initialize the light shader object.
-	m_LightShader = new LightShaderClass;
-
-	result = m_LightShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	result = m_FogShader->Initialize(m_Direct3D->GetDevice(), hwnd);
 	if (!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the light shader object.", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialize the fog shader object.", L"Error", MB_OK);
 		return false;
 	}
 
-	// Create and initialize the light object.
-	m_Light = new LightClass;
+	//// Create and initialize the light shader object.
+	//m_LightShader = new LightShaderClass;
 
-	m_Light->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
-	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetDirection(1.0f, 0.0f, 0.0f);
+	//result = m_LightShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	//if (!result)
+	//{
+	//	MessageBox(hwnd, L"Could not initialize the light shader object.", L"Error", MB_OK);
+	//	return false;
+	//}
+
+	//// Create and initialize the light object.
+	//m_Light = new LightClass;
+
+	//m_Light->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
+	//m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
+	//m_Light->SetDirection(1.0f, 0.0f, 0.0f);
 
 	return true;
 }
@@ -169,19 +179,19 @@ void ApplicationClass::Shutdown()
 		m_Sprite = 0;
 	}
 
+	// Release the fog shader object.
+	if (m_FogShader)
+	{
+		m_FogShader->Shutdown();
+		delete m_FogShader;
+		m_FogShader = 0;
+	}
+
 	// Release the light object.
 	if (m_Light)
 	{
 		delete m_Light;
 		m_Light = 0;
-	}
-
-	// Release the light shader object.
-	if (m_LightShader)
-	{
-		m_LightShader->Shutdown();
-		delete m_LightShader;
-		m_LightShader = 0;
 	}
 
 	// Release the light shader object.
@@ -290,10 +300,18 @@ bool ApplicationClass::Frame()
 bool ApplicationClass::Render(float rotation, float x, float y, float z)
 {
 	XMMATRIX worldMatrix, viewMatrix, orthoMatrix, projectionMatrix, rotateMatrix, translateMatrix, scaleMatrix, srMatrix;
+	float fogColor, fogStart, fogEnd;
 	bool result;
 
+	// Set the color of the fog to grey.
+	fogColor = 0.5f;
+
+	// Set the start and end of the fog.
+	fogStart = 0.0f;
+	fogEnd = 10.0f;
+
 	// Clear the buffers to begin the scene.
-	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
+	m_Direct3D->BeginScene(fogColor, fogColor, fogColor, 1.0f);
 
 	// Generate the view matrix based on the camera's position.
 	m_Camera->Render();
@@ -353,6 +371,13 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 
 	// Render the model using the multitexture shader.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_FogShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0), 
+		fogStart, fogEnd);
+	if (!result)
+	{
+		return false;
+	}
 
 	// Render the model using the light shader.
 	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
