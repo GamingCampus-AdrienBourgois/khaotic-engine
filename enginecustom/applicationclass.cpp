@@ -58,7 +58,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 2.0f, -12.0f);
+	m_Camera->SetPosition(0.0f, 0.0f, -12.0f);
 	m_Camera->SetRotation(0.0f, 0.0f, 0.0f);
 
 	// Create and initialize the texture shader object.
@@ -115,7 +115,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Set the file name of the model.
-	strcpy_s(modelFilename, "plane.txt");
+	strcpy_s(modelFilename, "cube.txt");
 
 	// Set the file name of the textures.
 	strcpy_s(textureFilename1, "stone01.tga");
@@ -362,9 +362,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 		lightPosition[i] = m_Lights[i].GetPosition();
 	}
 
-	// Render the model using the multitexture shader.
-	result = m_MultiTextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-		m_Model->GetTexture(0), m_Model->GetTexture(1));
+
 
 	scaleMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);  // Build the scaling matrix.
 	rotateMatrix = XMMatrixRotationY(rotation);  // Build the rotation matrix.
@@ -395,6 +393,10 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	{
 		return false;
 	}
+
+	// Render the model using the multitexture shader.
+	result = m_MultiTextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0), m_Model->GetTexture(1));
 
 	// Turn the Z buffer back on now that all 2D rendering has completed.
 	m_Direct3D->TurnZBufferOn();
