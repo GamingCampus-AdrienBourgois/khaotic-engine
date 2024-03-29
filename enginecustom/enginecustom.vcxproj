@@ -20,31 +20,42 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="alphamapshaderclass.cpp" />
     <ClCompile Include="applicationclass.cpp" />
     <ClCompile Include="bitmapclass.cpp" />
     <ClCompile Include="Cameraclass.cpp" />
     <ClCompile Include="Colorshaderclass.cpp" />
     <ClCompile Include="d3dclass.cpp" />
+    <ClCompile Include="fontclass.cpp" />
+    <ClCompile Include="fontshaderclass.cpp" />
+    <ClCompile Include="fpsclass.cpp" />
     <ClCompile Include="inputclass.cpp" />
     <ClCompile Include="Lightclass.cpp" />
+    <ClCompile Include="lightmapshaderclass.cpp" />
     <ClCompile Include="Lightshaderclass.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="modelclass.cpp" />
     <ClCompile Include="Multitextureshaderclass.cpp" />
     <ClCompile Include="Spriteclass.cpp" />
     <ClCompile Include="Systemclass.cpp" />
+    <ClCompile Include="textclass.cpp" />
     <ClCompile Include="textureclass.cpp" />
     <ClCompile Include="textureshaderclass.cpp" />
     <ClCompile Include="Timerclass.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="alphamapshaderclass.h" />
     <ClInclude Include="applicationclass.h" />
     <ClInclude Include="bitmapclass.h" />
     <ClInclude Include="Cameraclass.h" />
     <ClInclude Include="Colorshaderclass.h" />
     <ClInclude Include="d3dclass.h" />
+    <ClInclude Include="fontclass.h" />
+    <ClInclude Include="fontshaderclass.h" />
+    <ClInclude Include="fpsclass.h" />
     <ClInclude Include="inputclass.h" />
     <ClInclude Include="lightclass.h" />
+    <ClInclude Include="lightmapshaderclass.h" />
     <ClInclude Include="lightshaderclass.h" />
     <ClInclude Include="modelclass.h" />
     <ClInclude Include="Multitextureshaderclass.h" />
@@ -56,8 +67,14 @@
     <ClInclude Include="Timerclass.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="alphamap.ps" />
+    <None Include="alphamap.vs" />
+    <None Include="font.ps" />
+    <None Include="font.vs" />
     <None Include="light.ps" />
     <None Include="light.vs" />
+    <None Include="lightmap.ps" />
+    <None Include="lightmap.vs" />
     <None Include="Multitexture.ps" />
     <None Include="Multitexture.vs" />
     <None Include="packages.config" />
@@ -83,6 +100,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="alpha01.tga" />
+    <Image Include="dirt01.tga" />
+    <Image Include="font01.tga" />
+    <Image Include="light01.tga" />
     <Image Include="moss01.tga" />
     <Image Include="papier.tga" />
     <Image Include="stone01.tga" />
@@ -90,7 +111,10 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="cube.txt" />
+    <Text Include="font01.txt" />
+    <Text Include="plane.txt" />
     <Text Include="sphere.txt" />
+    <Text Include="square.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

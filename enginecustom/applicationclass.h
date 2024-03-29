@@ -10,12 +10,17 @@
 #include "modelclass.h"
 #include "lightshaderclass.h"
 #include "lightclass.h"
+#include "lightmapshaderclass.h"
 #include "multitextureshaderclass.h"
+#include "alphamapshaderclass.h"
 #include "bitmapclass.h"
 #include "textureshaderclass.h"
 #include "spriteclass.h"
 #include "timerclass.h"
+#include "fontshaderclass.h"
+#include "fontclass.h"
 #include "textclass.h"
+#include "fpsclass.h"
 
 /////////////
 // GLOBALS //
@@ -43,19 +48,29 @@ public:
 private:
 	bool Render(float, float, float, float);
 	bool UpdateMouseStrings(int, int, bool);
-
+	bool UpdateFps();
 private:
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
+	LightMapShaderClass* m_LightMapShader;
 	MultiTextureShaderClass* m_MultiTextureShader;
+	AlphaMapShaderClass* m_AlphaMapShader;
 	ModelClass* m_Model;
 	TextureShaderClass* m_TextureShader;
 	BitmapClass* m_Bitmap;
 	SpriteClass* m_Sprite;
     TimerClass* m_Timer;
 	TextClass* m_MouseStrings;
+	LightClass* m_Lights;
+	int m_numLights;
+	FontShaderClass* m_FontShader;
+	FontClass* m_Font;
+	TextClass *m_TextString1, *m_TextString2, *m_TextString3;
+	FpsClass* m_Fps;
+	TextClass* m_FpsString;
+	int m_previousFps;
 };
 
 #endif
