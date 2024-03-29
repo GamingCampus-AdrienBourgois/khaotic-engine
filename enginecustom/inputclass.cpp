@@ -30,8 +30,6 @@ bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int
 		m_keys[i] = false;
 	}
 
-	return;
-
 	// Store the screen size which will be used for positioning the mouse cursor.
 	m_screenWidth = screenWidth;
 	m_screenHeight = screenHeight;

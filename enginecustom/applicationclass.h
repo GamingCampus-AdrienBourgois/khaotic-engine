@@ -21,6 +21,7 @@
 #include "fontclass.h"
 #include "textclass.h"
 #include "fpsclass.h"
+#include "inputclass.h"
 
 /////////////
 // GLOBALS //
@@ -49,6 +50,7 @@ private:
 	bool Render(float, float, float, float);
 	bool UpdateMouseStrings(int, int, bool);
 	bool UpdateFps();
+
 private:
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;

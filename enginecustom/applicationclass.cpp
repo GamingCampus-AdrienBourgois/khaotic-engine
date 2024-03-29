@@ -305,6 +305,7 @@ void ApplicationClass::Shutdown()
 
 		delete[] m_MouseStrings;
 		m_MouseStrings = 0;
+	}
 	// Release the text object for the fps string.
 	if (m_FpsString)
 	{
@@ -472,10 +473,12 @@ bool ApplicationClass::Frame(InputClass* Input)
 	static float x = 6.f;
 	static float y = 3.f;
 	static float z = 0.f;
-	bool result;
 
 	// Check if the user pressed escape and wants to exit the application.
 	if (Input->IsEscapePressed())
+	{
+		return false;
+	}
 
 	// Update the frames per second each frame.
 	result = UpdateFps();
@@ -502,6 +505,19 @@ bool ApplicationClass::Frame(InputClass* Input)
 
 	// Render the graphics scene.
 	result = Render(rotation, x, y, z);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Get the location of the mouse from the input object,
+	Input->GetMouseLocation(mouseX, mouseY);
+
+	// Check if the mouse has been pressed.
+	mouseDown = Input->IsMousePressed();
+
+	// Update the mouse strings each frame.
+	result = UpdateMouseStrings(mouseX, mouseY, mouseDown);
 	if (!result)
 	{
 		return false;
@@ -736,6 +752,7 @@ bool ApplicationClass::UpdateMouseStrings(int mouseX, int mouseY, bool mouseDown
 
 	// Update the sentence vertex buffer with the new string information.
 	result = m_MouseStrings[2].UpdateText(m_Direct3D->GetDeviceContext(), m_Font, finalString, 10, 60, 1.0f, 1.0f, 1.0f);
+}
 
 bool ApplicationClass::UpdateFps()
 {
