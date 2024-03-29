@@ -12,6 +12,15 @@
 #include "lightclass.h"
 #include <vector>
 
+#include "multitextureshaderclass.h"
+#include "bitmapclass.h"
+#include "textureshaderclass.h"
+#include "spriteclass.h"
+#include "timerclass.h"
+#include "fontshaderclass.h"
+#include "fontclass.h"
+#include "textclass.h"
+#include "fpsclass.h"
 
 /////////////
 // GLOBALS //
@@ -55,21 +64,32 @@ public:
 	
 
 private:
-	bool Render(float);
-
+	bool Render(float, float, float, float);
+	bool UpdateFps();
 private:
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
-	ModelClass* m_Model;
 	IDXGISwapChain* m_swapChain;
-	LightShaderClass* m_LightShader;
-	LightClass* m_Light;
 	float speed = 0.1f;
 	Object* m_SelectedObject;
-	LightClass* m_Lights;
-	int m_numLights;
 	std::vector<Object*> m_cubes;
 	std::vector<Object*> m_terrainChunk;
+	LightShaderClass* m_LightShader;
+	LightClass* m_Light;
+	MultiTextureShaderClass* m_MultiTextureShader;
+	ModelClass* m_Model;
+	TextureShaderClass* m_TextureShader;
+	BitmapClass* m_Bitmap;
+	SpriteClass* m_Sprite;
+    TimerClass* m_Timer;
+	LightClass* m_Lights;
+	int m_numLights;
+	FontShaderClass* m_FontShader;
+	FontClass* m_Font;
+	TextClass *m_TextString1, *m_TextString2, *m_TextString3;
+	FpsClass* m_Fps;
+	TextClass* m_FpsString;
+	int m_previousFps;
 };
 
 #endif

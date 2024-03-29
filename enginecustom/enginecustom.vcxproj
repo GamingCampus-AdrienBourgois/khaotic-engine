@@ -21,6 +21,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="applicationclass.cpp" />
+    <ClCompile Include="bitmapclass.cpp" />
     <ClCompile Include="Cameraclass.cpp" />
     <ClCompile Include="Colorshaderclass.cpp" />
     <ClCompile Include="d3dclass.cpp" />
@@ -32,18 +33,26 @@
     <ClCompile Include="include\imgui_draw.cpp" />
     <ClCompile Include="include\imgui_tables.cpp" />
     <ClCompile Include="include\imgui_widgets.cpp" />
+    <ClCompile Include="fontclass.cpp" />
+    <ClCompile Include="fontshaderclass.cpp" />
+    <ClCompile Include="fpsclass.cpp" />
     <ClCompile Include="inputclass.cpp" />
-    <ClCompile Include="lightclass.cpp" />
-    <ClCompile Include="lightshaderclass.cpp" />
+    <ClCompile Include="Lightclass.cpp" />
+    <ClCompile Include="Lightshaderclass.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="modelclass.cpp" />
     <ClCompile Include="object.cpp" />
+    <ClCompile Include="Multitextureshaderclass.cpp" />
+    <ClCompile Include="Spriteclass.cpp" />
     <ClCompile Include="Systemclass.cpp" />
+    <ClCompile Include="textclass.cpp" />
     <ClCompile Include="textureclass.cpp" />
+    <ClCompile Include="textureshaderclass.cpp" />
+    <ClCompile Include="Timerclass.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\dx11win10tut06_src\source\lightclass.h" />
     <ClInclude Include="applicationclass.h" />
+    <ClInclude Include="bitmapclass.h" />
     <ClInclude Include="Cameraclass.h" />
     <ClInclude Include="Colorshaderclass.h" />
     <ClInclude Include="d3dclass.h" />
@@ -56,17 +65,32 @@
     <ClInclude Include="include\imstb_rectpack.h" />
     <ClInclude Include="include\imstb_textedit.h" />
     <ClInclude Include="include\imstb_truetype.h" />
+    <ClInclude Include="fontclass.h" />
+    <ClInclude Include="fontshaderclass.h" />
+    <ClInclude Include="fpsclass.h" />
     <ClInclude Include="inputclass.h" />
+    <ClInclude Include="lightclass.h" />
     <ClInclude Include="lightshaderclass.h" />
     <ClInclude Include="modelclass.h" />
     <ClInclude Include="object.h" />
+    <ClInclude Include="Multitextureshaderclass.h" />
+    <ClInclude Include="Spriteclass.h" />
     <ClInclude Include="systemclass.h" />
+    <ClInclude Include="textclass.h" />
     <ClInclude Include="textureclass.h" />
+    <ClInclude Include="textureshaderclass.h" />
+    <ClInclude Include="Timerclass.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="font.ps" />
+    <None Include="font.vs" />
     <None Include="light.ps" />
     <None Include="light.vs" />
+    <None Include="Multitexture.ps" />
+    <None Include="Multitexture.vs" />
     <None Include="packages.config" />
+    <None Include="texture.ps" />
+    <None Include="texture.vs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Color.ps">
@@ -88,11 +112,18 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\Downloads\grass.tga" />
+    <Image Include="font01.tga" />
+    <Image Include="moss01.tga" />
+    <Image Include="papier.tga" />
     <Image Include="stone01.tga" />
+    <Image Include="wall.tga" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\..\Downloads\chunk.txt" />
     <Text Include="cube.txt" />
+    <Text Include="font01.txt" />
+    <Text Include="plane.txt" />
+    <Text Include="sphere.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

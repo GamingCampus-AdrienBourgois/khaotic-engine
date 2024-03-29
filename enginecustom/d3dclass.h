@@ -16,11 +16,13 @@
 //////////////
 // INCLUDES //
 //////////////
-#include <d3d11.h>
-#include <directxmath.h>
 #include "imguiManager.h"
-using namespace DirectX;
+#include "d3d11.h"
+#include "fontshaderclass.h"
+#include "fontclass.h"
+#include "textclass.h"
 
+using namespace DirectX;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: D3DClass
@@ -56,6 +58,12 @@ public:
 
 	void ReleaseResources();
 	void ResetResources(int newWidth, int newHeight);
+	
+	void TurnZBufferOn();
+	void TurnZBufferOff();
+
+	void EnableAlphaBlending();
+	void DisableAlphaBlending();
 
 private:
 	bool m_vsync_enabled;
@@ -72,6 +80,9 @@ private:
 	XMMATRIX m_worldMatrix;
 	XMMATRIX m_orthoMatrix;
 	D3D11_VIEWPORT m_viewport;
+	ID3D11DepthStencilState* m_depthDisabledStencilState;
+	ID3D11BlendState* m_alphaEnableBlendingState;
+	ID3D11BlendState* m_alphaDisableBlendingState;
 };
 
 #endif

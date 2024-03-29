@@ -1,3 +1,4 @@
+#pragma once
 ////////////////////////////////////////////////////////////////////////////////
 // Filename: lightclass.h
 ////////////////////////////////////////////////////////////////////////////////
@@ -18,9 +19,9 @@ using namespace DirectX;
 class LightClass
 {
 public:
-	LightClass();
-	LightClass(const LightClass&);
-	~LightClass();
+    LightClass();
+    LightClass(const LightClass&);
+    ~LightClass();
 
 	void SetAmbientColor(float, float, float, float);
 	void SetDiffuseColor(float, float, float, float);
@@ -28,13 +29,14 @@ public:
 	void SetSpecularColor(float, float, float, float);
 	void SetSpecularPower(float);
 	void SetPosition(float, float, float);
-
+	
 	XMFLOAT4 GetAmbientColor();
 	XMFLOAT4 GetDiffuseColor();
 	XMFLOAT3 GetDirection();
 	XMFLOAT4 GetSpecularColor();
 	float GetSpecularPower();
 	XMFLOAT4 GetPosition();
+	
 private:
 	XMFLOAT4 m_ambientColor;
 	XMFLOAT4 m_diffuseColor;
