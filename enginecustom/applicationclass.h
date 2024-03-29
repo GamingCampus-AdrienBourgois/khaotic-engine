@@ -12,6 +12,7 @@
 #include "lightclass.h"
 #include <vector>
 
+
 /////////////
 // GLOBALS //
 /////////////
@@ -45,9 +46,9 @@ public:
 	void AddCube();
 	void DeleteCube(int index);
 	int GetCubeCount() const { return m_cubes.size(); };
-	int GetTerrainCubeCount() const { return m_terrainCubes.size(); };
+	int GetTerrainCubeCount() const { return m_terrainChunk.size(); };
 	std::vector<Object*> GetCubes() const { return m_cubes; };
-	std::vector<Object*> GetTerrainCubes() const { return m_terrainCubes; };
+	std::vector<Object*> GetTerrainCubes() const { return m_terrainChunk; };
 
 	void GenerateTerrain();
 	void DeleteTerrain();
@@ -68,7 +69,7 @@ private:
 	LightClass* m_Lights;
 	int m_numLights;
 	std::vector<Object*> m_cubes;
-	std::vector<Object*> m_terrainCubes;
+	std::vector<Object*> m_terrainChunk;
 };
 
 #endif

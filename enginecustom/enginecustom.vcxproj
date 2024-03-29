@@ -87,9 +87,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\Downloads\grass.tga" />
     <Image Include="stone01.tga" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="..\..\..\..\Downloads\chunk.txt" />
     <Text Include="cube.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

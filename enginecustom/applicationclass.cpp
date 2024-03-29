@@ -153,12 +153,12 @@ void ApplicationClass::Shutdown()
 	m_cubes.clear();
 
 	// Liberez la memoire pour chaque cube du terrain
-	for (auto cube : m_terrainCubes)
+	for (auto cube : m_terrainChunk)
 	{
 		cube->Shutdown();
 		delete cube;
 	}
-	m_terrainCubes.clear();
+	m_terrainChunk.clear();
 
 	return;
 }
@@ -236,7 +236,7 @@ bool ApplicationClass::Render(float rotation)
 		srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
 		worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
-		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(),
+		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), cube->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, cube->GetTexture(),
                                    diffuseColor, lightPosition);
 		if (!result)
 		{
@@ -244,14 +244,15 @@ bool ApplicationClass::Render(float rotation)
 		}
 	}
 
-	// Render terrainCube after all the cubes have been combined
-	for (auto cube : m_terrainCubes)
+	// Render terrain
+	for (auto chunk : m_terrainChunk)
 	{
-		cube->Render(m_Direct3D->GetDeviceContext());
+		chunk->Render(m_Direct3D->GetDeviceContext());
 
-		scaleMatrix = cube->GetScaleMatrix();
-		rotateMatrix = cube->GetRotateMatrix();
-		translateMatrix = cube->GetTranslateMatrix();
+		scaleMatrix = chunk->GetScaleMatrix();
+		rotateMatrix = chunk->GetRotateMatrix();
+		translateMatrix = chunk->GetTranslateMatrix();
+
 		srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
 		worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
@@ -262,7 +263,6 @@ bool ApplicationClass::Render(float rotation)
 			return false;
 		}
 	}
-
 
 
 	// Present the rendered scene to the screen.
@@ -288,32 +288,27 @@ int ApplicationClass::GetScreenHeight() const
 
 void ApplicationClass::GenerateTerrain()
 {
-	char modelFilename[128];
-	char textureFilename[128];
-
 	// Set the file name of the model.
-	strcpy_s(modelFilename, "cube.txt");
+	char modelFilename[128];
+
+	// check if a chunk file already exists
+	strcpy_s(modelFilename, "chunk.txt");
 
 	// Set the name of the texture file that we will be loading.
+	char textureFilename[128];
 	strcpy_s(textureFilename, "stone01.tga");
 
-	// Create cube objects to fill a 10x10 grid of cubes
-	for (int i = -10; i < 10; i++)
-	{
-		for (int j = -10; j < 10; j++)
-		{
-			Object* newCube = new Object();
-			newCube->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename);
+	Object* newTerrain = new Object();
+	newTerrain->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename);
 
-			newCube->SetTranslateMatrix(XMMatrixTranslation(i * 2.0f, -4.0f, j * 2.0f));
+	newTerrain->SetTranslateMatrix(XMMatrixTranslation(0.0f, -1.0f, 0.0f));
+	newTerrain->SetRotateMatrix(XMMatrixRotationY(180.0f));
 
-			m_terrainCubes.push_back(newCube);
-		}
-	}
+	m_cubes.push_back(newTerrain);
 
-	
-	
 }
+
+
 
 void ApplicationClass::AddCube()
 {
@@ -347,10 +342,10 @@ void ApplicationClass::DeleteCube(int index)
 
 void ApplicationClass::DeleteTerrain()
 {
-	for (auto cube : m_terrainCubes)
+	for (auto cube : m_terrainChunk)
 	{
 		cube->Shutdown();
 		delete cube;
 	}
-	m_terrainCubes.clear();
+	m_terrainChunk.clear();
 }
