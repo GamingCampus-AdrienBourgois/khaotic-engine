@@ -87,6 +87,9 @@
     <ClCompile Include="fpsclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="lightmapshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="applicationclass.h">
@@ -146,6 +149,9 @@
     <ClInclude Include="fpsclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="lightmapshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="font01.tga">
@@ -161,6 +167,9 @@
       <Filter>assets</Filter>
     </Image>
     <Image Include="stone01.tga">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="light01.tga">
       <Filter>assets</Filter>
     </Image>
   </ItemGroup>
@@ -196,6 +205,10 @@
     <None Include="light.vs">
       <Filter>shader</Filter>
     </None>
+    <None Include="lightmap.vs">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="lightmap.ps" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="font01.txt">
@@ -208,6 +221,9 @@
       <Filter>assets</Filter>
     </Text>
     <Text Include="cube.txt">
+      <Filter>assets</Filter>
+    </Text>
+    <Text Include="square.txt">
       <Filter>assets</Filter>
     </Text>
   </ItemGroup>

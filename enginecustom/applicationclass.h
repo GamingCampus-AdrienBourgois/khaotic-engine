@@ -10,6 +10,7 @@
 #include "modelclass.h"
 #include "lightshaderclass.h"
 #include "lightclass.h"
+#include "lightmapshaderclass.h"
 #include "multitextureshaderclass.h"
 #include "bitmapclass.h"
 #include "textureshaderclass.h"
@@ -51,6 +52,7 @@ private:
 	CameraClass* m_Camera;
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
+	LightMapShaderClass* m_LightMapShader;
 	MultiTextureShaderClass* m_MultiTextureShader;
 	ModelClass* m_Model;
 	TextureShaderClass* m_TextureShader;

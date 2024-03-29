@@ -7,6 +7,7 @@ ApplicationClass::ApplicationClass()
 	m_MultiTextureShader = 0;
 	m_Model = 0;
 	m_LightShader = 0;
+	m_LightMapShader = 0;
 	m_Light = 0;
 	m_TextureShader = 0;
 	m_Bitmap = 0;
@@ -179,7 +180,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	// Set the file name of the textures.
 	strcpy_s(textureFilename1, "stone01.tga");
-	strcpy_s(textureFilename2, "moss01.tga");
+	strcpy_s(textureFilename2, "light01.tga");
 
 	// Create and initialize the model object.
 	m_Model = new ModelClass;
@@ -221,6 +222,16 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Lights[3].SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);  // White
 	m_Lights[3].SetPosition(3.0f, 1.0f, -3.0f);
 
+	// Create and initialize the light map shader object.
+	m_LightMapShader = new LightMapShaderClass;
+
+	result = m_LightMapShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the light map shader object.", L"Error", MB_OK);
+		return false;
+	}
+
 	// Create and initialize the fps object.
 	m_Fps = new FpsClass();
 
@@ -260,7 +271,6 @@ void ApplicationClass::Shutdown()
 		delete m_Fps;
 		m_Fps = 0;
 	}
-
 
 	// Release the text string objects.
 	if (m_TextString3)
@@ -336,6 +346,14 @@ void ApplicationClass::Shutdown()
 		m_LightShader->Shutdown();
 		delete m_LightShader;
 		m_LightShader = 0;
+	}
+
+	// Release the light map shader object.
+	if (m_LightMapShader)
+	{
+		m_LightMapShader->Shutdown();
+		delete m_LightMapShader;
+		m_LightMapShader = 0;
 	}
 
 	// Release the model object.
@@ -543,7 +561,11 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 		lightPosition[i] = m_Lights[i].GetPosition();
 	}
 
+	///////////////////
+	//   DISCLAIMER  //
+	///////////////////
 
+	// Les shaders suivants ne s'appliquent a l'objet uniquement s'il sont les derniers appliques
 
 	scaleMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);  // Build the scaling matrix.
 	rotateMatrix = XMMatrixRotationY(rotation);  // Build the rotation matrix.
@@ -556,6 +578,14 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	// Render the model using the multitexture shader.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
+	// Render the model using the light shader.
+	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
+		diffuseColor, lightPosition);
+	if (!result)
+	{
+		return false;
+	}
+
 	scaleMatrix = XMMatrixScaling(2.0f, 2.0f, 2.0f);  // Build the scaling matrix.
 	rotateMatrix = XMMatrixRotationY(-rotation);  // Build the rotation matrix.
 	translateMatrix = XMMatrixTranslation(-x, -y, -z);  // Build the translation matrix.
@@ -567,13 +597,24 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
-	// Render the model using the light shader.
-	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
-		diffuseColor, lightPosition);
+	result = m_LightMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0), m_Model->GetTexture(1));
 	if (!result)
 	{
 		return false;
 	}
+
+
+	scaleMatrix = XMMatrixScaling(0.75f, 0.2f, 0.5f);  // Build the scaling matrix.
+	rotateMatrix = XMMatrixRotationY(rotation);  // Build the rotation matrix.
+	translateMatrix = XMMatrixTranslation(x + 1, y - 1, z + 2);  // Build the translation matrix.
+
+	// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
+	srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
+	worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+
+	// Render the model using the multitexture shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
 
 	// Render the model using the multitexture shader.
 	result = m_MultiTextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
