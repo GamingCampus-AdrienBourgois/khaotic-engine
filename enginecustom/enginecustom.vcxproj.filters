@@ -22,6 +22,15 @@
     <Filter Include="Fichiers sources\ImGui">
       <UniqueIdentifier>{2f09e599-272c-4cd3-b095-62c0b10b439b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Texture">
+      <UniqueIdentifier>{e7aac2a1-4fc0-42c7-b92f-15d3aec3736b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fonts">
+      <UniqueIdentifier>{39c57c7f-e726-4443-8fbc-734e2d0c97d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{2978535b-193d-4876-83be-1c3c4470db62}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -84,6 +93,33 @@
     <ClCompile Include="textureclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="bitmapclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="fontclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="fontshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="fpsclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Spriteclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Multitextureshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="textclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="textureshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Timerclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="systemclass.h">
@@ -131,9 +167,6 @@
     <ClInclude Include="include\backends\imgui_impl_win32.h">
       <Filter>Fichiers d%27en-tête\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\dx11win10tut06_src\source\lightclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="imguiManager.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -146,6 +179,36 @@
     <ClInclude Include="textureclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="bitmapclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="fontclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="fontshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="fpsclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="lightclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Multitextureshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Spriteclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="textclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="textureshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Timerclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -155,13 +218,66 @@
     <None Include="Color.vs">
       <Filter>shader</Filter>
     </None>
-    <None Include="light.ps" />
-    <None Include="light.vs" />
+    <None Include="font.ps">
+      <Filter>Fonts</Filter>
+    </None>
+    <None Include="font.vs">
+      <Filter>Fonts</Filter>
+    </None>
+    <None Include="light.ps">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="light.vs">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="Multitexture.ps">
+      <Filter>Texture</Filter>
+    </None>
+    <None Include="Multitexture.vs">
+      <Filter>Texture</Filter>
+    </None>
+    <None Include="texture.ps">
+      <Filter>Texture</Filter>
+    </None>
+    <None Include="texture.vs">
+      <Filter>Texture</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="stone01.tga" />
+    <Image Include="font01.tga">
+      <Filter>Fonts</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\grass.tga">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="moss01.tga">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="papier.tga">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="stone01.tga">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="wall.tga">
+      <Filter>Assets</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="cube.txt" />
+    <Text Include="font01.txt">
+      <Filter>Fonts</Filter>
+    </Text>
+    <Text Include="..\..\..\..\Downloads\chunk.txt">
+      <Filter>Assets</Filter>
+    </Text>
+    <Text Include="cube.txt">
+      <Filter>Assets</Filter>
+    </Text>
+    <Text Include="plane.txt">
+      <Filter>Assets</Filter>
+    </Text>
+    <Text Include="sphere.txt">
+      <Filter>Assets</Filter>
+    </Text>
   </ItemGroup>
 </Project>

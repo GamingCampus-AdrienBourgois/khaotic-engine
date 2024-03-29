@@ -689,10 +689,11 @@ void ApplicationClass::GenerateTerrain()
 
 	// Set the name of the texture file that we will be loading.
 	char textureFilename[128];
+	char textureFilename2[128];
 	strcpy_s(textureFilename, "stone01.tga");
-
+	strcpy_s(textureFilename2, "moss01.tga");
 	Object* newTerrain = new Object();
-	newTerrain->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename);
+	newTerrain->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2);
 
 	newTerrain->SetTranslateMatrix(XMMatrixTranslation(0.0f, -1.0f, 0.0f));
 	newTerrain->SetRotateMatrix(XMMatrixRotationY(180.0f));
@@ -705,16 +706,18 @@ void ApplicationClass::AddCube()
 {
 	char modelFilename[128];
 	char textureFilename[128];
+	char textureFilename2[128];
 
 	// Set the file name of the model.
 	strcpy_s(modelFilename, "cube.txt");
 
 	// Set the name of the texture file that we will be loading.
 	strcpy_s(textureFilename, "stone01.tga");
+	strcpy_s(textureFilename2, "moss01.tga");
 	static int cubeCount = 0;
 	float position = cubeCount * 2.0f;
 	Object* newCube = new Object();
-	newCube->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename);
+	newCube->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2);
 
 	newCube->SetTranslateMatrix(XMMatrixTranslation(position, 0.0f, 0.0f));
 
@@ -739,6 +742,9 @@ void ApplicationClass::DeleteTerrain()
 		delete cube;
 	}
 	m_terrainChunk.clear();
+
+}
+
 bool ApplicationClass::UpdateFps()
 {
 	int fps;

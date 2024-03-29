@@ -86,7 +86,6 @@ private:
 	int m_vertexCount, m_indexCount;
 	TextureClass* m_Textures;
 	ModelType* m_model;
-	int m_vertexCount, m_indexCount;
 };
 
 #endif
