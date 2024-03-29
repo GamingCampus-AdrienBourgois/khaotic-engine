@@ -585,7 +585,6 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	
 	for (auto cube : m_cubes)
 	{
-		cube->Render(m_Direct3D->GetDeviceContext());
 
 		scaleMatrix = cube->GetScaleMatrix();
 
@@ -601,6 +600,8 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 		srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
 		worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
+		cube->Render(m_Direct3D->GetDeviceContext());
+
 		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
 			diffuseColor, lightPosition);
 		if (!result)
@@ -612,7 +613,6 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	// Render terrain
 	for (auto chunk : m_terrainChunk)
 	{
-		chunk->Render(m_Direct3D->GetDeviceContext());
 
 		scaleMatrix = chunk->GetScaleMatrix();
 		rotateMatrix = chunk->GetRotateMatrix();
@@ -621,7 +621,9 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 		srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
 		worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
-		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
+		chunk->Render(m_Direct3D->GetDeviceContext());
+
+		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), chunk->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, chunk->GetTexture(0),
 						diffuseColor, lightPosition);
 		if (!result)
 		{
@@ -689,7 +691,7 @@ void ApplicationClass::GenerateTerrain()
 	char modelFilename[128];
 
 	// check if a chunk file already exists
-	strcpy_s(modelFilename, "chunk.txt");
+	strcpy_s(modelFilename, "plane.txt");
 
 	// Set the name of the texture file that we will be loading.
 	char textureFilename[128];
