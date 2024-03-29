@@ -173,7 +173,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Set the file name of the model.
-	strcpy_s(modelFilename, "cube.txt");
+	strcpy_s(modelFilename, "plane.txt");
 
 	// Set the file name of the textures.
 	strcpy_s(textureFilename1, "stone01.tga");
@@ -344,6 +344,22 @@ void ApplicationClass::Shutdown()
 		m_Model = 0;
 	}
 
+	// Liberez la memoire pour chaque cube
+	for (auto cube : m_cubes)
+	{
+		cube->Shutdown();
+		delete cube;
+	}
+	m_cubes.clear();
+
+	// Liberez la memoire pour chaque cube du terrain
+	for (auto cube : m_terrainChunk)
+	{
+		cube->Shutdown();
+		delete cube;
+	}
+	m_terrainChunk.clear();
+
 	// Release the multitexture shader object.
 	if (m_MultiTextureShader)
 	{
@@ -365,40 +381,23 @@ void ApplicationClass::Shutdown()
 			delete m_TextureShader;
 			m_TextureShader = 0;
 		}
-
-	// Liberez la memoire pour chaque cube
-	for (auto cube : m_cubes)
-	{
-		cube->Shutdown();
-		delete cube;
-	}
-	m_cubes.clear();
-
-	// Liberez la memoire pour chaque cube du terrain
-	for (auto cube : m_terrainChunk)
-	{
-		cube->Shutdown();
-		delete cube;
-	}
-	m_terrainChunk.clear();
-
 	
-	// Release the camera object.
-	if (m_Camera)
-	{
-		delete m_Camera;
-		m_Camera = 0;
-	}
+		// Release the camera object.
+		if (m_Camera)
+		{
+			delete m_Camera;
+			m_Camera = 0;
+		}
 
-	// Release the D3D object.
-	if (m_Direct3D)
-	{
-		m_Direct3D->Shutdown();
-		delete m_Direct3D;
-		m_Direct3D = 0;
-	}
+		// Release the D3D object.
+		if (m_Direct3D)
+		{
+			m_Direct3D->Shutdown();
+			delete m_Direct3D;
+			m_Direct3D = 0;
+		}
 
-	return;
+		return;
 	}
 }
 
@@ -560,13 +559,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 
 
 
-	scaleMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);  // Build the scaling matrix.
-	rotateMatrix = XMMatrixRotationY(rotation);  // Build the rotation matrix.
-	translateMatrix = XMMatrixTranslation(x, y, z);  // Build the translation matrix.
-
-	// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
-	srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
-	worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+	
 
 	// Render the model using the multitexture shader.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
@@ -588,17 +581,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 		// Create the light position array from the four light positions.
 		lightPosition[i] = m_Lights[i].GetPosition();
 	}
-	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	m_Model->Render(m_Direct3D->GetDeviceContext());
-
-	// Render the model using the light shader.
-	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
-		diffuseColor, lightPosition);
 	
-	if (!result)
-	{
-		return false;
-	}
 	
 	for (auto cube : m_cubes)
 	{
@@ -618,8 +601,8 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 		srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
 		worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
-		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), cube->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, cube->GetTexture(0),
-                                   diffuseColor, lightPosition);
+		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
+			diffuseColor, lightPosition);
 		if (!result)
 		{
 			return false;
@@ -647,8 +630,29 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	}
 
 	// Render the model using the multitexture shader.
-	result = m_MultiTextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-		m_Model->GetTexture(0), m_Model->GetTexture(1));
+	//result = m_MultiTextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+	//	m_Model->GetTexture(0), m_Model->GetTexture(1));
+
+	if (!result)
+	{
+		return false;
+	}
+
+	scaleMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);  // Build the scaling matrix.
+	rotateMatrix = XMMatrixRotationY(rotation);  // Build the rotation matrix.
+	translateMatrix = XMMatrixTranslation(x, y, z);  // Build the translation matrix.
+
+	// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
+	srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
+	worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	// Render the model using the light shader.
+	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
+		diffuseColor, lightPosition);
+
 	if (!result)
 	{
 		return false;
@@ -695,8 +699,7 @@ void ApplicationClass::GenerateTerrain()
 	Object* newTerrain = new Object();
 	newTerrain->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2);
 
-	newTerrain->SetTranslateMatrix(XMMatrixTranslation(0.0f, -1.0f, 0.0f));
-	newTerrain->SetRotateMatrix(XMMatrixRotationY(180.0f));
+	newTerrain->SetTranslateMatrix(XMMatrixTranslation(0.0f, 0.0f, 0.0f));
 
 	m_cubes.push_back(newTerrain);
 
