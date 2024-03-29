@@ -90,6 +90,9 @@
     <ClCompile Include="lightmapshaderclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="alphamapshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="applicationclass.h">
@@ -152,6 +155,9 @@
     <ClInclude Include="lightmapshaderclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="alphamapshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="font01.tga">
@@ -170,6 +176,12 @@
       <Filter>assets</Filter>
     </Image>
     <Image Include="light01.tga">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="dirt01.tga">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="alpha01.tga">
       <Filter>assets</Filter>
     </Image>
   </ItemGroup>
@@ -208,7 +220,15 @@
     <None Include="lightmap.vs">
       <Filter>shader</Filter>
     </None>
-    <None Include="lightmap.ps" />
+    <None Include="lightmap.ps">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="alphamap.vs">
+      <Filter>texture</Filter>
+    </None>
+    <None Include="alphamap.ps">
+      <Filter>texture</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="font01.txt">

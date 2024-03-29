@@ -20,6 +20,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="alphamapshaderclass.cpp" />
     <ClCompile Include="applicationclass.cpp" />
     <ClCompile Include="bitmapclass.cpp" />
     <ClCompile Include="Cameraclass.cpp" />
@@ -43,6 +44,7 @@
     <ClCompile Include="Timerclass.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="alphamapshaderclass.h" />
     <ClInclude Include="applicationclass.h" />
     <ClInclude Include="bitmapclass.h" />
     <ClInclude Include="Cameraclass.h" />
@@ -65,6 +67,8 @@
     <ClInclude Include="Timerclass.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="alphamap.ps" />
+    <None Include="alphamap.vs" />
     <None Include="font.ps" />
     <None Include="font.vs" />
     <None Include="light.ps" />
@@ -96,6 +100,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="alpha01.tga" />
+    <Image Include="dirt01.tga" />
     <Image Include="font01.tga" />
     <Image Include="light01.tga" />
     <Image Include="moss01.tga" />
