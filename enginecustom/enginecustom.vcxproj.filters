@@ -22,49 +22,63 @@
     <Filter Include="assets">
       <UniqueIdentifier>{741e1efe-db9b-48a7-9ecb-4c34a696f40e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="fonts">
+      <UniqueIdentifier>{51e14ebb-4f58-488f-8d0f-04935f51efda}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Systemclass.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="inputclass.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="applicationclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="d3dclass.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="Colorshaderclass.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="modelclass.cpp">
+    <ClCompile Include="bitmapclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Cameraclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="textureclass.cpp">
+    <ClCompile Include="Colorshaderclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="lightshaderclass.cpp">
+    <ClCompile Include="d3dclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="lightclass.cpp">
+    <ClCompile Include="fontclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="fontshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="inputclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Lightclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Lightshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="modelclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Multitextureshaderclass.cpp">
-    <ClCompile Include="bitmapclass.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="textureshaderclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Spriteclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Systemclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="textclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="textureclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="textureshaderclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Timerclass.cpp">
@@ -72,52 +86,55 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="systemclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="inputclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
     <ClInclude Include="applicationclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="d3dclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Colorshaderclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="modelclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Cameraclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="textureclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="lightshaderclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Multitextureshaderclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="lightclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Lightshaderclass.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="Lightclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="bitmapclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="textureshaderclass.h">
+    <ClInclude Include="Cameraclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Colorshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="fontclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="fontshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="inputclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="lightclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="lightshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="modelclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Multitextureshaderclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Spriteclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="systemclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="textclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="textureclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="textureshaderclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="Timerclass.h">
@@ -125,36 +142,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="Color.ps">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="Color.vs">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="light.vs">
-      <Filter>texture</Filter>
-    </None>
-    <None Include="light.ps">
-      <Filter>texture</Filter>
-    </None>
-    <None Include="Multitexture.vs" />
-    <None Include="Multitexture.ps" />
-    <None Include="texture.ps">
-      <Filter>texture</Filter>
-    </None>
-    <None Include="texture.vs">
-      <Filter>texture</Filter>
-    </None>
-    <None Include="sphere.obj">
-      <Filter>assets</Filter>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="wall.tga">
-      <Filter>assets</Filter>
+    <Image Include="font01.tga">
+      <Filter>fonts</Filter>
     </Image>
-    <Image Include="stone01.tga">
+    <Image Include="wall.tga">
       <Filter>assets</Filter>
     </Image>
     <Image Include="papier.tga">
@@ -163,8 +154,53 @@
     <Image Include="moss01.tga">
       <Filter>assets</Filter>
     </Image>
+    <Image Include="stone01.tga">
+      <Filter>assets</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="font.vs">
+      <Filter>fonts</Filter>
+    </None>
+    <None Include="font.ps">
+      <Filter>fonts</Filter>
+    </None>
+    <None Include="Color.ps">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="Color.vs">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="light.ps">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="Multitexture.ps">
+      <Filter>texture</Filter>
+    </None>
+    <None Include="Multitexture.vs">
+      <Filter>texture</Filter>
+    </None>
+    <None Include="texture.ps">
+      <Filter>texture</Filter>
+    </None>
+    <None Include="texture.vs">
+      <Filter>texture</Filter>
+    </None>
+    <None Include="light.vs">
+      <Filter>shader</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="font01.txt">
+      <Filter>fonts</Filter>
+    </Text>
+    <Text Include="plane.txt">
+      <Filter>assets</Filter>
+    </Text>
+    <Text Include="sphere.txt">
+      <Filter>assets</Filter>
+    </Text>
     <Text Include="cube.txt">
       <Filter>assets</Filter>
     </Text>
