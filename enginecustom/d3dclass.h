@@ -16,8 +16,11 @@
 //////////////
 // INCLUDES //
 //////////////
-#include <d3d11.h>
-#include <directxmath.h>
+#include "d3d11.h"
+#include "directxmath.h"
+#include "fontshaderclass.h"
+#include "fontclass.h"
+#include "textclass.h"
 using namespace DirectX;
 
 
@@ -52,6 +55,9 @@ public:
 	void TurnZBufferOn();
 	void TurnZBufferOff();
 
+	void EnableAlphaBlending();
+	void DisableAlphaBlending();
+
 private:
 	bool m_vsync_enabled;
 	int m_videoCardMemory;
@@ -69,6 +75,8 @@ private:
 	XMMATRIX m_orthoMatrix;
 	D3D11_VIEWPORT m_viewport;
 	ID3D11DepthStencilState* m_depthDisabledStencilState;
+	ID3D11BlendState* m_alphaEnableBlendingState;
+	ID3D11BlendState* m_alphaDisableBlendingState;
 };
 
 #endif

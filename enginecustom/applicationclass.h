@@ -15,6 +15,9 @@
 #include "textureshaderclass.h"
 #include "spriteclass.h"
 #include "timerclass.h"
+#include "fontshaderclass.h"
+#include "fontclass.h"
+#include "textclass.h"
 
 /////////////
 // GLOBALS //
@@ -54,6 +57,9 @@ private:
     TimerClass* m_Timer;
 	LightClass* m_Lights;
 	int m_numLights;
+	FontShaderClass* m_FontShader;
+	FontClass* m_Font;
+	TextClass *m_TextString1, *m_TextString2, *m_TextString3;
 };
 
 #endif
