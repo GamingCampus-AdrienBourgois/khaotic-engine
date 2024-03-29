@@ -15,6 +15,7 @@
 #include "textureshaderclass.h"
 #include "spriteclass.h"
 #include "timerclass.h"
+#include "textclass.h"
 
 /////////////
 // GLOBALS //
@@ -37,10 +38,12 @@ public:
 
 	bool Initialize(int, int, HWND);
 	void Shutdown();
-	bool Frame();
+	bool Frame(InputClass*);
 
 private:
 	bool Render(float, float, float, float);
+	bool UpdateMouseStrings(int, int, bool);
+
 private:
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
@@ -52,6 +55,7 @@ private:
 	BitmapClass* m_Bitmap;
 	SpriteClass* m_Sprite;
     TimerClass* m_Timer;
+	TextClass* m_MouseStrings;
 };
 
 #endif

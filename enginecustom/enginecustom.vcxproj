@@ -50,6 +50,7 @@
     <ClInclude Include="Multitextureshaderclass.h" />
     <ClInclude Include="Spriteclass.h" />
     <ClInclude Include="systemclass.h" />
+    <ClInclude Include="textclass.h" />
     <ClInclude Include="textureclass.h" />
     <ClInclude Include="textureshaderclass.h" />
     <ClInclude Include="Timerclass.h" />
