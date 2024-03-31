@@ -96,6 +96,9 @@
     <ClCompile Include="normalmapshaderclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="specmapshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="applicationclass.h">
@@ -162,6 +165,9 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="normalmapshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="specmapshaderclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -242,6 +248,12 @@
       <Filter>shader</Filter>
     </None>
     <None Include="normalmap.ps">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="specmap.vs">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="specmap.ps">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>

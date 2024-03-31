@@ -23,6 +23,7 @@
 #include "fpsclass.h"
 #include "inputclass.h"
 #include "normalmapshaderclass.h"
+#include "specmapshaderclass.h"
 
 
 /////////////
@@ -76,6 +77,7 @@ private:
 	TextClass* m_FpsString;
 	int m_previousFps;
 	NormalMapShaderClass* m_NormalMapShader;
+	SpecMapShaderClass* m_SpecMapShader;
 };
 
 #endif

@@ -23,7 +23,7 @@ ApplicationClass::ApplicationClass()
 	m_Fps = 0;
 	m_FpsString = 0;
 	m_NormalMapShader = 0;
-
+	m_SpecMapShader = 0;
 }
 
 
@@ -73,6 +73,16 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Set the initial position of the camera.
 	m_Camera->SetPosition(0.0f, 0.0f, -12.0f);
 	m_Camera->SetRotation(0.0f, 0.0f, 0.0f);
+
+	// Create and initialize the specular map shader object.
+	m_SpecMapShader = new SpecMapShaderClass;
+
+	result = m_SpecMapShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the specular map shader object.", L"Error", MB_OK);
+		return false;
+	}
 
 	// Create and initialize the normal map shader object.
 	m_NormalMapShader = new NormalMapShaderClass;
@@ -221,6 +231,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	strcpy_s(textureFilename1, "stone01.tga");
 	strcpy_s(textureFilename2, "normal01.tga");
 	strcpy_s(textureFilename3, "alpha01.tga");
+	// A FAIRE: Ajouter une nouvelle texture pour le multitexturing
 
 	// Create and initialize the model object.
 	m_Model = new ModelClass;
@@ -248,6 +259,8 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
+	m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
+	m_Light->SetSpecularPower(16.0f);
 
 	// Set the number of lights we will use.
 	m_numLights = 4;
@@ -412,6 +425,14 @@ void ApplicationClass::Shutdown()
 		m_Model->Shutdown();
 		delete m_Model;
 		m_Model = 0;
+	}
+
+	// Release the specular map shader object.
+	if (m_SpecMapShader)
+	{
+		m_SpecMapShader->Shutdown();
+		delete m_SpecMapShader;
+		m_SpecMapShader = 0;
 	}
 
 	// Release the normal map shader object.
@@ -704,9 +725,18 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 		return false;
 	}*/
 
-	//Normal Mapping
-	result = m_NormalMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-		m_Model->GetTexture(0), m_Model->GetTexture(1), m_Light->GetDirection(), m_Light->GetDiffuseColor());
+	////Normal Mapping
+	//result = m_NormalMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+	//	m_Model->GetTexture(0), m_Model->GetTexture(1), m_Light->GetDirection(), m_Light->GetDiffuseColor());
+	//if (!result)
+	//{
+	//	return false;
+	//}
+
+	//Specular Mapping
+	result = m_SpecMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0), m_Model->GetTexture(1), m_Model->GetTexture(2), m_Light->GetDirection(), m_Light->GetDiffuseColor(),
+		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
 	if (!result)
 	{
 		return false;
