@@ -93,6 +93,9 @@
     <ClCompile Include="alphamapshaderclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="normalmapshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="applicationclass.h">
@@ -158,6 +161,9 @@
     <ClInclude Include="alphamapshaderclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="normalmapshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="font01.tga">
@@ -182,6 +188,9 @@
       <Filter>assets</Filter>
     </Image>
     <Image Include="alpha01.tga">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="normal01.tga">
       <Filter>assets</Filter>
     </Image>
   </ItemGroup>
@@ -228,6 +237,12 @@
     </None>
     <None Include="alphamap.ps">
       <Filter>texture</Filter>
+    </None>
+    <None Include="normalmap.vs">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="normalmap.ps">
+      <Filter>shader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

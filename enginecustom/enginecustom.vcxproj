@@ -36,6 +36,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="modelclass.cpp" />
     <ClCompile Include="Multitextureshaderclass.cpp" />
+    <ClCompile Include="normalmapshaderclass.cpp" />
     <ClCompile Include="Spriteclass.cpp" />
     <ClCompile Include="Systemclass.cpp" />
     <ClCompile Include="textclass.cpp" />
@@ -59,6 +60,7 @@
     <ClInclude Include="lightshaderclass.h" />
     <ClInclude Include="modelclass.h" />
     <ClInclude Include="Multitextureshaderclass.h" />
+    <ClInclude Include="normalmapshaderclass.h" />
     <ClInclude Include="Spriteclass.h" />
     <ClInclude Include="systemclass.h" />
     <ClInclude Include="textclass.h" />
@@ -77,6 +79,8 @@
     <None Include="lightmap.vs" />
     <None Include="Multitexture.ps" />
     <None Include="Multitexture.vs" />
+    <None Include="normalmap.ps" />
+    <None Include="normalmap.vs" />
     <None Include="packages.config" />
     <None Include="texture.ps" />
     <None Include="texture.vs" />
@@ -105,6 +109,7 @@
     <Image Include="font01.tga" />
     <Image Include="light01.tga" />
     <Image Include="moss01.tga" />
+    <Image Include="normal01.tga" />
     <Image Include="papier.tga" />
     <Image Include="stone01.tga" />
     <Image Include="wall.tga" />

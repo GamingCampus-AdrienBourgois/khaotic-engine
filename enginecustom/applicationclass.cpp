@@ -22,6 +22,7 @@ ApplicationClass::ApplicationClass()
 	m_TextString3 = 0;
 	m_Fps = 0;
 	m_FpsString = 0;
+	m_NormalMapShader = 0;
 
 }
 
@@ -72,6 +73,16 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Set the initial position of the camera.
 	m_Camera->SetPosition(0.0f, 0.0f, -12.0f);
 	m_Camera->SetRotation(0.0f, 0.0f, 0.0f);
+
+	// Create and initialize the normal map shader object.
+	m_NormalMapShader = new NormalMapShaderClass;
+
+	result = m_NormalMapShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the normal map shader object.", L"Error", MB_OK);
+		return false;
+	}
 
 	// Create and initialize the font shader object.
 	m_FontShader = new FontShaderClass;
@@ -208,7 +219,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	// Set the file name of the textures.
 	strcpy_s(textureFilename1, "stone01.tga");
-	strcpy_s(textureFilename2, "dirt01.tga");
+	strcpy_s(textureFilename2, "normal01.tga");
 	strcpy_s(textureFilename3, "alpha01.tga");
 
 	// Create and initialize the model object.
@@ -231,6 +242,12 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize the light shader object.", L"Error", MB_OK);
 		return false;
 	}
+
+	// Create and initialize the light object.
+	m_Light = new LightClass;
+
+	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
+	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
 
 	// Set the number of lights we will use.
 	m_numLights = 4;
@@ -389,28 +406,20 @@ void ApplicationClass::Shutdown()
 		m_LightShader = 0;
 	}
 
-	// Release the light shader object.
-	if (m_LightShader)
-	{
-		m_LightShader->Shutdown();
-		delete m_LightShader;
-		m_LightShader = 0;
-	}
-
-	// Release the light map shader object.
-	if (m_LightMapShader)
-	{
-		m_LightMapShader->Shutdown();
-		delete m_LightMapShader;
-		m_LightMapShader = 0;
-	}
-
 	// Release the model object.
 	if (m_Model)
 	{
 		m_Model->Shutdown();
 		delete m_Model;
 		m_Model = 0;
+	}
+
+	// Release the normal map shader object.
+	if (m_NormalMapShader)
+	{
+		m_NormalMapShader->Shutdown();
+		delete m_NormalMapShader;
+		m_NormalMapShader = 0;
 	}
 
 	// Release the multitexture shader object.
@@ -469,7 +478,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	bool result, mouseDown;
 
 	float frameTime;
-	static float rotation = 0.0f;
+	static float rotation = 360.0f;
 	static float x = 6.f;
 	static float y = 3.f;
 	static float z = 0.f;
@@ -687,10 +696,17 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	//	return false;
 	//}
 
-
 	// Alphamapping
-	result = m_AlphaMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+	/*result = m_AlphaMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
 		m_Model->GetTexture(0), m_Model->GetTexture(1), m_Model->GetTexture(2));
+	if (!result)
+	{
+		return false;
+	}*/
+
+	//Normal Mapping
+	result = m_NormalMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0), m_Model->GetTexture(1), m_Light->GetDirection(), m_Light->GetDiffuseColor());
 	if (!result)
 	{
 		return false;

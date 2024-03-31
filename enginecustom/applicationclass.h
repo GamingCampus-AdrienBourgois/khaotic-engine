@@ -22,6 +22,8 @@
 #include "textclass.h"
 #include "fpsclass.h"
 #include "inputclass.h"
+#include "normalmapshaderclass.h"
+
 
 /////////////
 // GLOBALS //
@@ -73,6 +75,7 @@ private:
 	FpsClass* m_Fps;
 	TextClass* m_FpsString;
 	int m_previousFps;
+	NormalMapShaderClass* m_NormalMapShader;
 };
 
 #endif
