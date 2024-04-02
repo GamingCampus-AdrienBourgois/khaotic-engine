@@ -24,6 +24,9 @@
 #include "inputclass.h"
 #include "normalmapshaderclass.h"
 #include "specmapshaderclass.h"
+#include "Frustrumclass.h"
+#include "Positionclass.h"
+#include "Modellistclass.h"
 
 
 /////////////
@@ -53,6 +56,7 @@ private:
 	bool Render(float, float, float, float);
 	bool UpdateMouseStrings(int, int, bool);
 	bool UpdateFps();
+	bool UpdateRenderCountString(int);
 
 private:
 	D3DClass* m_Direct3D;
@@ -71,6 +75,7 @@ private:
 	LightClass* m_Lights;
 	int m_numLights;
 	FontShaderClass* m_FontShader;
+	TextClass* m_RenderCountString;
 	FontClass* m_Font;
 	TextClass *m_TextString1, *m_TextString2, *m_TextString3;
 	FpsClass* m_Fps;
@@ -78,6 +83,9 @@ private:
 	int m_previousFps;
 	NormalMapShaderClass* m_NormalMapShader;
 	SpecMapShaderClass* m_SpecMapShader;
+	ModelListClass* m_ModelList;
+	PositionClass* m_Position;
+	FrustumClass* m_Frustum;
 };
 
 #endif

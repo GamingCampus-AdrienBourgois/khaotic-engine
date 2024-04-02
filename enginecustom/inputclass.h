@@ -36,6 +36,8 @@ public:
 	bool IsMousePressed();
 	void KeyDown(unsigned int);
 	void KeyUp(unsigned int);
+	bool IsLeftArrowPressed();
+	bool IsRightArrowPressed();
 
 	bool IsKeyDown(unsigned int);
 
