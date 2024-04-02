@@ -236,10 +236,10 @@ void InputClass::ProcessInput()
 
 	//// Ensure the mouse location doesn't exceed the screen width or height.
 	//if (m_mouseX < 0) { m_mouseX = 0; }
-	//if (m_mouseY < 0) { m_mouseY = 0; }
+	if (m_mouseY < -m_screenHeight) { m_mouseY = -m_screenHeight; }
 
 	//if (m_mouseX > m_screenWidth) { m_mouseX = m_screenWidth; }
-	//if (m_mouseY > m_screenHeight) { m_mouseY = m_screenHeight; }
+	if (m_mouseY > m_screenHeight) { m_mouseY = m_screenHeight; }
 
 	return;
 }

@@ -780,6 +780,25 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 		return false;
 	}
 
+	scaleMatrix = XMMatrixScaling(1.0f, 1.0f, 1.0f);  // Build the scaling matrix.
+	rotateMatrix = XMMatrixRotationY(40);  // Build the rotation matrix.
+	translateMatrix = XMMatrixTranslation(0, 5.0f, -10.0f);  // Build the translation matrix.
+
+	// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
+	srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
+	worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+
+	// Render the model using the multitexture shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	//Normal Mapping
+	result = m_NormalMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0), m_Model->GetTexture(1), m_Light->GetDirection(), m_Light->GetDiffuseColor());
+	if (!result)
+	{
+		return false;
+	}
+
 	// Enable the Z buffer and disable alpha blending now that 2D rendering is complete.
 	m_Direct3D->TurnZBufferOn();
 	m_Direct3D->DisableAlphaBlending();
