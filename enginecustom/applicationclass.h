@@ -86,6 +86,8 @@ private:
 	ModelListClass* m_ModelList;
 	PositionClass* m_Position;
 	FrustumClass* m_Frustum;
+	float m_previousMouseX;
+	float m_previousMouseY;
 };
 
 #endif

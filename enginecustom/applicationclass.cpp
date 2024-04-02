@@ -553,6 +553,25 @@ bool ApplicationClass::Frame(InputClass* Input)
 		return false;
 	}
 
+	// Obtenez la position de la souris
+	Input->GetMouseLocation(mouseX, mouseY);
+
+	// Calculez la distance parcourue par la souris depuis le dernier frame
+	float deltaX = mouseX - m_previousMouseX;
+	float deltaY = mouseY - m_previousMouseY;
+
+	// Mettez à jour les positions précédentes de la souris
+	m_previousMouseX = mouseX;
+	m_previousMouseY = mouseY;
+
+	// Utilisez deltaX et deltaY pour ajuster la rotation de la caméra
+	float rotationSpeed = 0.1f;  // Ajustez cette valeur pour changer la vitesse de rotation
+	float rotationX = m_Camera->GetRotation().x + deltaY * rotationSpeed;
+	float rotationY = m_Camera->GetRotation().y + deltaX * rotationSpeed;
+
+	// Mettez à jour la rotation de la caméra
+	m_Camera->SetRotation(rotationX, rotationY, 0.0f);
+
 	// Update the system stats.
 	m_Timer->Frame();
 
@@ -737,6 +756,25 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	result = m_SpecMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
 		m_Model->GetTexture(0), m_Model->GetTexture(1), m_Model->GetTexture(2), m_Light->GetDirection(), m_Light->GetDiffuseColor(),
 		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+	if (!result)
+	{
+		return false;
+	}
+
+	scaleMatrix = XMMatrixScaling(1.0f, 1.0f, 1.0f);  // Build the scaling matrix.
+	rotateMatrix = XMMatrixRotationY(0);  // Build the rotation matrix.
+	translateMatrix = XMMatrixTranslation(0, 0.0f, -10.0f);  // Build the translation matrix.
+
+	// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
+	srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
+	worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+
+	// Render the model using the multitexture shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	//Normal Mapping
+	result = m_NormalMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0), m_Model->GetTexture(1), m_Light->GetDirection(), m_Light->GetDiffuseColor());
 	if (!result)
 	{
 		return false;
