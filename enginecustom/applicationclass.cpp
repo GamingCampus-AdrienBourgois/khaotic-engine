@@ -581,7 +581,21 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 		// Create the light position array from the four light positions.
 		lightPosition[i] = m_Lights[i].GetPosition();
 	}
-	
+
+	scaleMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);  // Build the scaling matrix.
+	rotateMatrix = XMMatrixRotationY(rotation);  // Build the rotation matrix.
+	translateMatrix = XMMatrixTranslation(x, y, z);  // Build the translation matrix.
+
+	// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
+	srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
+	worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	// Render the model using the light shader.
+	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
+		diffuseColor, lightPosition);
 	
 	for (auto cube : m_cubes)
 	{
@@ -623,13 +637,15 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 
 		chunk->Render(m_Direct3D->GetDeviceContext());
 
-		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), chunk->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, chunk->GetTexture(0),
+		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
 						diffuseColor, lightPosition);
 		if (!result)
 		{
 			return false;
 		}
 	}
+
+
 
 	// Render the model using the multitexture shader.
 	//result = m_MultiTextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
@@ -640,20 +656,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 		return false;
 	}
 
-	scaleMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);  // Build the scaling matrix.
-	rotateMatrix = XMMatrixRotationY(rotation);  // Build the rotation matrix.
-	translateMatrix = XMMatrixTranslation(x, y, z);  // Build the translation matrix.
-
-	// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
-	srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
-	worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
-
-	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	m_Model->Render(m_Direct3D->GetDeviceContext());
-
-	// Render the model using the light shader.
-	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
-		diffuseColor, lightPosition);
+	
 
 	if (!result)
 	{
@@ -689,21 +692,28 @@ void ApplicationClass::GenerateTerrain()
 {
 	// Set the file name of the model.
 	char modelFilename[128];
-
-	// check if a chunk file already exists
-	strcpy_s(modelFilename, "plane.txt");
-
 	// Set the name of the texture file that we will be loading.
 	char textureFilename[128];
 	char textureFilename2[128];
+
+	// check if a chunk file already exists
+	strcpy_s(modelFilename, "plane.txt");
 	strcpy_s(textureFilename, "stone01.tga");
 	strcpy_s(textureFilename2, "moss01.tga");
-	Object* newTerrain = new Object();
-	newTerrain->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2);
 
-	newTerrain->SetTranslateMatrix(XMMatrixTranslation(0.0f, 0.0f, 0.0f));
+	// for loop to generate terrain chunks for a 10x10 grid
+	for (int i = -10; i < 10; i++)
+	{
+		for (int j = -10; j < 10; j++)
+		{
+			Object* newTerrain = new Object();
+			newTerrain->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2);
 
-	m_cubes.push_back(newTerrain);
+			newTerrain->SetTranslateMatrix(XMMatrixTranslation(i * 10.0f, -5.0f, j * 10.0f));
+
+			m_terrainChunk.push_back(newTerrain);
+		}
+	}
 
 }
 
