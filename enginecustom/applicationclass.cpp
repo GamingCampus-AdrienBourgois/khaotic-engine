@@ -22,8 +22,7 @@ ApplicationClass::ApplicationClass()
 	m_TextString3 = 0;
 	m_Fps = 0;
 	m_FpsString = 0;
-	m_NormalMapShader = 0;
-	m_SpecMapShader = 0;
+	m_ShaderManager = 0;
 }
 
 
@@ -74,25 +73,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera->SetPosition(0.0f, 0.0f, -12.0f);
 	m_Camera->SetRotation(0.0f, 0.0f, 0.0f);
 
-	// Create and initialize the specular map shader object.
-	m_SpecMapShader = new SpecMapShaderClass;
-
-	result = m_SpecMapShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the specular map shader object.", L"Error", MB_OK);
-		return false;
-	}
-
-	// Create and initialize the normal map shader object.
-	m_NormalMapShader = new NormalMapShaderClass;
-
-	result = m_NormalMapShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the normal map shader object.", L"Error", MB_OK);
-		return false;
-	}
+	return true;
 
 	// Create and initialize the font shader object.
 	m_FontShader = new FontShaderClass;
@@ -262,25 +243,15 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetSpecularPower(16.0f);
 
-	// Set the number of lights we will use.
-	m_numLights = 4;
 
-	// Create and initialize the light objects array.
-	m_Lights = new LightClass[m_numLights];
+	// Create and initialize the normal map shader object.
+	m_ShaderManager = new ShaderManagerClass;
 
-	// Manually set the color and position of each light.
-	m_Lights[0].SetDiffuseColor(1.0f, 0.0f, 0.0f, 1.0f);  // Red
-	m_Lights[0].SetPosition(-3.0f, 1.0f, 3.0f);
-
-	m_Lights[1].SetDiffuseColor(0.0f, 1.0f, 0.0f, 1.0f);  // Green
-	m_Lights[1].SetPosition(3.0f, 1.0f, 3.0f);
-
-	m_Lights[2].SetDiffuseColor(0.0f, 0.0f, 1.0f, 1.0f);  // Blue
-	m_Lights[2].SetPosition(-3.0f, 1.0f, -3.0f);
-
-	m_Lights[3].SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);  // White
-	m_Lights[3].SetPosition(3.0f, 1.0f, -3.0f);
-
+	result = m_ShaderManager->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		return false;
+	}
 	// Create and initialize the light map shader object.
 	m_LightMapShader = new LightMapShaderClass;
 
@@ -326,6 +297,14 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void ApplicationClass::Shutdown()
 {
+	// Release the shader manager object.
+	if (m_ShaderManager)
+	{
+		m_ShaderManager->Shutdown();
+		delete m_ShaderManager;
+		m_ShaderManager = 0;
+	}
+
 	// Release the text objects for the mouse strings.
 	if (m_MouseStrings)
 	{
@@ -404,12 +383,12 @@ void ApplicationClass::Shutdown()
 		m_Sprite = 0;
 	}
 
-	  // Release the light objects.
-    if(m_Lights)
-    {
-        delete [] m_Lights;
-        m_Lights = 0;
-    }
+	// Release the light object.
+	if (m_Light)
+	{
+		delete m_Light;
+		m_Light = 0;
+	}
 
 	// Release the light shader object.
 	if (m_LightShader)
@@ -425,22 +404,6 @@ void ApplicationClass::Shutdown()
 		m_Model->Shutdown();
 		delete m_Model;
 		m_Model = 0;
-	}
-
-	// Release the specular map shader object.
-	if (m_SpecMapShader)
-	{
-		m_SpecMapShader->Shutdown();
-		delete m_SpecMapShader;
-		m_SpecMapShader = 0;
-	}
-
-	// Release the normal map shader object.
-	if (m_NormalMapShader)
-	{
-		m_NormalMapShader->Shutdown();
-		delete m_NormalMapShader;
-		m_NormalMapShader = 0;
 	}
 
 	// Release the multitexture shader object.
@@ -500,9 +463,9 @@ bool ApplicationClass::Frame(InputClass* Input)
 
 	float frameTime;
 	static float rotation = 360.0f;
-	static float x = 6.f;
-	static float y = 3.f;
-	static float z = 0.f;
+	static float x = 0.f;
+	static float y = 0.f;
+	static float z = -8.f;
 
 	// Check if the user pressed escape and wants to exit the application.
 	if (Input->IsEscapePressed())
@@ -524,13 +487,13 @@ bool ApplicationClass::Frame(InputClass* Input)
 		rotation += 360.0f;
 	}
 
-	// Update the x position variable each frame.
-	x -= 0.0174532925f * 0.6f;
+	//// Update the x position variable each frame.
+	//x -= 0.0174532925f * 0.6f;
 
-	y -= 0.0174532925f * 0.2f;
+	//y -= 0.0174532925f * 0.2f;
 
-	// Update the z position variable each frame.
-	z -= 0.0174532925f * 0.2f;
+	//// Update the z position variable each frame.
+	//z -= 0.0174532925f * 0.2f;
 
 
 	// Render the graphics scene.
@@ -539,6 +502,64 @@ bool ApplicationClass::Frame(InputClass* Input)
 	{
 		return false;
 	}
+
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, rotateMatrix, translateMatrix;
+
+	// Clear the buffers to begin the scene.
+	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
+
+	// Get the world, view, and projection matrices from the camera and d3d objects.
+	m_Direct3D->GetWorldMatrix(worldMatrix);
+	m_Camera->GetViewMatrix(viewMatrix);
+	m_Direct3D->GetProjectionMatrix(projectionMatrix);
+
+	// Setup matrices.
+	rotateMatrix = XMMatrixRotationY(rotation);
+	translateMatrix = XMMatrixTranslation(0.0f, 1.0f, 0.0f);
+	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
+
+	// Render the model using the texture shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0));
+	if (!result)
+	{
+		return false;
+	}
+
+	// Setup matrices.
+	rotateMatrix = XMMatrixRotationY(rotation);
+	translateMatrix = XMMatrixTranslation(-1.5f, -1.0f, 0.0f);
+	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
+
+	// Render the model using the light shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_ShaderManager->RenderLightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0), m_Light->GetDirection(), m_Light->GetDiffuseColor());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Setup matrices.
+	rotateMatrix = XMMatrixRotationY(rotation);
+	translateMatrix = XMMatrixTranslation(1.5f, -1.0f, 0.0f);
+	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
+
+	// Render the model using the normal map shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_ShaderManager->RenderNormalMapShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0), m_Model->GetTexture(1), m_Light->GetDirection(), m_Light->GetDiffuseColor());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Present the rendered scene to the screen.
+	m_Direct3D->EndScene();
 
 	// Get the location of the mouse from the input object,
 	Input->GetMouseLocation(mouseX, mouseY);
@@ -672,15 +693,15 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 		return false;
 	}
 
-	// Get the light properties.
-	for (i = 0; i < m_numLights; i++)
-	{
-		// Create the diffuse color array from the four light colors.
-		diffuseColor[i] = m_Lights[i].GetDiffuseColor();
+	//// Get the light properties.
+	//for (i = 0; i < m_numLights; i++)
+	//{
+	//	// Create the diffuse color array from the four light colors.
+	//	diffuseColor[i] = m_Lights[i].GetDiffuseColor();
 
-		// Create the light position array from the four light positions.
-		lightPosition[i] = m_Lights[i].GetPosition();
-	}
+	//	// Create the light position array from the four light positions.
+	//	lightPosition[i] = m_Lights[i].GetPosition();
+	//}
 
 	scaleMatrix = XMMatrixScaling(0.75f, 0.75f, 0.75f);  // Build the scaling matrix.
 	rotateMatrix = XMMatrixRotationY(rotation);  // Build the rotation matrix.
@@ -734,13 +755,13 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	//}
 
 	//Specular Mapping
-	result = m_SpecMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+	/*result = m_SpecMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
 		m_Model->GetTexture(0), m_Model->GetTexture(1), m_Model->GetTexture(2), m_Light->GetDirection(), m_Light->GetDiffuseColor(),
 		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
 	if (!result)
 	{
 		return false;
-	}
+	}*/
 
 	// Enable the Z buffer and disable alpha blending now that 2D rendering is complete.
 	m_Direct3D->TurnZBufferOn();

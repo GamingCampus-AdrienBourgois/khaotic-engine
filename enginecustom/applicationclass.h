@@ -14,7 +14,6 @@
 #include "multitextureshaderclass.h"
 #include "alphamapshaderclass.h"
 #include "bitmapclass.h"
-#include "textureshaderclass.h"
 #include "spriteclass.h"
 #include "timerclass.h"
 #include "fontshaderclass.h"
@@ -22,8 +21,7 @@
 #include "textclass.h"
 #include "fpsclass.h"
 #include "inputclass.h"
-#include "normalmapshaderclass.h"
-#include "specmapshaderclass.h"
+#include "shadermanagerclass.h"
 
 
 /////////////
@@ -68,7 +66,6 @@ private:
 	SpriteClass* m_Sprite;
     TimerClass* m_Timer;
 	TextClass* m_MouseStrings;
-	LightClass* m_Lights;
 	int m_numLights;
 	FontShaderClass* m_FontShader;
 	FontClass* m_Font;
@@ -76,8 +73,7 @@ private:
 	FpsClass* m_Fps;
 	TextClass* m_FpsString;
 	int m_previousFps;
-	NormalMapShaderClass* m_NormalMapShader;
-	SpecMapShaderClass* m_SpecMapShader;
+	ShaderManagerClass* m_ShaderManager;
 };
 
 #endif
