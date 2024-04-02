@@ -762,8 +762,8 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	}
 
 	scaleMatrix = XMMatrixScaling(1.0f, 1.0f, 1.0f);  // Build the scaling matrix.
-	rotateMatrix = XMMatrixRotationY(0);  // Build the rotation matrix.
-	translateMatrix = XMMatrixTranslation(0, 0.0f, -10.0f);  // Build the translation matrix.
+	rotateMatrix = XMMatrixRotationY(40);  // Build the rotation matrix.
+	translateMatrix = XMMatrixTranslation(0, -2.0f, -10.0f);  // Build the translation matrix.
 
 	// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
 	srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
