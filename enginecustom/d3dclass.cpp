@@ -407,6 +407,12 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 		return false;
 	}
 
+	// Initialisez l'échantillonneur de texture
+	if (!InitializeSampler())
+	{
+		return false;
+	}
+
 	return true;
 }
 
@@ -485,8 +491,40 @@ void D3DClass::Shutdown()
 		m_swapChain = 0;
 	}
 
+	if (m_samplerState)
+	{
+		m_samplerState->Release();
+		m_samplerState = 0;
+	}
+
 	return;
 }
+
+bool D3DClass::InitializeSampler()
+{
+	D3D11_SAMPLER_DESC sampDesc;
+	ZeroMemory(&sampDesc, sizeof(sampDesc));
+	sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR; // Utilisez le filtrage linéaire
+	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	sampDesc.MinLOD = 0;
+	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	// Créez l'échantillonneur de texture
+	HRESULT result = m_device->CreateSamplerState(&sampDesc, &m_samplerState);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	// Définissez l'échantillonneur de texture pour le pixel shader
+	m_deviceContext->PSSetSamplers(0, 1, &m_samplerState);
+
+	return true;
+}
+
 
 
 void D3DClass::BeginScene(float red, float green, float blue, float alpha)

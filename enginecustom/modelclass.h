@@ -1,3 +1,4 @@
+#pragma once
 #ifndef _MODELCLASS_H_
 #define _MODELCLASS_H_
 
@@ -86,6 +87,14 @@ private:
 	int m_vertexCount, m_indexCount;
 	TextureClass* m_Textures;
 	ModelType* m_model;
+
+private :
+	vector<XMFLOAT3> m_vertices;
+	vector<XMFLOAT2> m_textures;
+	vector<XMFLOAT3> m_normals;
+	vector<ModelType> m_modelData;
+	ifstream fin;
+	string line;
 };
 
 #endif

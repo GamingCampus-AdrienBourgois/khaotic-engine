@@ -46,6 +46,7 @@ public:
 	IDXGISwapChain* m_swapChain;
 	IDXGISwapChain* GetSwapChain();
 	void ResizeSwapChain(int, int);
+	bool InitializeSampler();
 
 	XMMATRIX GetProjectionMatrix();
 	void GetWorldMatrix(XMMATRIX&);
@@ -83,6 +84,7 @@ private:
 	ID3D11DepthStencilState* m_depthDisabledStencilState;
 	ID3D11BlendState* m_alphaEnableBlendingState;
 	ID3D11BlendState* m_alphaDisableBlendingState;
+	ID3D11SamplerState* m_samplerState;
 };
 
 #endif

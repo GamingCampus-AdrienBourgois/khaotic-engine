@@ -82,6 +82,7 @@
     <ClInclude Include="Timerclass.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="cube.kobj" />
     <None Include="font.ps" />
     <None Include="font.vs" />
     <None Include="light.ps" />
@@ -89,6 +90,7 @@
     <None Include="Multitexture.ps" />
     <None Include="Multitexture.vs" />
     <None Include="packages.config" />
+    <None Include="plane.kobj" />
     <None Include="texture.ps" />
     <None Include="texture.vs" />
   </ItemGroup>

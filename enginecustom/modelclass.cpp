@@ -1,6 +1,5 @@
 #include "modelclass.h"
 
-
 ModelClass::ModelClass()
 {
 	m_vertexBuffer = 0;
@@ -27,6 +26,7 @@ bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 	result = LoadModel(modelFilename);
 	if (!result)
 	{
+		MessageBox(NULL, L"Could not load model data.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -34,12 +34,14 @@ bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 	result = InitializeBuffers(device);
 	if (!result)
 	{
+		MessageBox(NULL, L"Could not initialize the buffers.", L"Error", MB_OK);
 		return false;
 	}
 	// Load the textures for this model.
 	result = LoadTextures(device, deviceContext, textureFilename1, textureFilename2);
 	if (!result)
 	{
+		MessageBox(NULL, L"Could not load the textures.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -240,10 +242,12 @@ void ModelClass::ReleaseTextures()
 
 bool ModelClass::LoadModel(char* filename)
 {
-	ifstream fin;
-	char input;
-	int i;
-
+	std::ifstream fin;
+	std::string line;
+	std::vector<XMFLOAT3> vertices;
+	std::vector<XMFLOAT2> textures;
+	std::vector<XMFLOAT3> normals;
+	std::vector<ModelType> modelData;
 
 	// Open the model file.
 	fin.open(filename);
@@ -254,44 +258,88 @@ bool ModelClass::LoadModel(char* filename)
 		return false;
 	}
 
-	// Read up to the value of vertex count.
-	fin.get(input);
-	while (input != ':')
+	// Read the file line by line.
+	while (std::getline(fin, line))
 	{
-		fin.get(input);
-	}
+		std::istringstream iss(line);
+		std::string type;
+		iss >> type;
 
-	// Read in the vertex count.
-	fin >> m_vertexCount;
+		if (type == "v")
+		{
+			XMFLOAT3 vertex;
+			iss >> vertex.x >> vertex.y >> vertex.z;
+			vertices.push_back(vertex);
+		}
+		else if (type == "vt")
+		{
+			XMFLOAT2 texture;
+			iss >> texture.x >> texture.y;
+			textures.push_back(texture);
+		}
+		else if (type == "vn")
+		{
+			XMFLOAT3 normal;
+			iss >> normal.x >> normal.y >> normal.z;
+			normals.push_back(normal);
+		}
+		else if (type == "f")
+		{
+			std::string vertexInfo;
+			std::vector<ModelType> faceData;
 
-	// Set the number of indices to be the same as the vertex count.
-	m_indexCount = m_vertexCount;
+			// Parse each vertex of the face.
+			while (iss >> vertexInfo)
+			{
+				ModelType model;
+				int v, vt, vn;
 
-	// Create the model using the vertex count that was read in.
-	m_model = new ModelType[m_vertexCount];
+				sscanf_s(vertexInfo.c_str(), "%d/%d/%d", &v, &vt, &vn);
+				model.x = vertices[v - 1].x;
+				model.y = vertices[v - 1].y;
+				model.z = vertices[v - 1].z;
+				model.tu = textures[vt - 1].x;
+				model.tv = textures[vt - 1].y;
+				model.nx = normals[vn - 1].x;
+				model.ny = normals[vn - 1].y;
+				model.nz = normals[vn - 1].z;
+				faceData.push_back(model);
+			}
 
-	// Read up to the beginning of the data.
-	fin.get(input);
-	while (input != ':')
-	{
-		fin.get(input);
-	}
-	fin.get(input);
-	fin.get(input);
+			// Triangulate the face.
+			modelData.push_back(faceData[0]);
+			modelData.push_back(faceData[1]);
+			modelData.push_back(faceData[2]);
 
-	// Read in the vertex data.
-	for (i = 0; i < m_vertexCount; i++)
-	{
-		fin >> m_model[i].x >> m_model[i].y >> m_model[i].z;
-		fin >> m_model[i].tu >> m_model[i].tv;
-		fin >> m_model[i].nx >> m_model[i].ny >> m_model[i].nz;
+			if (faceData.size() > 3) // If the face is not a triangle
+			{
+				modelData.push_back(faceData[0]);
+				modelData.push_back(faceData[2]);
+				modelData.push_back(faceData[3]);
+			}
+
+		}
 	}
 
 	// Close the model file.
 	fin.close();
 
+	// Set the vertex and index counts.
+	m_vertexCount = modelData.size();
+	m_indexCount = modelData.size();
+
+	// Create the model using the vertex count that was read in.
+	m_model = new ModelType[m_vertexCount];
+
+	// Copy the model data into the class's model data.
+	for (int i = 0; i < m_vertexCount; i++)
+	{
+		m_model[i] = modelData[i];
+	}
+
 	return true;
 }
+
 
 void ModelClass::ReleaseModel()
 {

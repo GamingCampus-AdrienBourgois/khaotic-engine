@@ -242,6 +242,12 @@
     <None Include="texture.vs">
       <Filter>Texture</Filter>
     </None>
+    <None Include="plane.kobj">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="cube.kobj">
+      <Filter>Assets</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="font01.tga">

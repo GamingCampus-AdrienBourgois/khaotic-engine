@@ -173,7 +173,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Set the file name of the model.
-	strcpy_s(modelFilename, "plane.txt");
+	strcpy_s(modelFilename, "plane.kobj");
 
 	// Set the file name of the textures.
 	strcpy_s(textureFilename1, "stone01.tga");
@@ -697,7 +697,7 @@ void ApplicationClass::GenerateTerrain()
 	char textureFilename2[128];
 
 	// check if a chunk file already exists
-	strcpy_s(modelFilename, "plane.txt");
+	strcpy_s(modelFilename, "plane.kobj");
 	strcpy_s(textureFilename, "stone01.tga");
 	strcpy_s(textureFilename2, "moss01.tga");
 
@@ -709,7 +709,7 @@ void ApplicationClass::GenerateTerrain()
 			Object* newTerrain = new Object();
 			newTerrain->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2);
 
-			newTerrain->SetTranslateMatrix(XMMatrixTranslation(i * 10.0f, -5.0f, j * 10.0f));
+			newTerrain->SetTranslateMatrix(XMMatrixTranslation(i*2, -5.0f, j*2));
 
 			m_terrainChunk.push_back(newTerrain);
 		}
@@ -724,7 +724,7 @@ void ApplicationClass::AddCube()
 	char textureFilename2[128];
 
 	// Set the file name of the model.
-	strcpy_s(modelFilename, "cube.txt");
+	strcpy_s(modelFilename, "cube.kobj");
 
 	// Set the name of the texture file that we will be loading.
 	strcpy_s(textureFilename, "stone01.tga");
