@@ -102,15 +102,26 @@ bool ShaderManagerClass::RenderLightShader(ID3D11DeviceContext* deviceContext, i
 {
     bool result;
 
+    // Allouer de la mémoire pour stocker XMFLOAT4 pour la direction de la lumière
+    XMFLOAT4* lightDirection4Ptr = new XMFLOAT4(lightDirection.x, lightDirection.y, lightDirection.z, 1.0f);
 
-    result = m_LightShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture, lightDirection, diffuseColor);
+    // Allouer de la mémoire pour stocker XMFLOAT4 pour la couleur diffuse
+    XMFLOAT4* diffuseColorPtr = new XMFLOAT4(diffuseColor);
+
+    result = m_LightShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture, lightDirection4Ptr, diffuseColorPtr);
     if (!result)
     {
+        delete lightDirection4Ptr;
+        delete diffuseColorPtr;
         return false;
     }
 
+    delete lightDirection4Ptr;
+    delete diffuseColorPtr;
     return true;
 }
+
+
 
 
 bool ShaderManagerClass::RenderNormalMapShader(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
