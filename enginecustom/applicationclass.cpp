@@ -709,9 +709,10 @@ void ApplicationClass::GenerateTerrain()
 			Object* newTerrain = new Object();
 			newTerrain->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2);
 
-			newTerrain->SetTranslateMatrix(XMMatrixTranslation(i * 10.0f, -5.0f, j * 10.0f));
+			newTerrain->SetTranslateMatrix(XMMatrixTranslation(i*10, -5.0f, j*10));
 
 			m_terrainChunk.push_back(newTerrain);
+
 		}
 	}
 
