@@ -25,6 +25,7 @@
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="Colorshaderclass.cpp" />
     <ClCompile Include="d3dclass.cpp" />
+<<<<<<< Updated upstream
     <ClCompile Include="imguiManager.cpp" />
     <ClCompile Include="include\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="include\backends\imgui_impl_win32.cpp" />
@@ -33,13 +34,30 @@
     <ClCompile Include="include\imgui_draw.cpp" />
     <ClCompile Include="include\imgui_tables.cpp" />
     <ClCompile Include="include\imgui_widgets.cpp" />
+=======
+    <ClCompile Include="displayplaneclass.cpp" />
+    <ClCompile Include="fontclass.cpp" />
+    <ClCompile Include="fontshaderclass.cpp" />
+    <ClCompile Include="fpsclass.cpp" />
+    <ClCompile Include="frustumclass.cpp" />
+>>>>>>> Stashed changes
     <ClCompile Include="inputclass.cpp" />
     <ClCompile Include="lightclass.cpp" />
     <ClCompile Include="lightshaderclass.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="modelclass.cpp" />
+<<<<<<< Updated upstream
     <ClCompile Include="NetworkManager.cpp" />
     <ClCompile Include="Server.cpp" />
+=======
+    <ClCompile Include="modellistclass.cpp" />
+    <ClCompile Include="Multitextureshaderclass.cpp" />
+    <ClCompile Include="normalmapshaderclass.cpp" />
+    <ClCompile Include="positionclass.cpp" />
+    <ClCompile Include="rendertextureclass.cpp" />
+    <ClCompile Include="specmapshaderclass.cpp" />
+    <ClCompile Include="Spriteclass.cpp" />
+>>>>>>> Stashed changes
     <ClCompile Include="Systemclass.cpp" />
     <ClCompile Include="textureclass.cpp" />
   </ItemGroup>
@@ -50,6 +68,7 @@
     <ClInclude Include="Client.h" />
     <ClInclude Include="Colorshaderclass.h" />
     <ClInclude Include="d3dclass.h" />
+<<<<<<< Updated upstream
     <ClInclude Include="imguiManager.h" />
     <ClInclude Include="include\backends\imgui_impl_dx11.h" />
     <ClInclude Include="include\backends\imgui_impl_win32.h" />
@@ -59,12 +78,29 @@
     <ClInclude Include="include\imstb_rectpack.h" />
     <ClInclude Include="include\imstb_textedit.h" />
     <ClInclude Include="include\imstb_truetype.h" />
+=======
+    <ClInclude Include="displayplaneclass.h" />
+    <ClInclude Include="fontclass.h" />
+    <ClInclude Include="fontshaderclass.h" />
+    <ClInclude Include="fpsclass.h" />
+    <ClInclude Include="frustumclass.h" />
+>>>>>>> Stashed changes
     <ClInclude Include="inputclass.h" />
     <ClInclude Include="lightshaderclass.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="modelclass.h" />
+<<<<<<< Updated upstream
     <ClInclude Include="NetworkManager.h" />
     <ClInclude Include="Server.h" />
+=======
+    <ClInclude Include="modellistclass.h" />
+    <ClInclude Include="Multitextureshaderclass.h" />
+    <ClInclude Include="normalmapshaderclass.h" />
+    <ClInclude Include="positionclass.h" />
+    <ClInclude Include="rendertextureclass.h" />
+    <ClInclude Include="specmapshaderclass.h" />
+    <ClInclude Include="Spriteclass.h" />
+>>>>>>> Stashed changes
     <ClInclude Include="systemclass.h" />
     <ClInclude Include="textureclass.h" />
   </ItemGroup>
