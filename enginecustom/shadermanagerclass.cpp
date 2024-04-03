@@ -49,6 +49,15 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
         return false;
     }
 
+    // Create and initialize the multitexture shader object.
+    m_MultitextureShader = new MultiTextureShaderClass;
+
+    result = m_MultitextureShader->Initialize(device, hwnd);
+    if (!result)
+    {
+        return false;
+    }
+
     return true;
 }
 
@@ -78,6 +87,14 @@ void ShaderManagerClass::Shutdown()
         m_TextureShader = 0;
     }
 
+    // Release the multitexture shader object.
+    if (m_MultitextureShader)
+    {
+        m_MultitextureShader->Shutdown();
+        delete m_MultitextureShader;
+        m_MultitextureShader = 0;
+    }
+
     return;
 }
 
@@ -95,7 +112,6 @@ bool ShaderManagerClass::RenderTextureShader(ID3D11DeviceContext* deviceContext,
 
     return true;
 }
-
 
 bool ShaderManagerClass::RenderLightShader(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
     ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor)
@@ -121,9 +137,6 @@ bool ShaderManagerClass::RenderLightShader(ID3D11DeviceContext* deviceContext, i
     return true;
 }
 
-
-
-
 bool ShaderManagerClass::RenderNormalMapShader(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
     ID3D11ShaderResourceView* colorTexture, ID3D11ShaderResourceView* normalTexture, XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor)
 {
@@ -131,6 +144,21 @@ bool ShaderManagerClass::RenderNormalMapShader(ID3D11DeviceContext* deviceContex
 
 
     result = m_NormalMapShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, colorTexture, normalTexture, lightDirection, diffuseColor);
+    if (!result)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ShaderManagerClass::RenderMultitextureShader(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
+    ID3D11ShaderResourceView* texture1, ID3D11ShaderResourceView* texture2)
+{
+    bool result;
+
+
+    result = m_MultitextureShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture1, texture2);
     if (!result)
     {
         return false;
