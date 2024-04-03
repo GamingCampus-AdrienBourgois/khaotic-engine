@@ -1,7 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: frustumclass.cpp
-////////////////////////////////////////////////////////////////////////////////
-#include "Frustrumclass.h"
+#include "frustumclass.h"
 
 
 FrustumClass::FrustumClass()
@@ -17,7 +14,6 @@ FrustumClass::FrustumClass(const FrustumClass& other)
 FrustumClass::~FrustumClass()
 {
 }
-
 
 void FrustumClass::ConstructFrustum(XMMATRIX viewMatrix, XMMATRIX projectionMatrix, float screenDepth)
 {
@@ -298,3 +294,4 @@ bool FrustumClass::CheckRectangle(float xCenter, float yCenter, float zCenter, f
 
     return true;
 }
+

@@ -24,9 +24,9 @@
 #include "inputclass.h"
 #include "normalmapshaderclass.h"
 #include "specmapshaderclass.h"
-#include "Frustrumclass.h"
-#include "Positionclass.h"
-#include "Modellistclass.h"
+#include "modellistclass.h"
+#include "positionclass.h"
+#include "frustumclass.h"
 
 
 /////////////
@@ -86,6 +86,7 @@ private:
 	ModelListClass* m_ModelList;
 	PositionClass* m_Position;
 	FrustumClass* m_Frustum;
+	XMMATRIX m_baseViewMatrix;
 	float m_previousMouseX;
 	float m_previousMouseY;
 };

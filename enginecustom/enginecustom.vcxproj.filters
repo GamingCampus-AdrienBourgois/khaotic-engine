@@ -99,13 +99,13 @@
     <ClCompile Include="specmapshaderclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Frustrumclass.cpp">
+    <ClCompile Include="frustumclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Modellistclass.cpp">
+    <ClCompile Include="modellistclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="Positionclass.cpp">
+    <ClCompile Include="positionclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -179,13 +179,13 @@
     <ClInclude Include="specmapshaderclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Frustrumclass.h">
+    <ClInclude Include="frustumclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Modellistclass.h">
+    <ClInclude Include="modellistclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Positionclass.h">
+    <ClInclude Include="positionclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
