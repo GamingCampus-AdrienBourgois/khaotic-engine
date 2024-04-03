@@ -93,6 +93,7 @@ private:
 	XMMATRIX m_baseViewMatrix;
 	RenderTextureClass* m_RenderTexture;
 	DisplayPlaneClass* m_DisplayPlane;
+	float m_screenWidth, m_screenHeight;
 };
 
 #endif
