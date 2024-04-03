@@ -19,7 +19,7 @@ public:
     FrustumClass(const FrustumClass&);
     ~FrustumClass();
 
-    void ConstructFrustum(XMMATRIX, XMMATRIX, float);
+    void ConstructFrustum(XMMATRIX, XMMATRIX, float, float, float);
 
     bool CheckPoint(float, float, float);
     bool CheckCube(float, float, float, float);

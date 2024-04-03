@@ -51,6 +51,8 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	char fpsString[32];
 	bool result;
 
+	m_screenWidth = screenWidth;
+	m_screenHeight = screenHeight;
 
 	// Create the Direct3D object.
 	m_Direct3D = new D3DClass;
@@ -725,7 +727,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	}
 
 	// Construct the frustum.
-	m_Frustum->ConstructFrustum(viewMatrix, projectionMatrix, SCREEN_DEPTH);
+	m_Frustum->ConstructFrustum(viewMatrix, projectionMatrix, SCREEN_DEPTH, m_screenWidth, m_screenHeight);
 
 	// Get the number of models that will be rendered.
 	modelCount = m_ModelList->GetModelCount();

@@ -15,11 +15,20 @@ FrustumClass::~FrustumClass()
 {
 }
 
-void FrustumClass::ConstructFrustum(XMMATRIX viewMatrix, XMMATRIX projectionMatrix, float screenDepth)
+void FrustumClass::ConstructFrustum(XMMATRIX viewMatrix, XMMATRIX projectionMatrix, float screenDepth, float screenWidth, float screenHeight)
 {
     XMMATRIX finalMatrix;
     XMFLOAT4X4 projMatrix, matrix;
     float zMinimum, r, t;
+
+    // Augmenter la taille de la zone de frustum en fonction de la taille de l'écran
+    float fov = XM_PI / 4.0f; // Champ de vision, généralement pi/4
+    float aspect = screenWidth / screenHeight; // Rapport d'aspect, généralement largeur/hauteur
+    float znear = screenDepth / 2.0f; // Plan proche, généralement la moitié de la profondeur de l'écran
+    float zfar = screenDepth * 2.0f; // Plan éloigné, généralement deux fois la profondeur de l'écran
+
+    // Créer une nouvelle matrice de projection avec les nouvelles valeurs
+    XMMATRIX newProjectionMatrix = XMMatrixPerspectiveFovLH(fov, aspect, znear, zfar);
 
 
     // Load the projection matrix into a XMFLOAT4X4 structure.
