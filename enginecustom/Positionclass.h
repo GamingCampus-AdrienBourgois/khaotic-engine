@@ -19,15 +19,16 @@ public:
     ~PositionClass();
 
     void SetFrameTime(float);
-    void GetRotation(float&);
+    void GetRotation(float&, float&);
 
     void TurnLeft(bool);
     void TurnRight(bool);
+    void TurnMouse(float, float);
 
 private:
     float m_frameTime;
-    float m_rotationY;
-    float m_leftTurnSpeed, m_rightTurnSpeed;
+    float m_rotationY, m_rotationX;
+    float m_leftTurnSpeed, m_rightTurnSpeed, m_horizontalTurnSpeed, m_verticalTurnSpeed;
 };
 
 #endif

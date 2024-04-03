@@ -4,6 +4,7 @@ PositionClass::PositionClass()
 {
     m_frameTime = 0.0f;
     m_rotationY = 0.0f;
+    m_rotationX = 0.0f;
     m_leftTurnSpeed = 0.0f;
     m_rightTurnSpeed = 0.0f;
 }
@@ -24,9 +25,10 @@ void PositionClass::SetFrameTime(float time)
     return;
 }
 
-void PositionClass::GetRotation(float& y)
+void PositionClass::GetRotation(float& y, float& x)
 {
     y = m_rotationY;
+    x = m_rotationX;
     return;
 }
 
@@ -90,6 +92,39 @@ void PositionClass::TurnRight(bool keydown)
     if (m_rotationY > 360.0f)
     {
         m_rotationY -= 360.0f;
+    }
+
+    return;
+}
+
+void PositionClass::TurnMouse(float deltaX, float deltaY)
+{
+    // The turning speed is proportional to the horizontal mouse movement
+    m_horizontalTurnSpeed = deltaX * 0.1f;
+
+    // Update the rotation using the turning speed
+    m_rotationY += m_horizontalTurnSpeed;
+    if (m_rotationY < 0.0f)
+    {
+        m_rotationY += 360.0f;
+    }
+    else if (m_rotationY > 360.0f)
+    {
+        m_rotationY -= 360.0f;
+    }
+
+    // The turning speed is proportional to the vertical mouse movement
+    m_verticalTurnSpeed = deltaY * 0.1f;
+
+    // Update the rotation using the turning speed
+    m_rotationX += m_verticalTurnSpeed;
+    if (m_rotationX < -90.0f)
+    {
+        m_rotationX = -90.0f;
+    }
+    else if (m_rotationX > 90.0f)
+    {
+        m_rotationX = 90.0f;
     }
 
     return;

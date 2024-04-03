@@ -87,8 +87,6 @@ private:
 	PositionClass* m_Position;
 	FrustumClass* m_Frustum;
 	XMMATRIX m_baseViewMatrix;
-	float m_previousMouseX;
-	float m_previousMouseY;
 };
 
 #endif

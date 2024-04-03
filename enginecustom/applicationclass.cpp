@@ -572,11 +572,14 @@ void ApplicationClass::Shutdown()
 
 bool ApplicationClass::Frame(InputClass* Input)
 {
-	int mouseX, mouseY;
+	int mouseX, mouseY, currentMouseX, currentMouseY;
 	bool result, mouseDown, keyDown;
-	float rotationY;
+	float rotationY, rotationX;
 
 	float frameTime;
+
+	static int lastMouseX = 0, lastMouseY = 0;
+
 	static float rotation = 360.0f;
 	static float x = 6.f;
 	static float y = 3.f;
@@ -594,6 +597,19 @@ bool ApplicationClass::Frame(InputClass* Input)
 		return false;
 	}
 
+	// Get the location of the mouse from the input object,
+	Input->GetMouseLocation(mouseX, mouseY);
+
+	currentMouseX = mouseX;
+
+	float deltaX = currentMouseX - lastMouseX;  // Calculez le déplacement de la souris
+	lastMouseX = currentMouseX;  // Mettez à jour la dernière position de la souris pour la prochaine image
+
+	currentMouseY = mouseY;
+
+	float deltaY = currentMouseY - lastMouseY;  // Calculez le déplacement de la souris
+	lastMouseY = currentMouseY;  // Mettez à jour la dernière position de la souris pour la prochaine image
+
 	// Set the frame time for calculating the updated position.
 	m_Position->SetFrameTime(m_Timer->GetTime());
 
@@ -604,11 +620,13 @@ bool ApplicationClass::Frame(InputClass* Input)
 	keyDown = Input->IsRightArrowPressed();
 	m_Position->TurnRight(keyDown);
 
+	m_Position->TurnMouse(deltaX, deltaY);
+
 	// Get the current view point rotation.
-	m_Position->GetRotation(rotationY);
+	m_Position->GetRotation(rotationY, rotationX);
 
 	// Set the rotation of the camera.
-	m_Camera->SetRotation(0.0f, rotationY, 0.0f);
+	m_Camera->SetRotation(rotationX, rotationY, 0.0f);
 	m_Camera->Render();
 
 	// Render the graphics scene.
@@ -648,9 +666,6 @@ bool ApplicationClass::Frame(InputClass* Input)
 		return false;
 	}
 
-	// Get the location of the mouse from the input object,
-	Input->GetMouseLocation(mouseX, mouseY);
-
 	// Check if the mouse has been pressed.
 	mouseDown = Input->IsMousePressed();
 
@@ -660,25 +675,6 @@ bool ApplicationClass::Frame(InputClass* Input)
 	{
 		return false;
 	}
-
-	//// Obtenez la position de la souris
-	//Input->GetMouseLocation(mouseX, mouseY);
-
-	//// Calculez la distance parcourue par la souris depuis le dernier frame
-	//float deltaX = mouseX - m_previousMouseX;
-	//float deltaY = mouseY - m_previousMouseY;
-
-	//// Mettez à jour les positions précédentes de la souris
-	//m_previousMouseX = mouseX;
-	//m_previousMouseY = mouseY;
-
-	//// Utilisez deltaX et deltaY pour ajuster la rotation de la caméra
-	//float rotationSpeed = 0.1f;  // Ajustez cette valeur pour changer la vitesse de rotation
-	//float rotationX = m_Camera->GetRotation().x + deltaY * rotationSpeed;
-	//float rotationY = m_Camera->GetRotation().y + deltaX * rotationSpeed;
-
-	//// Mettez à jour la rotation de la caméra
-	//m_Camera->SetRotation(rotationX, rotationY, 0.0f);
 
 	// Update the sprite object using the frame time.
 	m_Sprite->Update(frameTime);
