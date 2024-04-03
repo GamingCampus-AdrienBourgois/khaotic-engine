@@ -110,8 +110,9 @@ void PositionClass::TurnRight(bool keydown)
 
 void PositionClass::TurnMouse(float deltaX, float deltaY)
 {
+    float speed = 0.1f;
     // The turning speed is proportional to the horizontal mouse movement
-    m_horizontalTurnSpeed = deltaX * 0.1f;
+    m_horizontalTurnSpeed = deltaX * speed;
 
     // Update the rotation using the turning speed
     m_rotationY += m_horizontalTurnSpeed;
@@ -125,7 +126,7 @@ void PositionClass::TurnMouse(float deltaX, float deltaY)
     }
 
     // The turning speed is proportional to the vertical mouse movement
-    m_verticalTurnSpeed = deltaY * 0.1f;
+    m_verticalTurnSpeed = deltaY * speed;
 
     // Update the rotation using the turning speed
     m_rotationX += m_verticalTurnSpeed;
@@ -147,7 +148,7 @@ void PositionClass::MoveCamera(bool forward, bool backward, bool left, bool righ
     float speed;
 
     // Set the speed of the camera.
-    speed = 0.1f;
+    speed = 2.0f * m_frameTime;
 
     // Convert degrees to radians.
     radiansY = m_rotationY * 0.0174532925f;
