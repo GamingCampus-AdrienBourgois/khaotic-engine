@@ -1,4 +1,4 @@
-#include "Positionclass.h"
+#include "positionclass.h"
 
 PositionClass::PositionClass()
 {

@@ -1,4 +1,5 @@
-#include "Modellistclass.h"
+#include "modellistclass.h"
+
 
 ModelListClass::ModelListClass()
 {
@@ -19,17 +20,15 @@ ModelListClass::~ModelListClass()
 void ModelListClass::Initialize(int numModels)
 {
     int i;
-    
 
-        // Store the number of models.
-        m_modelCount = numModels;
+    // Store the number of models.
+    m_modelCount = numModels;
 
     // Create a list array of the model information.
     m_ModelInfoList = new ModelInfoType[m_modelCount];
-    
 
-        // Seed the random generator with the current time.
-        srand((unsigned int)time(NULL));
+    // Seed the random generator with the current time.
+    srand((unsigned int)time(NULL));
 
     // Go through all the models and randomly generate the position.
     for (i = 0; i < m_modelCount; i++)
