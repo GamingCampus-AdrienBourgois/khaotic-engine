@@ -143,45 +143,55 @@ void PositionClass::TurnMouse(float deltaX, float deltaY)
 
 void PositionClass::MoveCamera(bool forward, bool backward, bool left, bool right, bool up, bool down)
 {
-	float radians;
-	float speed;
+    float radiansY, radiansX;
+    float speed;
 
-	// Set the speed of the camera.
-	speed = 0.1f;
+    // Set the speed of the camera.
+    speed = 0.1f;
 
-	// Convert degrees to radians.
-	radians = m_rotationY * 0.0174532925f;
+    // Convert degrees to radians.
+    radiansY = m_rotationY * 0.0174532925f;
+    radiansX = m_rotationX * 0.0174532925f;
 
-	// Update the position.
+    // Update the position.
+
+    // If moving forward, the position moves in the direction of the camera and accordingly to its angle.
     if (forward)
     {
-		m_positionX += sinf(radians) * speed;
-		m_positionZ += cosf(radians) * speed;
-	}
+        m_positionX += sinf(radiansY) * cosf(radiansX) * speed;
+        m_positionZ += cosf(radiansY) * cosf(radiansX) * speed;
+        m_positionY -= sinf(radiansX) * speed;
+    }
 
+    // If moving backward, the position moves in the opposite direction of the camera and accordingly to its angle.
     if (backward)
     {
-		m_positionX -= sinf(radians) * speed;
-		m_positionZ -= cosf(radians) * speed;
-	}
+        m_positionX -= sinf(radiansY) * cosf(radiansX) * speed;
+        m_positionZ -= cosf(radiansY) * cosf(radiansX) * speed;
+        m_positionY += sinf(radiansX) * speed;
+    }
 
+    // If moving left, the position moves to the left of the camera and accordingly to its angle.
     if (left)
     {
-		m_positionX -= cosf(radians) * speed;
-		m_positionZ += sinf(radians) * speed;
-	}
+        m_positionX -= cosf(radiansY) * speed;
+        m_positionZ += sinf(radiansY) * speed;
+    }
 
+    // If moving right, the position moves to the right of the camera and accordingly to its angle.
     if (right)
     {
-		m_positionX += cosf(radians) * speed;
-		m_positionZ -= sinf(radians) * speed;
-	}
+        m_positionX += cosf(radiansY) * speed;
+        m_positionZ -= sinf(radiansY) * speed;
+    }
 
+    // If moving up, the position moves up.
     if (up)
     {
 		m_positionY += speed;
 	}
 
+    // If moving down, the position moves down.
     if (down)
     {
 		m_positionY -= speed;
