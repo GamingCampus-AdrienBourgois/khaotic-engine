@@ -1,5 +1,7 @@
 #include "systemclass.h"
 #include <iostream>
+#include <shellapi.h> // Include for DragAcceptFiles and DragQueryFile
+#include <windows.h>
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 SystemClass::SystemClass()
@@ -59,6 +61,7 @@ bool SystemClass::Initialize()
 	// Initialize imgui
 	m_imguiManager = new imguiManager;
 	m_imguiManager->Initialize(m_hwnd, m_Application->GetDirect3D()->GetDevice(), m_Application->GetDirect3D()->GetDeviceContext());
+
 
 	return true;
 }
@@ -218,6 +221,25 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 		}
 	}
 
+	case WM_DROPFILES:
+	{
+		 HDROP hDrop = reinterpret_cast<HDROP>(wparam);
+        UINT numFiles = DragQueryFile(hDrop, 0xFFFFFFFF, nullptr, 0);
+
+        if (numFiles > 0) {
+            // Handle dropped files here
+            for (UINT i = 0; i < numFiles; ++i) {
+                // Get the file name
+                WCHAR filePath[MAX_PATH];
+                DragQueryFile(hDrop, i, filePath, MAX_PATH);
+                std::wcout << L"File dropped: " << filePath << std::endl;
+            }
+        }
+
+        DragFinish(hDrop);
+        return 0;
+	}
+
 	// Any other messages send to the default message handler as our application won't make use of them.
 	default:
 	{
@@ -304,6 +326,9 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	// Hide the mouse cursor.
 	ShowCursor(true);
 
+	//drag and drop 
+	DragAcceptFiles(m_hwnd, TRUE);
+
 	return;
 }
 
@@ -353,6 +378,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 	{
 		PostQuitMessage(0);
 		return 0;
+	}
+
+	case WM_DROPFILES:
+	{
+		ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
+		return(0);
 	}
 
 	// All other messages pass to the message handler in the system class.
