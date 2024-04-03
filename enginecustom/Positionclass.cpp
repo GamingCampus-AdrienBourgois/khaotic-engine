@@ -5,6 +5,9 @@ PositionClass::PositionClass()
     m_frameTime = 0.0f;
     m_rotationY = 0.0f;
     m_rotationX = 0.0f;
+    m_positionX = 0.0f;
+    m_positionY = 0.0f;
+    m_positionZ = 0.0f;
     m_leftTurnSpeed = 0.0f;
     m_rightTurnSpeed = 0.0f;
 }
@@ -29,6 +32,14 @@ void PositionClass::GetRotation(float& y, float& x)
 {
     y = m_rotationY;
     x = m_rotationX;
+    return;
+}
+
+void PositionClass::GetPosition(float& x, float& y, float& z)
+{
+    x = m_positionX;
+    y = m_positionY;
+    z = m_positionZ;
     return;
 }
 
@@ -128,4 +139,53 @@ void PositionClass::TurnMouse(float deltaX, float deltaY)
     }
 
     return;
+}
+
+void PositionClass::MoveCamera(bool forward, bool backward, bool left, bool right, bool up, bool down)
+{
+	float radians;
+	float speed;
+
+	// Set the speed of the camera.
+	speed = 0.1f;
+
+	// Convert degrees to radians.
+	radians = m_rotationY * 0.0174532925f;
+
+	// Update the position.
+    if (forward)
+    {
+		m_positionX += sinf(radians) * speed;
+		m_positionZ += cosf(radians) * speed;
+	}
+
+    if (backward)
+    {
+		m_positionX -= sinf(radians) * speed;
+		m_positionZ -= cosf(radians) * speed;
+	}
+
+    if (left)
+    {
+		m_positionX -= cosf(radians) * speed;
+		m_positionZ += sinf(radians) * speed;
+	}
+
+    if (right)
+    {
+		m_positionX += cosf(radians) * speed;
+		m_positionZ -= sinf(radians) * speed;
+	}
+
+    if (up)
+    {
+		m_positionY += speed;
+	}
+
+    if (down)
+    {
+		m_positionY -= speed;
+	}
+
+	return;
 }
