@@ -276,6 +276,73 @@ bool InputClass::IsRightArrowPressed()
 	return false;
 }
 
+///////////////////////////////////////////////////
+// Les touches correspondent aux claviers QWERTY //
+///////////////////////////////////////////////////
+
+bool InputClass::IsAPressed()
+{
+	// Touche A sur QWERTY, Q sur AZERTY
+	if (m_keyboardState[DIK_A] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool InputClass::IsDPressed()
+{
+	if (m_keyboardState[DIK_D] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool InputClass::IsWPressed()
+{
+	// Touche W sur QWERTY, Z sur AZERTY
+	if (m_keyboardState[DIK_W] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool InputClass::IsSPressed()
+{
+	if (m_keyboardState[DIK_S] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool InputClass::IsQPressed()
+{
+	// Touche Q sur QWERTY, A sur AZERTY
+	if (m_keyboardState[DIK_Q] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool InputClass::IsEPressed()
+{
+	if (m_keyboardState[DIK_E] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 void InputClass::GetMouseLocation(int& mouseX, int& mouseY)
 {
 	mouseX = m_mouseX;

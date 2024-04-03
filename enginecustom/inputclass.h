@@ -38,6 +38,12 @@ public:
 	void KeyUp(unsigned int);
 	bool IsLeftArrowPressed();
 	bool IsRightArrowPressed();
+	bool IsAPressed();
+	bool IsDPressed();
+	bool IsWPressed();
+	bool IsSPressed();
+	bool IsQPressed();
+	bool IsEPressed();
 
 	bool IsKeyDown(unsigned int);
 
