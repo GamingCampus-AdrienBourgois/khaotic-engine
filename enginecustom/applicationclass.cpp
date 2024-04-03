@@ -57,6 +57,8 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	GenerateTerrain();
+
 	// Create the camera object.
 	m_Camera = new CameraClass;
 	if (!m_Camera)
@@ -690,21 +692,18 @@ int ApplicationClass::GetScreenHeight() const
 
 void ApplicationClass::GenerateTerrain()
 {
-	// Set the file name of the model.
 	char modelFilename[128];
-	// Set the name of the texture file that we will be loading.
 	char textureFilename[128];
 	char textureFilename2[128];
-
-	// check if a chunk file already exists
+	// Set the file name of the model.
 	strcpy_s(modelFilename, "plane.txt");
 	strcpy_s(textureFilename, "stone01.tga");
 	strcpy_s(textureFilename2, "moss01.tga");
 
 	// for loop to generate terrain chunks for a 10x10 grid
-	for (int i = -10; i < 10; i++)
+	for (int i = -5; i < 5; i++)
 	{
-		for (int j = -10; j < 10; j++)
+		for (int j = -5; j < 5; j++)
 		{
 			Object* newTerrain = new Object();
 			newTerrain->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2);

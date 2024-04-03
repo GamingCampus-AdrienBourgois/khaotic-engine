@@ -61,7 +61,6 @@ public:
 
 	void GenerateTerrain();
 	void DeleteTerrain();
-	
 
 private:
 	bool Render(float, float, float, float);
