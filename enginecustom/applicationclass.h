@@ -27,6 +27,9 @@
 #include "modellistclass.h"
 #include "positionclass.h"
 #include "frustumclass.h"
+#include "rendertextureclass.h"
+#include "displayplaneclass.h"
+
 
 
 /////////////
@@ -57,6 +60,7 @@ private:
 	bool UpdateMouseStrings(int, int, bool);
 	bool UpdateFps();
 	bool UpdateRenderCountString(int);
+	bool RenderSceneToTexture(float);
 
 private:
 	D3DClass* m_Direct3D;
@@ -87,6 +91,8 @@ private:
 	PositionClass* m_Position;
 	FrustumClass* m_Frustum;
 	XMMATRIX m_baseViewMatrix;
+	RenderTextureClass* m_RenderTexture;
+	DisplayPlaneClass* m_DisplayPlane;
 };
 
 #endif
