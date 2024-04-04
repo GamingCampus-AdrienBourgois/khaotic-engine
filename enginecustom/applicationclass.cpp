@@ -727,7 +727,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	}
 
 	// Construct the frustum.
-	m_Frustum->ConstructFrustum(viewMatrix, projectionMatrix, SCREEN_DEPTH, m_screenWidth, m_screenHeight);
+	m_Frustum->ConstructFrustum(viewMatrix, projectionMatrix, SCREEN_DEPTH);
 
 	// Get the number of models that will be rendered.
 	modelCount = m_ModelList->GetModelCount();
