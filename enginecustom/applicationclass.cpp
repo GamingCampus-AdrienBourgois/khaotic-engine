@@ -73,7 +73,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera->SetPosition(0.0f, 0.0f, -12.0f);
 	m_Camera->SetRotation(0.0f, 0.0f, 0.0f);
 
-	return true;
+	
 
 	// Create and initialize the font shader object.
 	m_FontShader = new FontShaderClass;
@@ -289,8 +289,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
-
-
 	return true;
 }
 
