@@ -28,6 +28,7 @@ ApplicationClass::ApplicationClass()
 	m_ModelList = 0;
 	m_Position = 0;
 	m_Frustum = 0;
+	m_DisplayPlane = 0;
 }
 
 
@@ -162,6 +163,25 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
 		return false;
 	}
+
+	// Create and initialize the render to texture object.
+	m_RenderTexture = new RenderTextureClass;
+
+	result = m_RenderTexture->Initialize(m_Direct3D->GetDevice(), 256, 256, SCREEN_DEPTH, SCREEN_NEAR, 1);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Create and initialize the display plane object.
+	m_DisplayPlane = new DisplayPlaneClass;
+
+	result = m_DisplayPlane->Initialize(m_Direct3D->GetDevice(), 1.0f, 1.0f);
+	if (!result)
+	{
+		return false;
+	}
+
 
 	// Set the sprite info file we will be using.
 	strcpy_s(spriteFilename, "sprite_data_01.txt");
@@ -382,6 +402,14 @@ void ApplicationClass::Shutdown()
 		m_Frustum = 0;
 	}
 
+	// Release the display plane object.
+	if (m_DisplayPlane)
+	{
+		m_DisplayPlane->Shutdown();
+		delete m_DisplayPlane;
+		m_DisplayPlane = 0;
+	}
+
 	// Release the position object.
 	if (m_Position)
 	{
@@ -496,14 +524,6 @@ void ApplicationClass::Shutdown()
 		m_LightShader->Shutdown();
 		delete m_LightShader;
 		m_LightShader = 0;
-	}
-
-	// Release the model object.
-	if (m_Model)
-	{
-		m_Model->Shutdown();
-		delete m_Model;
-		m_Model = 0;
 	}
 
 	// Release the specular map shader object.
@@ -671,6 +691,12 @@ bool ApplicationClass::Frame(InputClass* Input)
 	// Update the z position variable each frame.
 	z -= 0.0174532925f * 0.2f;
 
+	// Render the scene to a render texture.
+	result = RenderSceneToTexture(rotation);
+	if (!result)
+	{
+		return false;
+	}
 
 	// Render the graphics scene.
 	result = Render(rotation, x, y, z);
@@ -695,6 +721,42 @@ bool ApplicationClass::Frame(InputClass* Input)
 	return true;
 }
 
+bool ApplicationClass::RenderSceneToTexture(float rotation)
+{
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
+	bool result;
+
+	// Set the render target to be the render texture and clear it.
+	m_RenderTexture->SetRenderTarget(m_Direct3D->GetDeviceContext());
+	m_RenderTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), 0.0f, 0.5f, 1.0f, 1.0f);
+
+	// Set the position of the camera for viewing the cube.
+	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
+	m_Camera->Render();
+
+	// Get the matrices.
+	m_Direct3D->GetWorldMatrix(worldMatrix);
+	m_Camera->GetViewMatrix(viewMatrix);
+	m_RenderTexture->GetProjectionMatrix(projectionMatrix);
+
+	// Rotate the world matrix by the rotation value so that the cube will spin.
+	worldMatrix = XMMatrixRotationY(rotation);
+
+	// Render the model using the texture shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(1));
+	if (!result)
+	{
+		return false;
+	}
+
+	// Reset the render target back to the original back buffer and not the render to texture anymore.  And reset the viewport back to the original.
+	m_Direct3D->SetBackBufferRenderTarget();
+	m_Direct3D->ResetViewport();
+
+	return true;
+}
 
 bool ApplicationClass::Render(float rotation, float x, float y, float z)
 {
@@ -708,6 +770,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
 	// Generate the view matrix based on the camera's position.
+	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
 	m_Camera->Render();
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
@@ -715,6 +778,42 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 	m_Direct3D->GetOrthoMatrix(orthoMatrix);
+
+	// Setup matrices - Top display plane.
+	worldMatrix = XMMatrixTranslation(0.0f, 1.5f, 0.0f);
+
+	// Render the display plane using the texture shader and the render texture resource.
+	m_DisplayPlane->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_DisplayPlane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_RenderTexture->GetShaderResourceView());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Setup matrices - Bottom left display plane.
+	worldMatrix = XMMatrixTranslation(-1.5f, -1.5f, 0.0f);
+
+	// Render the display plane using the texture shader and the render texture resource.
+	m_DisplayPlane->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_DisplayPlane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_RenderTexture->GetShaderResourceView());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Setup matrices - Bottom right display plane.
+	worldMatrix = XMMatrixTranslation(1.5f, -1.5f, 0.0f);
+
+	// Render the display plane using the texture shader and the render texture resource.
+	m_DisplayPlane->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_DisplayPlane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_RenderTexture->GetShaderResourceView());
+	if (!result)
+	{
+		return false;
+	}
 
 	// Get the light properties.
 	for (i = 0; i < m_numLights; i++)
