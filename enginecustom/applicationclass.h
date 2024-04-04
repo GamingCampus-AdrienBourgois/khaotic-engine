@@ -56,12 +56,11 @@ public:
 	bool Frame(InputClass*);
 
 private:
-	bool Render(float, float, float, float);
+	bool Render(float, float, float, float, float);
 	bool UpdateMouseStrings(int, int, bool);
 	bool UpdateFps();
 	bool UpdateRenderCountString(int);
 	bool RenderSceneToTexture(float);
-	bool RenderTextureTranslation(static float);
 
 private:
 	D3DClass* m_Direct3D;

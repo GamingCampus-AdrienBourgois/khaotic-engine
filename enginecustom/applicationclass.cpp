@@ -683,7 +683,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	m_Camera->Render();
 
 	// Render the graphics scene.
-	result = Render(rotation, x, y, z);
+	result = Render(rotation, x, y, z, textureTranslation);
 	if (!result)
 	{
 		return false;
@@ -718,19 +718,6 @@ bool ApplicationClass::Frame(InputClass* Input)
 		return false;
 	}
 
-	// Render the graphics scene.
-	result = Render(rotation, x, y, z);
-	if (!result)
-	{
-		return false;
-	}
-
-	result = RenderTextureTranslation(textureTranslation);
-	if (!result)
-	{
-		return false;
-	}
-
 	// Check if the mouse has been pressed.
 	mouseDown = Input->IsMousePressed();
 
@@ -751,35 +738,12 @@ bool ApplicationClass::Frame(InputClass* Input)
 		textureTranslation -= 1.0f;
 	}
 
-	return true;
-}
-
-bool ApplicationClass::RenderTextureTranslation(float textureTranslation)
-{
-	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
-	bool result;
-
-
-	// Clear the buffers to begin the scene.
-	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
-
-	// Get the world, view, and projection matrices from the camera and d3d objects.
-	m_Direct3D->GetWorldMatrix(worldMatrix);
-	m_Camera->GetViewMatrix(viewMatrix);
-	m_Direct3D->GetProjectionMatrix(projectionMatrix);
-
-	// Render the model using the translate shader.
-	m_Model->Render(m_Direct3D->GetDeviceContext());
-
-	result = m_TranslateShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-		m_Model->GetTexture(0), textureTranslation);
+	// Render the graphics scene.
+	result = Render(rotation, x, y, z, textureTranslation);
 	if (!result)
 	{
 		return false;
 	}
-
-	// Present the rendered scene to the screen.
-	m_Direct3D->EndScene();
 
 	return true;
 }
@@ -821,7 +785,7 @@ bool ApplicationClass::RenderSceneToTexture(float rotation)
 	return true;
 }
 
-bool ApplicationClass::Render(float rotation, float x, float y, float z)
+bool ApplicationClass::Render(float rotation, float x, float y, float z, float textureTranslation)
 {
 	XMMATRIX worldMatrix, viewMatrix, orthoMatrix, projectionMatrix, rotateMatrix, translateMatrix, scaleMatrix, srMatrix;
 	float positionX, positionY, positionZ, radius;
@@ -848,7 +812,8 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	// Render the display plane using the texture shader and the render texture resource.
 	m_DisplayPlane->Render(m_Direct3D->GetDeviceContext());
 
-	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_DisplayPlane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_RenderTexture->GetShaderResourceView());
+	result = m_TranslateShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0), textureTranslation);
 	if (!result)
 	{
 		return false;
