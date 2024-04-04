@@ -61,6 +61,7 @@ private:
 	bool UpdateFps();
 	bool UpdateRenderCountString(int);
 	bool RenderSceneToTexture(float);
+	bool RenderTextureTranslation(static float);
 
 private:
 	D3DClass* m_Direct3D;

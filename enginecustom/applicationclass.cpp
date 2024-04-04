@@ -29,6 +29,7 @@ ApplicationClass::ApplicationClass()
 	m_Position = 0;
 	m_Frustum = 0;
 	m_DisplayPlane = 0;
+	m_TranslateShader = 0;
 }
 
 
@@ -262,6 +263,16 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	// Create and initialize the translate shader object.
+	m_TranslateShader = new TranslateShaderClass;
+
+	result = m_TranslateShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the translate shader object.", L"Error", MB_OK);
+		return false;
+	}
+
 
 	// Create and initialize the light shader object.
 	m_LightShader = new LightShaderClass;
@@ -395,6 +406,14 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void ApplicationClass::Shutdown()
 {
+	// Release the translate shader object.
+	if (m_TranslateShader)
+	{
+		m_TranslateShader->Shutdown();
+		delete m_TranslateShader;
+		m_TranslateShader = 0;
+	}
+
 	// Release the frustum class object.
 	if (m_Frustum)
 	{
@@ -597,6 +616,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	int mouseX, mouseY, currentMouseX, currentMouseY;
 	bool result, mouseDown, keyDown, buttonQ, buttonD, buttonZ, buttonS, buttonA, buttonE;
 	float rotationY, rotationX, positionX, positionY, positionZ;
+	static float textureTranslation = 0.0f;
 
 	float frameTime;
 
@@ -705,6 +725,12 @@ bool ApplicationClass::Frame(InputClass* Input)
 		return false;
 	}
 
+	result = RenderTextureTranslation(textureTranslation);
+	if (!result)
+	{
+		return false;
+	}
+
 	// Check if the mouse has been pressed.
 	mouseDown = Input->IsMousePressed();
 
@@ -717,6 +743,43 @@ bool ApplicationClass::Frame(InputClass* Input)
 
 	// Update the sprite object using the frame time.
 	m_Sprite->Update(frameTime);
+
+	// Increment the texture translation.
+	textureTranslation += 0.01f;
+	if (textureTranslation > 1.0f)
+	{
+		textureTranslation -= 1.0f;
+	}
+
+	return true;
+}
+
+bool ApplicationClass::RenderTextureTranslation(float textureTranslation)
+{
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
+	bool result;
+
+
+	// Clear the buffers to begin the scene.
+	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
+
+	// Get the world, view, and projection matrices from the camera and d3d objects.
+	m_Direct3D->GetWorldMatrix(worldMatrix);
+	m_Camera->GetViewMatrix(viewMatrix);
+	m_Direct3D->GetProjectionMatrix(projectionMatrix);
+
+	// Render the model using the translate shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_TranslateShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0), textureTranslation);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Present the rendered scene to the screen.
+	m_Direct3D->EndScene();
 
 	return true;
 }
