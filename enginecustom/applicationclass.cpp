@@ -1,4 +1,5 @@
 #include "applicationclass.h"
+#include "systemclass.h"
 
 ApplicationClass::ApplicationClass()
 {
@@ -333,7 +334,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	// Create and initialize the model list object.
 	m_ModelList = new ModelListClass;
-	m_ModelList->Initialize(25);
+	m_ModelList->Initialize(10);
 
 	// Create and initialize the timer object.
 	m_Timer = new TimerClass;
@@ -987,7 +988,6 @@ bool ApplicationClass::UpdateMouseStrings(int mouseX, int mouseY, bool mouseDown
 {
 	char tempString[16], finalString[32];
 	bool result;
-
 
 	// Convert the mouse X integer to string format.
 	sprintf_s(tempString, "%d", mouseX);

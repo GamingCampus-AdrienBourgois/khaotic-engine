@@ -214,7 +214,16 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	SetFocus(m_hwnd);
 
 	// Hide the mouse cursor.
-	ShowCursor(false);
+	ShowCursor(true);
+
+	RECT r;
+
+	GetWindowRect(m_hwnd, &r);
+	ClipCursor(&r);
+
+
+
+
 
 	return;
 }
