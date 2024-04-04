@@ -108,6 +108,9 @@
     <ClCompile Include="positionclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="clipplaneshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="applicationclass.h">
@@ -186,6 +189,9 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="positionclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="clipplaneshaderclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -272,6 +278,12 @@
       <Filter>shader</Filter>
     </None>
     <None Include="specmap.ps">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="clipplane.vs">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="clipplane.ps">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>

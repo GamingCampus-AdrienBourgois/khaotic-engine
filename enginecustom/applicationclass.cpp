@@ -28,6 +28,7 @@ ApplicationClass::ApplicationClass()
 	m_ModelList = 0;
 	m_Position = 0;
 	m_Frustum = 0;
+	m_ClipPlaneShader = 0;
 }
 
 
@@ -368,6 +369,15 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	// Create and initialize the clip plane shader object.
+	m_ClipPlaneShader = new ClipPlaneShaderClass;
+
+	result = m_ClipPlaneShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the clip plane shader object.", L"Error", MB_OK);
+		return false;
+	}
 
 	return true;
 }
@@ -375,6 +385,14 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void ApplicationClass::Shutdown()
 {
+	// Release the clip plane shader object.
+	if (m_ClipPlaneShader)
+	{
+		m_ClipPlaneShader->Shutdown();
+		delete m_ClipPlaneShader;
+		m_ClipPlaneShader = 0;
+	}
+
 	// Release the frustum class object.
 	if (m_Frustum)
 	{
@@ -700,9 +718,12 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 {
 	XMMATRIX worldMatrix, viewMatrix, orthoMatrix, projectionMatrix, rotateMatrix, translateMatrix, scaleMatrix, srMatrix;
 	float positionX, positionY, positionZ, radius;
-	XMFLOAT4 diffuseColor[4], lightPosition[4];
+	XMFLOAT4 diffuseColor[4], lightPosition[4], clipPlane;
 	int  modelCount, renderCount, i;
 	bool result, renderModel;
+
+	// Setup a clipping plane.
+	clipPlane = XMFLOAT4(0.0f, -1.0f, 0.0f, 0.0f);
 
 	// Clear the buffers to begin the scene.
 	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
@@ -757,7 +778,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 			m_Model->Render(m_Direct3D->GetDeviceContext());
 
 			result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-				m_Model->GetTexture(0), diffuseColor, lightPosition);
+				m_Model->GetTexture(0), diffuseColor, lightPosition, clipPlane);
 			if (!result)
 			{
 				return false;

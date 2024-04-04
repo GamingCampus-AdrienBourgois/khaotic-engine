@@ -29,7 +29,7 @@
 #include "frustumclass.h"
 #include "rendertextureclass.h"
 #include "displayplaneclass.h"
-
+#include "clipplaneshaderclass.h"
 
 
 /////////////
@@ -94,6 +94,7 @@ private:
 	RenderTextureClass* m_RenderTexture;
 	DisplayPlaneClass* m_DisplayPlane;
 	float m_screenWidth, m_screenHeight;
+	ClipPlaneShaderClass* m_ClipPlaneShader;
 };
 
 #endif
