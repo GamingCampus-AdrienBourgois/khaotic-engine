@@ -362,6 +362,13 @@ void ApplicationClass::Shutdown()
 	}
 	m_terrainChunk.clear();
 
+	for (auto object : m_object)
+	{
+		object->Shutdown();
+		delete object;
+	}
+	m_object.clear();
+
 	// Release the multitexture shader object.
 	if (m_MultiTextureShader)
 	{
@@ -559,10 +566,6 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 		lightPosition[i] = m_Lights[i].GetPosition();
 	}
 
-
-
-	
-
 	// Render the model using the multitexture shader.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
@@ -622,6 +625,30 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 			diffuseColor, lightPosition);
 		if (!result)
 		{
+			return false;
+		}
+	}
+
+	for (auto object : m_object)
+	{
+		scaleMatrix = object->GetScaleMatrix();
+		if (object->m_demoSpinning)
+			rotateMatrix = XMMatrixRotationY(rotation);
+		else
+		{
+			rotateMatrix = object->GetRotateMatrix();
+		}
+		translateMatrix = object->GetTranslateMatrix();
+		srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
+		worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+
+		object->Render(m_Direct3D->GetDeviceContext());
+
+		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
+			diffuseColor, lightPosition);
+
+		if (!result)
+			{
 			return false;
 		}
 	}
@@ -717,6 +744,31 @@ void ApplicationClass::GenerateTerrain()
 
 }
 
+void ApplicationClass::AddKobject(WCHAR* filepath)
+{
+	char modelFilename[128];
+	char textureFilename[128];
+	char textureFilename2[128];
+	filesystem::path p(filepath);
+	string filename = p.stem().string();
+
+	size_t convertedChars = 0;
+	wcstombs_s(&convertedChars, modelFilename, sizeof(modelFilename), filepath, _TRUNCATE);
+
+
+	// Set the name of the texture file that we will be loading.
+	strcpy_s(textureFilename, "stone01.tga");
+	strcpy_s(textureFilename2, "moss01.tga");
+
+	Object* newObject = new Object();
+	newObject->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2);
+
+	newObject->SetTranslateMatrix(XMMatrixTranslation(0.0f, 0.0f, 0.0f));
+	newObject->SetName(filename);
+
+	m_object.push_back(newObject);
+}
+
 void ApplicationClass::AddCube()
 {
 	char modelFilename[128];
@@ -739,13 +791,13 @@ void ApplicationClass::AddCube()
 	m_cubes.push_back(newCube);
 }
 
-void ApplicationClass::DeleteCube(int index)
+void ApplicationClass::DeleteKobject(int index)
 {
-	if (index < m_cubes.size())
+	if (index < m_object.size())
 	{
-		m_cubes[index]->Shutdown();
-		delete m_cubes[index];
-		m_cubes.erase(m_cubes.begin() + index);
+		m_object[index]->Shutdown();
+		delete m_object[index];
+		m_object.erase(m_object.begin() + index);
 	}
 }
 

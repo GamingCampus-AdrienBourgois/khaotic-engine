@@ -220,10 +220,9 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 			m_initialWindowHeight = newHeight;
 		}
 	}
-
 	case WM_DROPFILES:
 	{
-		 HDROP hDrop = reinterpret_cast<HDROP>(wparam);
+		HDROP hDrop = reinterpret_cast<HDROP>(wparam);
         UINT numFiles = DragQueryFile(hDrop, 0xFFFFFFFF, nullptr, 0);
 
         if (numFiles > 0) {
@@ -233,13 +232,13 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
                 WCHAR filePath[MAX_PATH];
                 DragQueryFile(hDrop, i, filePath, MAX_PATH);
                 std::wcout << L"File dropped: " << filePath << std::endl;
+				m_Application->AddKobject(filePath);
             }
         }
 
         DragFinish(hDrop);
         return 0;
 	}
-
 	// Any other messages send to the default message handler as our application won't make use of them.
 	default:
 	{

@@ -118,3 +118,47 @@ void Object::SetScale(XMVECTOR scale)
 	matrix._33 = XMVectorGetZ(scale);
 	m_scaleMatrix = XMLoadFloat4x4(&matrix);
 }
+
+void Object::UpdateWorldMatrix()
+{
+	m_worldMatrix = m_scaleMatrix * m_rotateMatrix * m_translateMatrix;
+}
+
+void Object::UpdateSRMatrix()
+{
+	m_srMatrix = m_scaleMatrix * m_rotateMatrix;
+}
+
+void Object::UpdateTranslateMatrix()
+{
+	m_translateMatrix = XMMatrixTranslationFromVector(GetPosition());
+}
+
+void Object::UpdateRotateMatrix()
+{
+	m_rotateMatrix = XMMatrixRotationRollPitchYawFromVector(GetRotation());
+}
+
+void Object::UpdateScaleMatrix()
+{
+	m_scaleMatrix = XMMatrixScalingFromVector(GetScale());
+}
+
+void Object::Update()
+{
+	UpdateWorldMatrix();
+	UpdateSRMatrix();
+	UpdateTranslateMatrix();
+	UpdateRotateMatrix();
+	UpdateScaleMatrix();
+}
+
+std::string Object::GetName()
+{
+	return m_name;
+}
+
+void Object::SetName(std::string name)
+{
+	m_name = name;
+}

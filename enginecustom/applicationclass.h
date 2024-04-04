@@ -11,6 +11,7 @@
 #include "lightshaderclass.h"
 #include "lightclass.h"
 #include <vector>
+#include <filesystem>
 
 #include "multitextureshaderclass.h"
 #include "bitmapclass.h"
@@ -53,11 +54,13 @@ public:
 	void SetSpeed(float speed) { this->speed = speed; };
 
 	void AddCube();
-	void DeleteCube(int index);
+	void DeleteKobject(int index);
 	int GetCubeCount() const { return m_cubes.size(); };
 	int GetTerrainCubeCount() const { return m_terrainChunk.size(); };
 	std::vector<Object*> GetCubes() const { return m_cubes; };
 	std::vector<Object*> GetTerrainCubes() const { return m_terrainChunk; };
+	std::vector<Object*> GetKobjects() const { return m_object; };
+	void AddKobject(WCHAR* filepath);
 
 	void GenerateTerrain();
 	void DeleteTerrain();
@@ -89,6 +92,7 @@ private:
 	FpsClass* m_Fps;
 	TextClass* m_FpsString;
 	int m_previousFps;
+	std::vector<Object*> m_object;
 };
 
 #endif

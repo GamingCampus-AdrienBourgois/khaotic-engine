@@ -27,6 +27,17 @@ public:
 	XMVECTOR GetRotation();
 	XMVECTOR GetScale();
 
+	void UpdateWorldMatrix();
+	void UpdateSRMatrix();
+	void UpdateScaleMatrix();
+	void UpdateRotateMatrix();
+	void UpdateTranslateMatrix();
+
+	void Update();
+
+	std::string GetName();
+	void SetName(std::string name);
+
 public :
 	bool m_demoSpinning = false;
 
@@ -37,4 +48,5 @@ private:
 	XMMATRIX m_srMatrix;
 	XMMATRIX m_worldMatrix;
 
+	std::string m_name;
 };

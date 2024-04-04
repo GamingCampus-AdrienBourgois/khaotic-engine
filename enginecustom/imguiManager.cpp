@@ -81,15 +81,16 @@ void imguiManager::WidgetObjectWindow(ApplicationClass* app)
 {
 	ImGui::Begin("Objects");
 	int index = 0;
-	for (auto& object : app->GetCubes())
+	for (auto& object : app->GetKobjects())
 	{
-		std::string headerName = "Object " + std::to_string(index);
+		std::string headerName = object->GetName() + " " + std::to_string(index);
 		if (ImGui::CollapsingHeader(headerName.c_str()))
 		{
 
 			XMVECTOR position = object->GetPosition();
 			XMVECTOR rotation = object->GetRotation();
 			XMVECTOR scale = object->GetScale();
+
 			float pos[3] = { XMVectorGetX(position), XMVectorGetY(position), XMVectorGetZ(position) };
 			std::string posLabel = "Position##" + std::to_string(index);
 			if (ImGui::DragFloat3(posLabel.c_str(), pos))
@@ -117,7 +118,7 @@ void imguiManager::WidgetObjectWindow(ApplicationClass* app)
 			std::string deleteLabel = "Delete##" + std::to_string(index);
 			if (ImGui::Button(deleteLabel.c_str()))
 			{
-				app->DeleteCube(index);
+				app->DeleteKobject(index);
 			}
 
 			ImGui::Separator();
