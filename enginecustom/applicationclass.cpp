@@ -777,8 +777,8 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 			// Render the model using the light shader.
 			m_Model->Render(m_Direct3D->GetDeviceContext());
 
-			result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-				m_Model->GetTexture(0), diffuseColor, lightPosition, clipPlane);
+			result = m_ClipPlaneShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+				m_Model->GetTexture(0), clipPlane);
 			if (!result)
 			{
 				return false;
