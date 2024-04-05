@@ -30,7 +30,7 @@ public:
 
 
 	void Render();
-	XMMATRIX GetViewMatrix();
+	XMMATRIX GetViewMatrix(XMMATRIX& viewMatrix);
 
 private:
 	float m_positionX, m_positionY, m_positionZ;
