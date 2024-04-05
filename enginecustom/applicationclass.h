@@ -15,12 +15,15 @@
 #include "alphamapshaderclass.h"
 #include "bitmapclass.h"
 #include "spriteclass.h"
+#include "textureshaderclass.h"
 #include "timerclass.h"
 #include "fontshaderclass.h"
 #include "fontclass.h"
 #include "textclass.h"
 #include "fpsclass.h"
 #include "inputclass.h"
+#include "normalmapshaderclass.h"
+#include "specmapshaderclass.h"
 #include "shadermanagerclass.h"
 #include "modellistclass.h"
 #include "positionclass.h"
@@ -65,6 +68,7 @@ private:
 	CameraClass* m_Camera;
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
+	LightClass* m_Lights;
 	LightMapShaderClass* m_LightMapShader;
 	MultiTextureShaderClass* m_MultiTextureShader;
 	AlphaMapShaderClass* m_AlphaMapShader;
@@ -82,6 +86,8 @@ private:
 	FpsClass* m_Fps;
 	TextClass* m_FpsString;
 	int m_previousFps;
+	NormalMapShaderClass* m_NormalMapShader;
+	SpecMapShaderClass* m_SpecMapShader;
 	ShaderManagerClass* m_ShaderManager;
 	ModelListClass* m_ModelList;
 	PositionClass* m_Position;

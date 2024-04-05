@@ -85,7 +85,25 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera->Render();
 	m_Camera->GetViewMatrix(m_baseViewMatrix);
 
-	
+	// Create and initialize the specular map shader object.
+	m_SpecMapShader = new SpecMapShaderClass;
+
+	result = m_SpecMapShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the specular map shader object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Create and initialize the normal map shader object.
+	m_NormalMapShader = new NormalMapShaderClass;
+
+	result = m_NormalMapShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the normal map shader object.", L"Error", MB_OK);
+		return false;
+	}
 
 	// Create and initialize the font shader object.
 	m_FontShader = new FontShaderClass;
@@ -274,6 +292,25 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
 	m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetSpecularPower(16.0f);
+
+	// Set the number of lights we will use.
+	m_numLights = 4;
+
+	// Create and initialize the light objects array.
+	m_Lights = new LightClass[m_numLights];
+
+	// Manually set the color and position of each light.
+	m_Lights[0].SetDiffuseColor(1.0f, 0.0f, 0.0f, 1.0f);  // Red
+	m_Lights[0].SetPosition(-3.0f, 1.0f, 3.0f);
+
+	m_Lights[1].SetDiffuseColor(0.0f, 1.0f, 0.0f, 1.0f);  // Green
+	m_Lights[1].SetPosition(3.0f, 1.0f, 3.0f);
+
+	m_Lights[2].SetDiffuseColor(0.0f, 0.0f, 1.0f, 1.0f);  // Blue
+	m_Lights[2].SetPosition(-3.0f, 1.0f, -3.0f);
+
+	m_Lights[3].SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);  // White
+	m_Lights[3].SetPosition(3.0f, 1.0f, -3.0f);
 
 
 	// Create and initialize the normal map shader object.
@@ -509,6 +546,13 @@ void ApplicationClass::Shutdown()
 		m_Sprite = 0;
 	}
 
+	// Release the light objects.
+	if (m_Lights)
+	{
+		delete[] m_Lights;
+		m_Lights = 0;
+	}
+
 	// Release the light object.
 	if (m_Light)
 	{
@@ -522,6 +566,22 @@ void ApplicationClass::Shutdown()
 		m_LightShader->Shutdown();
 		delete m_LightShader;
 		m_LightShader = 0;
+	}
+
+	// Release the normal map shader object.
+	if (m_NormalMapShader) 
+	{
+		m_NormalMapShader->Shutdown();
+		delete m_NormalMapShader;
+		m_NormalMapShader = 0;
+	}
+
+	// Release the specular map shader object.
+	if (m_SpecMapShader)
+	{
+		m_SpecMapShader->Shutdown();
+		delete m_SpecMapShader;
+		m_SpecMapShader = 0;
 	}
 
 	// Release the model object.
