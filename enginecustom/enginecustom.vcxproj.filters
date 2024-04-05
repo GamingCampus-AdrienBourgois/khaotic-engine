@@ -352,12 +352,6 @@
     <None Include="normalmap.ps">
       <Filter>shader</Filter>
     </None>
-    <None Include="specmap.vs">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="specmap.ps">
-      <Filter>shader</Filter>
-    </None>
     <None Include="texture.ps">
       <Filter>Texture</Filter>
     </None>
@@ -398,5 +392,13 @@
     <Text Include="square.txt">
       <Filter>assets</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="specmap.vs">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="specmap.ps">
+      <Filter>shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

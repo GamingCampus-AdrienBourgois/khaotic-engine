@@ -197,6 +197,7 @@ void imguiManager::ImGuiWidgetRenderer(ApplicationClass* app)
 	WidgetAddObject(app);
 	WidgetObjectWindow(app);
 	WidgetTerrainWindow(app);
+	WidgetLightWindow(app);
 
 	ImGui::End();
 
@@ -204,4 +205,48 @@ void imguiManager::ImGuiWidgetRenderer(ApplicationClass* app)
 	Render();
 
 	app->GetDirect3D()->m_swapChain->Present(0, NULL);
+}
+
+void imguiManager::WidgetLightWindow(ApplicationClass* app)
+{
+	ImGui::Begin("Light");
+	int index = 0;
+	for(auto& light : app->GetLights())
+	{
+		std::string headerName = "Light " + std::to_string(index);
+		if (ImGui::CollapsingHeader(headerName.c_str()))
+		{
+			XMVECTOR position = light->GetPosition();
+			XMVECTOR color = light->GetColor();
+			float pos[3] = { XMVectorGetX(position), XMVectorGetY(position), XMVectorGetZ(position) };
+			float col[3] = { XMVectorGetX(color), XMVectorGetY(color), XMVectorGetZ(color) };
+
+			std::string posLabel = "Position##" + std::to_string(index);
+			std::string colLabel = "Color##" + std::to_string(index);
+
+			if (ImGui::DragFloat3(posLabel.c_str(), pos))
+			{
+				light->SetPosition(XMVectorSet(pos[0], pos[1], pos[2], 0.0f));
+			}
+
+			if (ImGui::ColorEdit3(colLabel.c_str(), col))
+			{
+				light->SetColor(XMVectorSet(col[0], col[1], col[2], 0.0f));
+			}
+
+			ImGui::Separator();
+
+			// Delete button
+			std::string deleteLabel = "Delete##" + std::to_string(index);
+			if (ImGui::Button(deleteLabel.c_str()))
+			{
+				app->DeleteLight(index);
+			}
+
+			ImGui::Separator();
+		}
+		index++;
+	})
+
+	ImGui::End();
 }

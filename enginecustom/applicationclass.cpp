@@ -285,20 +285,24 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_numLights = 4;
 
 	// Create and initialize the light objects array.
-	m_Lights = new LightClass[m_numLights];
+	m_Lights.resize(m_numLights);
 
-	// Manually set the color and position of each light.
-	m_Lights[0].SetDiffuseColor(1.0f, 0.0f, 0.0f, 1.0f);  // Red
-	m_Lights[0].SetPosition(-3.0f, 1.0f, 3.0f);
+	// Définissez manuellement la couleur et la position de chaque lumière.
+	m_Lights[0] = new LightClass;
+	m_Lights[0]->SetDiffuseColor(1.0f, 0.0f, 0.0f, 1.0f);  // Rouge
+	m_Lights[0]->SetPosition(-3.0f, 1.0f, 3.0f);
 
-	m_Lights[1].SetDiffuseColor(0.0f, 1.0f, 0.0f, 1.0f);  // Green
-	m_Lights[1].SetPosition(3.0f, 1.0f, 3.0f);
+	m_Lights[1] = new LightClass;
+	m_Lights[1]->SetDiffuseColor(0.0f, 1.0f, 0.0f, 1.0f);  // Vert
+	m_Lights[1]->SetPosition(3.0f, 1.0f, 3.0f);
 
-	m_Lights[2].SetDiffuseColor(0.0f, 0.0f, 1.0f, 1.0f);  // Blue
-	m_Lights[2].SetPosition(-3.0f, 1.0f, -3.0f);
+	m_Lights[2] = new LightClass;
+	m_Lights[2]->SetDiffuseColor(0.0f, 0.0f, 1.0f, 1.0f);  // Bleu
+	m_Lights[2]->SetPosition(-3.0f, 1.0f, -3.0f);
 
-	m_Lights[3].SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);  // White
-	m_Lights[3].SetPosition(3.0f, 1.0f, -3.0f);
+	m_Lights[3] = new LightClass;
+	m_Lights[3]->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);  // Blanc
+	m_Lights[3]->SetPosition(3.0f, 1.0f, -3.0f);
 
 	// Create and initialize the light map shader object.
 	m_LightMapShader = new LightMapShaderClass;
@@ -511,12 +515,12 @@ void ApplicationClass::Shutdown()
 		m_Sprite = 0;
 	}
 
-	  // Release the light objects.
-    if(m_Lights)
-    {
-        delete [] m_Lights;
-        m_Lights = 0;
-    }
+	// Supprimez tous les objets de lumière.
+	for (int i = 0; i < m_Lights.size(); i++)
+	{
+		delete m_Lights[i];
+		m_Lights[i] = 0;
+	}
 
 	// Release the light shader object.
 	if (m_LightShader)
@@ -833,10 +837,10 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	for (i = 0; i < m_numLights; i++)
 	{
 		// Create the diffuse color array from the four light colors.
-		diffuseColor[i] = m_Lights[i].GetDiffuseColor();
+		diffuseColor[i] = m_Lights[i]->GetDiffuseColor();
 
 		// Create the light position array from the four light positions.
-		lightPosition[i] = m_Lights[i].GetPosition();
+		lightPosition[i] = m_Lights[i]->GetPosition();
 	}
 
 	// Construct the frustum.
@@ -1011,10 +1015,10 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	for (i = 0; i < m_numLights; i++)
 	{
 		// Create the diffuse color array from the four light colors.
-		diffuseColor[i] = m_Lights[i].GetDiffuseColor();
+		diffuseColor[i] = m_Lights[i]->GetDiffuseColor();
 
 		// Create the light position array from the four light positions.
-		lightPosition[i] = m_Lights[i].GetPosition();
+		lightPosition[i] = m_Lights[i]->GetPosition();
 	}
 
 	scaleMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);  // Build the scaling matrix.
@@ -1408,4 +1412,40 @@ bool ApplicationClass::UpdateRenderCountString(int renderCount)
 	}
 
 	return true;
+}
+
+XMVECTOR ApplicationClass::GetLightColor(int index)
+{
+	//convert to XMVECTOR
+	XMVECTOR lightColor = XMVectorSet(m_Lights[index]->GetDiffuseColor().x, m_Lights[index]->GetDiffuseColor().y, m_Lights[index]->GetDiffuseColor().z, 1.0f);
+
+	return lightColor;
+}
+
+XMVECTOR ApplicationClass::GetLightPosition(int index)
+{
+	//convert to XMVECTOR
+	XMVECTOR lightPosition = XMVectorSet(m_Lights[index]->GetPosition().x, m_Lights[index]->GetPosition().y, m_Lights[index]->GetPosition().z, 1.0f);
+
+	return lightPosition;
+}
+
+void ApplicationClass::SetLightColor(int index, XMVECTOR color)
+{
+	//convert to XMFLOAT4
+	XMFLOAT4 lightColor;
+	XMStoreFloat4(&lightColor, color);
+
+	//set the color
+	m_Lights[index]->SetDiffuseColor(lightColor.x, lightColor.y, lightColor.z, 1.0f);
+}
+
+void ApplicationClass::SetLightPosition(int index, XMVECTOR position)
+{
+	//convert to XMFLOAT4
+	XMFLOAT4 lightPosition;
+	XMStoreFloat4(&lightPosition, position);
+
+	//set the position
+	m_Lights[index]->SetPosition(lightPosition.x, lightPosition.y, lightPosition.z);
 }

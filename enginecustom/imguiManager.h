@@ -28,6 +28,7 @@ public:
 
 	void WidgetObjectWindow(ApplicationClass* app);
 	void WidgetTerrainWindow(ApplicationClass* app);
+	void WidgetLightWindow(ApplicationClass* app);
 
 	void ImGuiWidgetRenderer(ApplicationClass* app);
 

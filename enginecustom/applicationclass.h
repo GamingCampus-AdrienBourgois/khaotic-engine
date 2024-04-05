@@ -78,6 +78,14 @@ public:
 	void GenerateTerrain();
 	void DeleteTerrain();
 
+	XMVECTOR GetLightPosition(int index);
+	XMVECTOR GetLightColor(int index);
+
+	void SetLightPosition(int index, XMVECTOR color);
+	void SetLightColor(int index, XMVECTOR color);
+
+	std::vector<LightClass*> GetLights() const { return m_Lights; };
+
 private:
 	bool Render(float, float, float, float);
 	bool UpdateMouseStrings(int, int, bool);
@@ -123,7 +131,7 @@ private :
 	// ----------------------------------- //
 
 	LightClass* m_Light;
-	LightClass* m_Lights;
+	std::vector<LightClass*> m_Lights;
 	int m_numLights;
 
 	// ----------------------------------- //
