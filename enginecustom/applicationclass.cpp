@@ -755,7 +755,6 @@ bool ApplicationClass::RenderSceneToTexture(float rotation)
 	m_RenderTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), 0.0f, 0.5f, 1.0f, 1.0f);
 
 	// Set the position of the camera for viewing the cube.
-	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
 	m_Camera->Render();
 
 	// Get the matrices.
@@ -794,7 +793,6 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
 	// Generate the view matrix based on the camera's position.
-	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
 	m_Camera->Render();
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
@@ -1213,6 +1211,7 @@ void ApplicationClass::AddKobject(WCHAR* filepath)
 	char textureFilename[128];
 	char textureFilename2[128];
 	char textureFilename3[128];
+
 	filesystem::path p(filepath);
 	string filename = p.stem().string();
 
