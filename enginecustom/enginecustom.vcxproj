@@ -49,10 +49,6 @@
     <ClCompile Include="textureclass.cpp" />
     <ClCompile Include="textureshaderclass.cpp" />
     <ClCompile Include="Timerclass.cpp" />
-    <ClCompile Include="translate.cpp">
-      <DependentUpon>translate.vs</DependentUpon>
-      <SubType>Code</SubType>
-    </ClCompile>
     <ClCompile Include="translateshaderclass.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -84,10 +80,6 @@
     <ClInclude Include="textureclass.h" />
     <ClInclude Include="textureshaderclass.h" />
     <ClInclude Include="Timerclass.h" />
-    <ClInclude Include="translate.h">
-      <DependentUpon>translate.vs</DependentUpon>
-      <SubType>Code</SubType>
-    </ClInclude>
     <ClInclude Include="translateshaderclass.h" />
   </ItemGroup>
   <ItemGroup>
@@ -152,11 +144,6 @@
     <Midl Include="translate.vs">
       <SubType>Designer</SubType>
     </Midl>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Translate.xaml">
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
