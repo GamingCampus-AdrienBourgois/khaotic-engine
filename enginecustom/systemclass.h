@@ -37,6 +37,7 @@ private:
 	int m_initialWindowWidth;
 	int m_initialWindowHeight;
 	bool m_isDirect3DInitialized;
+	bool m_isResizing = false;
 };
 
 

@@ -206,23 +206,36 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 			m_initialWindowHeight = newHeight;
 		}
 	}
+	case WM_ENTERSIZEMOVE:
+	{
+		m_isResizing = true;
+		break;
+	}
+	case WM_EXITSIZEMOVE:
+	{
+		m_isResizing = false;
+		break;
+	}
 	case WM_DROPFILES:
 	{
-		HDROP hDrop = reinterpret_cast<HDROP>(wparam);
-        UINT numFiles = DragQueryFile(hDrop, 0xFFFFFFFF, nullptr, 0);
+		if (!m_isResizing)
+		{
+			HDROP hDrop = reinterpret_cast<HDROP>(wparam);
+			UINT numFiles = DragQueryFile(hDrop, 0xFFFFFFFF, nullptr, 0);
 
-        if (numFiles > 0) {
-            // Handle dropped files here
-            for (UINT i = 0; i < numFiles; ++i) {
-                // Get the file name
-                WCHAR filePath[MAX_PATH];
-                DragQueryFile(hDrop, i, filePath, MAX_PATH);
-                std::wcout << L"File dropped: " << filePath << std::endl;
-				m_Application->AddKobject(filePath);
-            }
-        }
+			if (numFiles > 0 && m_Application != nullptr) {
+				// Handle dropped files here
+				for (UINT i = 0; i < numFiles; ++i) {
+					// Get the file name
+					WCHAR filePath[MAX_PATH];
+					DragQueryFile(hDrop, i, filePath, MAX_PATH);
+					std::wcout << L"File dropped: " << filePath << std::endl;
+					m_Application->AddKobject(filePath);
+				}
+			}
 
-        DragFinish(hDrop);
+			DragFinish(hDrop);
+		}
         return 0;
 	}
 	// Any other messages send to the default message handler as our application won't make use of them.

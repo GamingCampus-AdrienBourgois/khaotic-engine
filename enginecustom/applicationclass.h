@@ -156,6 +156,7 @@ private :
 	FpsClass* m_Fps;
 	TextClass* m_FpsString;
 	int m_previousFps;
+
 };
 
 #endif
