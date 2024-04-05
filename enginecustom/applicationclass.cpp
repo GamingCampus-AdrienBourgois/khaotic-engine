@@ -29,6 +29,7 @@ ApplicationClass::ApplicationClass()
 	m_Position = 0;
 	m_Frustum = 0;
 	m_DisplayPlane = 0;
+	m_ReflectionShader = 0;
 }
 
 
