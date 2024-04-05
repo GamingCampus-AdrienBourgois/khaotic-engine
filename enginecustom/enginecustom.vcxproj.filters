@@ -391,4 +391,12 @@
       <Filter>assets</Filter>
     </Text>
   </ItemGroup>
+  <ItemGroup>
+    <Midl Include="translate.ps">
+      <Filter>shader</Filter>
+    </Midl>
+    <Midl Include="translate.vs">
+      <Filter>shader</Filter>
+    </Midl>
+  </ItemGroup>
 </Project>
