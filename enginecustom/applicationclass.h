@@ -30,6 +30,8 @@
 #include "rendertextureclass.h"
 #include "displayplaneclass.h"
 #include "translateshaderclass.h"
+#include "transparentshaderclass.h"
+
 
 
 /////////////
@@ -95,6 +97,7 @@ private:
 	DisplayPlaneClass* m_DisplayPlane;
 	float m_screenWidth, m_screenHeight;
 	TranslateShaderClass* m_TranslateShader;
+	TransparentShaderClass* m_TransparentShader;
 };
 
 #endif

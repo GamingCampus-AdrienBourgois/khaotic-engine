@@ -29,6 +29,7 @@ ApplicationClass::ApplicationClass()
 	m_Position = 0;
 	m_Frustum = 0;
 	m_DisplayPlane = 0;
+	m_TransparentShader = 0;
 }
 
 
@@ -395,6 +396,14 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void ApplicationClass::Shutdown()
 {
+	// Release the transparent shader object.
+	if (m_TransparentShader)
+	{
+		m_TransparentShader->Shutdown();
+		delete m_TransparentShader;
+		m_TransparentShader = 0;
+	}
+
 	// Release the frustum class object.
 	if (m_Frustum)
 	{
@@ -607,6 +616,8 @@ bool ApplicationClass::Frame(InputClass* Input)
 	static float y = 3.f;
 	static float z = 0.f;
 
+	
+
 	// Update the system stats.
 	m_Timer->Frame();
 
@@ -761,10 +772,14 @@ bool ApplicationClass::RenderSceneToTexture(float rotation)
 bool ApplicationClass::Render(float rotation, float x, float y, float z)
 {
 	XMMATRIX worldMatrix, viewMatrix, orthoMatrix, projectionMatrix, rotateMatrix, translateMatrix, scaleMatrix, srMatrix;
-	float positionX, positionY, positionZ, radius;
+	float positionX, positionY, positionZ, radius, blendAmount;
 	XMFLOAT4 diffuseColor[4], lightPosition[4];
 	int  modelCount, renderCount, i;
 	bool result, renderModel;
+
+
+	// Set the blending amount to 50%.
+	blendAmount = 0.5f;
 
 	// Clear the buffers to begin the scene.
 	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
@@ -1071,6 +1086,13 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	//{
 	//	return false;
 	//}
+
+	//bozo
+	result = m_TransparentShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(1), blendAmount);
+	if (!result)
+	{
+		return false;
+	}
 
 	// Enable the Z buffer and disable alpha blending now that 2D rendering is complete.
 	m_Direct3D->TurnZBufferOn();
