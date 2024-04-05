@@ -29,6 +29,9 @@ ApplicationClass::ApplicationClass()
 	m_Position = 0;
 	m_Frustum = 0;
 	m_DisplayPlane = 0;
+	m_FloorModel = 0;
+	m_CubeModel = 0;
+	m_RenderTexture = 0;
 	m_ReflectionShader = 0;
 }
 
@@ -251,7 +254,43 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	strcpy_s(textureFilename1, "stone01.tga");
 	strcpy_s(textureFilename2, "normal01.tga");
 	strcpy_s(textureFilename3, "alpha01.tga");
-	// A FAIRE: Ajouter une nouvelle texture pour le multitexturing
+
+	// Create and initialize the cube model object.
+	m_CubeModel = new ModelClass;
+
+	result = m_CubeModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2, textureFilename3);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the cube model object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Set the file name of the floor model.
+	strcpy_s(modelFilename, "floor.txt");
+
+	// Set the file name of the floor model.
+	strcpy_s(textureFilename1, "blue01.tga");
+
+	// Create and initialize the floor model object.
+	m_FloorModel = new ModelClass;
+
+	result = m_FloorModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename1, textureFilename1);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the floor model object.", L"Error", MB_OK);
+		return false;
+	}
+
+
+	// Create and initialize the reflection shader object.
+	m_ReflectionShader = new ReflectionShaderClass;
+
+	result = m_ReflectionShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the reflection shader object.", L"Error", MB_OK);
+		return false;
+	}
 
 	// Create and initialize the model object.
 	m_Model = new ModelClass;
@@ -262,7 +301,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}
-
 
 	// Create and initialize the light shader object.
 	m_LightShader = new LightShaderClass;
@@ -396,6 +434,46 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void ApplicationClass::Shutdown()
 {
+	// Release the reflection shader object.
+	if (m_ReflectionShader)
+	{
+		m_ReflectionShader->Shutdown();
+		delete m_ReflectionShader;
+		m_ReflectionShader = 0;
+	}
+
+	// Release the texture shader object.
+	if (m_TextureShader)
+	{
+		m_TextureShader->Shutdown();
+		delete m_TextureShader;
+		m_TextureShader = 0;
+	}
+
+	// Release the render texture object.
+	if (m_RenderTexture)
+	{
+		m_RenderTexture->Shutdown();
+		delete m_RenderTexture;
+		m_RenderTexture = 0;
+	}
+
+	// Release the cube model object.
+	if (m_CubeModel)
+	{
+		m_CubeModel->Shutdown();
+		delete m_CubeModel;
+		m_CubeModel = 0;
+	}
+
+	// Release the floor model object.
+	if (m_FloorModel)
+	{
+		m_FloorModel->Shutdown();
+		delete m_FloorModel;
+		m_FloorModel = 0;
+	}
+
 	// Release the frustum class object.
 	if (m_Frustum)
 	{

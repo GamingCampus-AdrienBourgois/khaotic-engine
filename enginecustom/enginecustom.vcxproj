@@ -40,6 +40,7 @@
     <ClCompile Include="Multitextureshaderclass.cpp" />
     <ClCompile Include="normalmapshaderclass.cpp" />
     <ClCompile Include="positionclass.cpp" />
+    <ClCompile Include="reflectionshaderclass.cpp" />
     <ClCompile Include="rendertextureclass.cpp" />
     <ClCompile Include="specmapshaderclass.cpp" />
     <ClCompile Include="Spriteclass.cpp" />
@@ -71,6 +72,7 @@
     <ClInclude Include="Multitextureshaderclass.h" />
     <ClInclude Include="normalmapshaderclass.h" />
     <ClInclude Include="positionclass.h" />
+    <ClInclude Include="reflectionshaderclass.h" />
     <ClInclude Include="rendertextureclass.h" />
     <ClInclude Include="specmapshaderclass.h" />
     <ClInclude Include="Spriteclass.h" />
@@ -95,6 +97,8 @@
     <None Include="normalmap.ps" />
     <None Include="normalmap.vs" />
     <None Include="packages.config" />
+    <None Include="reflection.ps" />
+    <None Include="reflection.vs" />
     <None Include="specmap.ps" />
     <None Include="specmap.vs" />
     <None Include="texture.ps" />
@@ -120,6 +124,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="alpha01.tga" />
+    <Image Include="blue01.tga" />
     <Image Include="dirt01.tga" />
     <Image Include="font01.tga" />
     <Image Include="light01.tga" />
@@ -131,6 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="cube.txt" />
+    <Text Include="floor.txt" />
     <Text Include="font01.txt" />
     <Text Include="plane.txt" />
     <Text Include="sphere.txt" />

@@ -30,6 +30,7 @@
 #include "rendertextureclass.h"
 #include "displayplaneclass.h"
 #include "translateshaderclass.h"
+#include "reflectionshaderclass.h"
 
 
 /////////////
@@ -94,7 +95,10 @@ private:
 	RenderTextureClass* m_RenderTexture;
 	DisplayPlaneClass* m_DisplayPlane;
 	float m_screenWidth, m_screenHeight;
+	ModelClass* m_CubeModel;
+	ModelClass* m_FloorModel;
 	TranslateShaderClass* m_TranslateShader;
+	ReflectionShaderClass* m_ReflectionShader;
 };
 
 #endif
