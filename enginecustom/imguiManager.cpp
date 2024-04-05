@@ -74,6 +74,31 @@ void imguiManager::WidgetAddObject(ApplicationClass* app)
 		}
 		ImGui::SameLine();
 		ImGui::Text("Number of cubes: %d", app->GetCubeCount());
+
+		if (ImGui::Button("Import Object"))
+		{
+			// Open file dialog
+			OPENFILENAME ofn;
+			WCHAR szFile[260];
+			ZeroMemory(&ofn, sizeof(ofn));
+			ofn.lStructSize = sizeof(ofn);
+			ofn.hwndOwner = NULL;
+			ofn.lpstrFile = szFile;
+			ofn.lpstrFile[0] = '\0';
+			ofn.nMaxFile = sizeof(szFile);
+			ofn.lpstrFilter = L"OBJ\0*.obj\0TXT\0*.txt\0KOBJ\0*.kobj";
+			ofn.nFilterIndex = 1;
+			ofn.lpstrFileTitle = NULL;
+			ofn.nMaxFileTitle = 0;
+			ofn.lpstrInitialDir = NULL;
+			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+			if (GetOpenFileName(&ofn))
+			{
+				app->AddKobject(ofn.lpstrFile);
+			}
+
+		}
 	}
 }
 

@@ -441,6 +441,7 @@ void ApplicationClass::Shutdown()
 		delete[] m_MouseStrings;
 		m_MouseStrings = 0;
 	}
+
 	// Release the text object for the fps string.
 	if (m_FpsString)
 	{

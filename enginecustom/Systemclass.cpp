@@ -159,7 +159,7 @@ bool SystemClass::Frame()
 		return false;
 	}
 
-	// Render ImGui
+	// Render ImGui 
 	m_imguiManager->ImGuiWidgetRenderer(m_Application);
 
 	return true;
