@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.props" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -26,18 +25,23 @@
     <ClCompile Include="Cameraclass.cpp" />
     <ClCompile Include="Colorshaderclass.cpp" />
     <ClCompile Include="d3dclass.cpp" />
+    <ClCompile Include="displayplaneclass.cpp" />
     <ClCompile Include="fontclass.cpp" />
     <ClCompile Include="fontshaderclass.cpp" />
     <ClCompile Include="fpsclass.cpp" />
+    <ClCompile Include="frustumclass.cpp" />
     <ClCompile Include="inputclass.cpp" />
     <ClCompile Include="Lightclass.cpp" />
     <ClCompile Include="lightmapshaderclass.cpp" />
     <ClCompile Include="Lightshaderclass.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="modelclass.cpp" />
+    <ClCompile Include="modellistclass.cpp" />
     <ClCompile Include="Multitextureshaderclass.cpp" />
     <ClCompile Include="normalmapshaderclass.cpp" />
     <ClCompile Include="shadermanagerclass.cpp" />
+    <ClCompile Include="positionclass.cpp" />
+    <ClCompile Include="rendertextureclass.cpp" />
     <ClCompile Include="specmapshaderclass.cpp" />
     <ClCompile Include="Spriteclass.cpp" />
     <ClCompile Include="Systemclass.cpp" />
@@ -45,6 +49,7 @@
     <ClCompile Include="textureclass.cpp" />
     <ClCompile Include="textureshaderclass.cpp" />
     <ClCompile Include="Timerclass.cpp" />
+    <ClCompile Include="translateshaderclass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="alphamapshaderclass.h" />
@@ -53,17 +58,22 @@
     <ClInclude Include="Cameraclass.h" />
     <ClInclude Include="Colorshaderclass.h" />
     <ClInclude Include="d3dclass.h" />
+    <ClInclude Include="displayplaneclass.h" />
     <ClInclude Include="fontclass.h" />
     <ClInclude Include="fontshaderclass.h" />
     <ClInclude Include="fpsclass.h" />
+    <ClInclude Include="frustumclass.h" />
     <ClInclude Include="inputclass.h" />
     <ClInclude Include="lightclass.h" />
     <ClInclude Include="lightmapshaderclass.h" />
     <ClInclude Include="lightshaderclass.h" />
     <ClInclude Include="modelclass.h" />
+    <ClInclude Include="modellistclass.h" />
     <ClInclude Include="Multitextureshaderclass.h" />
     <ClInclude Include="normalmapshaderclass.h" />
     <ClInclude Include="shadermanagerclass.h" />
+    <ClInclude Include="positionclass.h" />
+    <ClInclude Include="rendertextureclass.h" />
     <ClInclude Include="specmapshaderclass.h" />
     <ClInclude Include="Spriteclass.h" />
     <ClInclude Include="systemclass.h" />
@@ -71,6 +81,7 @@
     <ClInclude Include="textureclass.h" />
     <ClInclude Include="textureshaderclass.h" />
     <ClInclude Include="Timerclass.h" />
+    <ClInclude Include="translateshaderclass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="alphamap.ps" />
@@ -85,7 +96,6 @@
     <None Include="Multitexture.vs" />
     <None Include="normalmap.ps" />
     <None Include="normalmap.vs" />
-    <None Include="packages.config" />
     <None Include="specmap.ps" />
     <None Include="specmap.vs" />
     <None Include="texture.ps" />
@@ -97,7 +107,6 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <FileType>Document</FileType>
     </None>
     <None Include="Color.vs">
@@ -105,7 +114,6 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <FileType>Document</FileType>
     </None>
   </ItemGroup>
@@ -127,11 +135,20 @@
     <Text Include="sphere.txt" />
     <Text Include="square.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="translate.ps">
+      <SubType>Designer</SubType>
+      <FileType>Document</FileType>
+    </None>
+    <None Include="translate.vs">
+      <SubType>Designer</SubType>
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{92cf56c4-76bb-40d4-8fe5-36c15f5f127a}</ProjectGuid>
-    <RootNamespace>enginecustom</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -236,14 +253,4 @@
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.targets')" />
-  </ImportGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>Ce projet fait référence à des packages NuGet qui sont manquants sur cet ordinateur. Utilisez l'option de restauration des packages NuGet pour les télécharger. Pour plus d'informations, consultez http://go.microsoft.com/fwlink/?LinkID=322105. Le fichier manquant est : {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.props'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.targets'))" />
-  </Target>
 </Project>

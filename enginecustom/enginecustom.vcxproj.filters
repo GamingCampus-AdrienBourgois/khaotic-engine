@@ -100,6 +100,22 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="shadermanagerclass.cpp">
+    <ClCompile Include="frustumclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="modellistclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="positionclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="displayplaneclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="rendertextureclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="translateshaderclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -174,6 +190,22 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="shadermanagerclass.h">
+    <ClInclude Include="frustumclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="modellistclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="positionclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="displayplaneclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="rendertextureclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="translateshaderclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -279,5 +311,13 @@
     <Text Include="square.txt">
       <Filter>assets</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Midl Include="translate.ps">
+      <Filter>shader</Filter>
+    </Midl>
+    <Midl Include="translate.vs">
+      <Filter>shader</Filter>
+    </Midl>
   </ItemGroup>
 </Project>

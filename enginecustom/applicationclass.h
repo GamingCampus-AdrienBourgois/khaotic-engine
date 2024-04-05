@@ -22,6 +22,12 @@
 #include "fpsclass.h"
 #include "inputclass.h"
 #include "shadermanagerclass.h"
+#include "modellistclass.h"
+#include "positionclass.h"
+#include "frustumclass.h"
+#include "rendertextureclass.h"
+#include "displayplaneclass.h"
+#include "translateshaderclass.h"
 
 
 /////////////
@@ -48,9 +54,11 @@ public:
 	bool Frame(InputClass*);
 
 private:
-	bool Render(float, float, float, float);
+	bool Render(float, float, float, float, float);
 	bool UpdateMouseStrings(int, int, bool);
 	bool UpdateFps();
+	bool UpdateRenderCountString(int);
+	bool RenderSceneToTexture(float);
 
 private:
 	D3DClass* m_Direct3D;
@@ -68,12 +76,21 @@ private:
 	TextClass* m_MouseStrings;
 	int m_numLights;
 	FontShaderClass* m_FontShader;
+	TextClass* m_RenderCountString;
 	FontClass* m_Font;
 	TextClass *m_TextString1, *m_TextString2, *m_TextString3;
 	FpsClass* m_Fps;
 	TextClass* m_FpsString;
 	int m_previousFps;
 	ShaderManagerClass* m_ShaderManager;
+	ModelListClass* m_ModelList;
+	PositionClass* m_Position;
+	FrustumClass* m_Frustum;
+	XMMATRIX m_baseViewMatrix;
+	RenderTextureClass* m_RenderTexture;
+	DisplayPlaneClass* m_DisplayPlane;
+	float m_screenWidth, m_screenHeight;
+	TranslateShaderClass* m_TranslateShader;
 };
 
 #endif

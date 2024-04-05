@@ -234,11 +234,11 @@ void InputClass::ProcessInput()
 	m_mouseX += m_mouseState.lX;
 	m_mouseY += m_mouseState.lY;
 
-	// Ensure the mouse location doesn't exceed the screen width or height.
-	if (m_mouseX < 0) { m_mouseX = 0; }
-	if (m_mouseY < 0) { m_mouseY = 0; }
+	//// Ensure the mouse location doesn't exceed the screen width or height.
+	//if (m_mouseX < 0) { m_mouseX = 0; }
+	if (m_mouseY < -m_screenHeight) { m_mouseY = -m_screenHeight; }
 
-	if (m_mouseX > m_screenWidth) { m_mouseX = m_screenWidth; }
+	//if (m_mouseX > m_screenWidth) { m_mouseX = m_screenWidth; }
 	if (m_mouseY > m_screenHeight) { m_mouseY = m_screenHeight; }
 
 	return;
@@ -248,6 +248,94 @@ bool InputClass::IsEscapePressed()
 {
 	// Do a bitwise and on the keyboard state to check if the escape key is currently being pressed.
 	if (m_keyboardState[DIK_ESCAPE] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool InputClass::IsLeftArrowPressed()
+{
+	if (m_keyboardState[DIK_LEFT] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+
+bool InputClass::IsRightArrowPressed()
+{
+	if (m_keyboardState[DIK_RIGHT] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+///////////////////////////////////////////////////
+// Les touches correspondent aux claviers QWERTY //
+///////////////////////////////////////////////////
+
+bool InputClass::IsAPressed()
+{
+	// Touche A sur QWERTY, Q sur AZERTY
+	if (m_keyboardState[DIK_A] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool InputClass::IsDPressed()
+{
+	if (m_keyboardState[DIK_D] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool InputClass::IsWPressed()
+{
+	// Touche W sur QWERTY, Z sur AZERTY
+	if (m_keyboardState[DIK_W] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool InputClass::IsSPressed()
+{
+	if (m_keyboardState[DIK_S] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool InputClass::IsQPressed()
+{
+	// Touche Q sur QWERTY, A sur AZERTY
+	if (m_keyboardState[DIK_Q] & 0x80)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool InputClass::IsEPressed()
+{
+	if (m_keyboardState[DIK_E] & 0x80)
 	{
 		return true;
 	}

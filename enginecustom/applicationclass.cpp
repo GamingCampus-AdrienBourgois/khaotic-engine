@@ -23,6 +23,14 @@ ApplicationClass::ApplicationClass()
 	m_Fps = 0;
 	m_FpsString = 0;
 	m_ShaderManager = 0;
+	m_NormalMapShader = 0;
+	m_SpecMapShader = 0;
+	m_RenderCountString = 0;
+	m_ModelList = 0;
+	m_Position = 0;
+	m_Frustum = 0;
+	m_DisplayPlane = 0;
+	m_TranslateShader = 0;
 }
 
 
@@ -40,12 +48,14 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 	char mouseString1[32], mouseString2[32], mouseString3[32];
 	char testString1[32], testString2[32], testString3[32];
-	char modelFilename[128], textureFilename1[128], textureFilename2[128], textureFilename3[128];
+	char modelFilename[128], textureFilename1[128], textureFilename2[128], textureFilename3[128], renderString[32];
 	char bitmapFilename[128];
 	char spriteFilename[128];
 	char fpsString[32];
 	bool result;
 
+	m_screenWidth = screenWidth;
+	m_screenHeight = screenHeight;
 
 	// Create the Direct3D object.
 	m_Direct3D = new D3DClass;
@@ -72,6 +82,8 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Set the initial position of the camera.
 	m_Camera->SetPosition(0.0f, 0.0f, -12.0f);
 	m_Camera->SetRotation(0.0f, 0.0f, 0.0f);
+	m_Camera->Render();
+	m_Camera->GetViewMatrix(m_baseViewMatrix);
 
 	
 
@@ -136,6 +148,25 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	// Create and initialize the render to texture object.
+	m_RenderTexture = new RenderTextureClass;
+
+	result = m_RenderTexture->Initialize(m_Direct3D->GetDevice(), 256, 256, SCREEN_DEPTH, SCREEN_NEAR, 1);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Create and initialize the display plane object.
+	m_DisplayPlane = new DisplayPlaneClass;
+
+	result = m_DisplayPlane->Initialize(m_Direct3D->GetDevice(), 1.0f, 1.0f);
+	if (!result)
+	{
+		return false;
+	}
+
+
 	// Set the sprite info file we will be using.
 	strcpy_s(spriteFilename, "sprite_data_01.txt");
 
@@ -143,15 +174,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Sprite = new SpriteClass;
 
 	result = m_Sprite->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, spriteFilename, 50, 50);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Create and initialize the timer object.
-	m_Timer = new TimerClass;
-
-	result = m_Timer->Initialize();
 	if (!result)
 	{
 		return false;
@@ -224,6 +246,16 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	// Create and initialize the translate shader object.
+	m_TranslateShader = new TranslateShaderClass;
+
+	result = m_TranslateShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the translate shader object.", L"Error", MB_OK);
+		return false;
+	}
+
 
 	// Create and initialize the light shader object.
 	m_LightShader = new LightShaderClass;
@@ -272,6 +304,56 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	// Create and initialize the font shader object.
+	m_FontShader = new FontShaderClass;
+
+	result = m_FontShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the font shader object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Create and initialize the font object.
+	m_Font = new FontClass;
+
+	result = m_Font->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), 0);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Set the initial render count string.
+	strcpy_s(renderString, "Render Count: 0");
+
+	// Create and initialize the text object for the render count string.
+	m_RenderCountString = new TextClass;
+
+	result = m_RenderCountString->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, 32, m_Font, renderString, 10, 10, 1.0f, 1.0f, 1.0f);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Create and initialize the model list object.
+	m_ModelList = new ModelListClass;
+	m_ModelList->Initialize(25);
+
+	// Create and initialize the timer object.
+	m_Timer = new TimerClass;
+
+	result = m_Timer->Initialize();
+	if (!result)
+	{
+		return false;
+	}
+
+	// Create the position class object.
+	m_Position = new PositionClass;
+
+	// Create the frustum class object.
+	m_Frustum = new FrustumClass;
+
 	// Create and initialize the fps object.
 	m_Fps = new FpsClass();
 
@@ -301,6 +383,52 @@ void ApplicationClass::Shutdown()
 		m_ShaderManager->Shutdown();
 		delete m_ShaderManager;
 		m_ShaderManager = 0;
+	}
+
+	// Release the translate shader object.
+	if (m_TranslateShader)
+	{
+		m_TranslateShader->Shutdown();
+		delete m_TranslateShader;
+		m_TranslateShader = 0;
+	}
+
+	// Release the frustum class object.
+	if (m_Frustum)
+	{
+		delete m_Frustum;
+		m_Frustum = 0;
+	}
+
+	// Release the display plane object.
+	if (m_DisplayPlane)
+	{
+		m_DisplayPlane->Shutdown();
+		delete m_DisplayPlane;
+		m_DisplayPlane = 0;
+	}
+
+	// Release the position object.
+	if (m_Position)
+	{
+		delete m_Position;
+		m_Position = 0;
+	}
+
+	// Release the model list object.
+	if (m_ModelList)
+	{
+		m_ModelList->Shutdown();
+		delete m_ModelList;
+		m_ModelList = 0;
+	}
+
+	// Release the text objects for the render count string.
+	if (m_RenderCountString)
+	{
+		m_RenderCountString->Shutdown();
+		delete m_RenderCountString;
+		m_RenderCountString = 0;
 	}
 
 	// Release the text objects for the mouse strings.
@@ -456,17 +584,78 @@ void ApplicationClass::Shutdown()
 
 bool ApplicationClass::Frame(InputClass* Input)
 {
-	int mouseX, mouseY;
-	bool result, mouseDown;
+	int mouseX, mouseY, currentMouseX, currentMouseY;
+	bool result, mouseDown, keyDown, buttonQ, buttonD, buttonZ, buttonS, buttonA, buttonE;
+	float rotationY, rotationX, positionX, positionY, positionZ;
+	static float textureTranslation = 0.0f;
 
 	float frameTime;
+
+	static int lastMouseX = 0, lastMouseY = 0;
+
 	static float rotation = 360.0f;
 	static float x = 0.f;
 	static float y = 0.f;
 	static float z = -8.f;
 
+	// Update the system stats.
+	m_Timer->Frame();
+
+	// Get the current frame time.
+	frameTime = m_Timer->GetTime();
+
 	// Check if the user pressed escape and wants to exit the application.
 	if (Input->IsEscapePressed())
+	{
+		return false;
+	}
+
+	// Get the location of the mouse from the input object,
+	Input->GetMouseLocation(mouseX, mouseY);
+
+	currentMouseX = mouseX;
+
+	float deltaX = currentMouseX - lastMouseX;  // Calculez le d�placement de la souris
+	lastMouseX = currentMouseX;  // Mettez � jour la derni�re position de la souris pour la prochaine image
+
+	currentMouseY = mouseY;
+
+	float deltaY = currentMouseY - lastMouseY;  // Calculez le d�placement de la souris
+	lastMouseY = currentMouseY;  // Mettez � jour la derni�re position de la souris pour la prochaine image
+
+	// Set the frame time for calculating the updated position.
+	m_Position->SetFrameTime(m_Timer->GetTime());
+
+	// Check if the left or right arrow key has been pressed, if so rotate the camera accordingly.
+	keyDown = Input->IsLeftArrowPressed();
+	m_Position->TurnLeft(keyDown);
+
+	keyDown = Input->IsRightArrowPressed();
+	m_Position->TurnRight(keyDown);
+
+	m_Position->TurnMouse(deltaX, deltaY);
+
+	// Get the current view point rotation.
+	m_Position->GetRotation(rotationY, rotationX);
+
+	// Check if the a(q), d, w(z), s, q(a), e have been pressed, if so move the camera accordingly.
+	buttonQ = Input->IsAPressed();
+	buttonD = Input->IsDPressed();
+	buttonZ = Input->IsWPressed();
+	buttonS = Input->IsSPressed();
+	buttonA = Input->IsQPressed();
+	buttonE = Input->IsEPressed();
+	m_Position->MoveCamera(buttonZ, buttonS, buttonQ, buttonD, buttonE, buttonA);
+	m_Position->GetPosition(positionX, positionY, positionZ);
+
+	// Set the postion and rotation of the camera.
+	m_Camera->SetPosition(positionX, positionY, positionZ);
+	m_Camera->SetRotation(rotationX, rotationY, 0.0f);
+	m_Camera->Render();
+
+	// Render the graphics scene.
+	result = Render(rotation, x, y, z, textureTranslation);
+	if (!result)
 	{
 		return false;
 	}
@@ -493,16 +682,12 @@ bool ApplicationClass::Frame(InputClass* Input)
 	//// Update the z position variable each frame.
 	//z -= 0.0174532925f * 0.2f;
 
-
-	// Render the graphics scene.
-	result = Render(rotation, x, y, z);
+	// Render the scene to a render texture.
+	result = RenderSceneToTexture(rotation);
 	if (!result)
 	{
 		return false;
 	}
-
-	// Get the location of the mouse from the input object,
-	Input->GetMouseLocation(mouseX, mouseY);
 
 	// Check if the mouse has been pressed.
 	mouseDown = Input->IsMousePressed();
@@ -514,30 +699,76 @@ bool ApplicationClass::Frame(InputClass* Input)
 		return false;
 	}
 
-	// Update the system stats.
-	m_Timer->Frame();
-
-	// Get the current frame time.
-	frameTime = m_Timer->GetTime();
-
 	// Update the sprite object using the frame time.
 	m_Sprite->Update(frameTime);
+
+	// Increment the texture translation.
+	textureTranslation += 0.01f;
+	if (textureTranslation > 1.0f)
+	{
+		textureTranslation -= 1.0f;
+	}
+
+	// Render the graphics scene.
+	result = Render(rotation, x, y, z, textureTranslation);
+	if (!result)
+	{
+		return false;
+	}
 
 	return true;
 }
 
+bool ApplicationClass::RenderSceneToTexture(float rotation)
+{
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
+	bool result;
 
-bool ApplicationClass::Render(float rotation, float x, float y, float z)
+	// Set the render target to be the render texture and clear it.
+	m_RenderTexture->SetRenderTarget(m_Direct3D->GetDeviceContext());
+	m_RenderTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), 0.0f, 0.5f, 1.0f, 1.0f);
+
+	// Set the position of the camera for viewing the cube.
+	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
+	m_Camera->Render();
+
+	// Get the matrices.
+	m_Direct3D->GetWorldMatrix(worldMatrix);
+	m_Camera->GetViewMatrix(viewMatrix);
+	m_RenderTexture->GetProjectionMatrix(projectionMatrix);
+
+	// Rotate the world matrix by the rotation value so that the cube will spin.
+	worldMatrix = XMMatrixRotationY(rotation);
+
+	// Render the model using the texture shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(1));
+	if (!result)
+	{
+		return false;
+	}
+
+	// Reset the render target back to the original back buffer and not the render to texture anymore.  And reset the viewport back to the original.
+	m_Direct3D->SetBackBufferRenderTarget();
+	m_Direct3D->ResetViewport();
+
+	return true;
+}
+
+bool ApplicationClass::Render(float rotation, float x, float y, float z, float textureTranslation)
 {
 	XMMATRIX worldMatrix, viewMatrix, orthoMatrix, projectionMatrix, rotateMatrix, translateMatrix, scaleMatrix, srMatrix;
+	float positionX, positionY, positionZ, radius;
 	XMFLOAT4 diffuseColor[4], lightPosition[4];
-	int i;
-	bool result;
+	int  modelCount, renderCount, i;
+	bool result, renderModel;
 
 	// Clear the buffers to begin the scene.
 	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
 	// Generate the view matrix based on the camera's position.
+	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
 	m_Camera->Render();
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
@@ -546,14 +777,123 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 	m_Direct3D->GetOrthoMatrix(orthoMatrix);
 
+	// Setup matrices - Top display plane.
+	worldMatrix = XMMatrixTranslation(0.0f, 1.5f, 0.0f);
+
+	// Render the display plane using the texture shader and the render texture resource.
+	m_DisplayPlane->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_TranslateShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0), textureTranslation);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Setup matrices - Bottom left display plane.
+	worldMatrix = XMMatrixTranslation(-1.5f, -1.5f, 0.0f);
+
+	// Render the display plane using the texture shader and the render texture resource.
+	m_DisplayPlane->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_DisplayPlane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_RenderTexture->GetShaderResourceView());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Setup matrices - Bottom right display plane.
+	worldMatrix = XMMatrixTranslation(1.5f, -1.5f, 0.0f);
+
+	// Render the display plane using the texture shader and the render texture resource.
+	m_DisplayPlane->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_DisplayPlane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_RenderTexture->GetShaderResourceView());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Get the light properties.
+	for (i = 0; i < m_numLights; i++)
+	{
+		// Create the diffuse color array from the four light colors.
+		diffuseColor[i] = m_Lights[i].GetDiffuseColor();
+
+		// Create the light position array from the four light positions.
+		lightPosition[i] = m_Lights[i].GetPosition();
+	}
+
+	// Construct the frustum.
+	m_Frustum->ConstructFrustum(viewMatrix, projectionMatrix, SCREEN_DEPTH);
+
+	// Get the number of models that will be rendered.
+	modelCount = m_ModelList->GetModelCount();
+
+	// Initialize the count of models that have been rendered.
+	renderCount = 0;
+
+	// Go through all the models and render them only if they can be seen by the camera view.
+	for (i = 0; i < modelCount; i++)
+	{
+		// Get the position and color of the sphere model at this index.
+		m_ModelList->GetData(i, positionX, positionY, positionZ);
+
+		// Set the radius of the sphere to 1.0 since this is already known.
+		radius = 1.0f;
+
+		// Check if the sphere model is in the view frustum.
+		renderModel = m_Frustum->CheckSphere(positionX, positionY, positionZ, radius);
+
+		// If it can be seen then render it, if not skip this model and check the next sphere.
+		if (renderModel)
+		{
+			// Move the model to the location it should be rendered at.
+			worldMatrix = XMMatrixTranslation(positionX, positionY, positionZ);
+
+			// Render the model using the light shader.
+			m_Model->Render(m_Direct3D->GetDeviceContext());
+
+			result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+				m_Model->GetTexture(0), diffuseColor, lightPosition);
+			if (!result)
+			{
+				return false;
+			}
+
+			// Since this model was rendered then increase the count for this frame.
+			renderCount++;
+		}
+	}
+
+	// Update the render count text.
+	result = UpdateRenderCountString(renderCount);
+	if (!result)
+	{
+		return false;
+	}
+
 	// Disable the Z buffer and enable alpha blending for 2D rendering.
 	m_Direct3D->TurnZBufferOff();
 	m_Direct3D->EnableAlphaBlending();
 
+	// Reset the world matrix.
+	m_Direct3D->GetWorldMatrix(worldMatrix);
+
+	// Render the render count text string using the font shader.
+	m_RenderCountString->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_FontShader->Render(m_Direct3D->GetDeviceContext(), m_RenderCountString->GetIndexCount(), worldMatrix, m_baseViewMatrix, orthoMatrix,
+		m_Font->GetTexture(), m_RenderCountString->GetPixelColor());
+	if (!result)
+	{
+		return false;
+	}
+
 	// Render the fps text string using the font shader.
 	m_FpsString->Render(m_Direct3D->GetDeviceContext());
 
-	result = m_FontShader->Render(m_Direct3D->GetDeviceContext(), m_FpsString->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix,
+	result = m_FontShader->Render(m_Direct3D->GetDeviceContext(), m_FpsString->GetIndexCount(), worldMatrix, m_baseViewMatrix, orthoMatrix,
 		m_Font->GetTexture(), m_FpsString->GetPixelColor());
 	if (!result)
 	{
@@ -563,7 +903,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	// Render the first text string using the font shader.
 	m_TextString1->Render(m_Direct3D->GetDeviceContext());
 
-	result = m_FontShader->Render(m_Direct3D->GetDeviceContext(), m_TextString1->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix,
+	result = m_FontShader->Render(m_Direct3D->GetDeviceContext(), m_TextString1->GetIndexCount(), worldMatrix, m_baseViewMatrix, orthoMatrix,
 		m_Font->GetTexture(), m_TextString1->GetPixelColor());
 	if (!result)
 	{
@@ -573,7 +913,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	// Render the second text string using the font shader.
 	m_TextString2->Render(m_Direct3D->GetDeviceContext());
 
-	result = m_FontShader->Render(m_Direct3D->GetDeviceContext(), m_TextString2->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix,
+	result = m_FontShader->Render(m_Direct3D->GetDeviceContext(), m_TextString2->GetIndexCount(), worldMatrix, m_baseViewMatrix, orthoMatrix,
 		m_Font->GetTexture(), m_TextString2->GetPixelColor());
 	if (!result)
 	{
@@ -583,7 +923,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	// Render the second text string using the font shader.
 	m_TextString3->Render(m_Direct3D->GetDeviceContext());
 
-	result = m_FontShader->Render(m_Direct3D->GetDeviceContext(), m_TextString3->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix,
+	result = m_FontShader->Render(m_Direct3D->GetDeviceContext(), m_TextString3->GetIndexCount(), worldMatrix, m_baseViewMatrix, orthoMatrix,
 		m_Font->GetTexture(), m_TextString3->GetPixelColor());
 	if (!result)
 	{
@@ -595,7 +935,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	{
 		m_MouseStrings[i].Render(m_Direct3D->GetDeviceContext());
 
-		result = m_FontShader->Render(m_Direct3D->GetDeviceContext(), m_MouseStrings[i].GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix,
+		result = m_FontShader->Render(m_Direct3D->GetDeviceContext(), m_MouseStrings[i].GetIndexCount(), worldMatrix, m_baseViewMatrix, orthoMatrix,
 			m_Font->GetTexture(), m_MouseStrings[i].GetPixelColor());
 		if (!result)
 		{
@@ -643,16 +983,16 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	//	lightPosition[i] = m_Lights[i].GetPosition();
 	//}
 
-	scaleMatrix = XMMatrixScaling(0.75f, 0.75f, 0.75f);  // Build the scaling matrix.
-	rotateMatrix = XMMatrixRotationY(rotation);  // Build the rotation matrix.
-	translateMatrix = XMMatrixTranslation(x, y, z);  // Build the translation matrix.
+	//scaleMatrix = XMMatrixScaling(0.75f, 0.75f, 0.75f);  // Build the scaling matrix.
+	//rotateMatrix = XMMatrixRotationY(rotation);  // Build the rotation matrix.
+	//translateMatrix = XMMatrixTranslation(x, y, z);  // Build the translation matrix.
 
-	// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
-	srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
-	worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+	//// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
+	//srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
+	//worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
-	// Render the model using the multitexture shader.
-	m_Model->Render(m_Direct3D->GetDeviceContext());
+	//// Render the model using the multitexture shader.
+	//m_Model->Render(m_Direct3D->GetDeviceContext());
 
 	result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
 		m_Model->GetTexture(0));
@@ -723,6 +1063,26 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 		return false;
 	}*/
 
+	////Specular Mapping
+	//result = m_SpecMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+	//	m_Model->GetTexture(0), m_Model->GetTexture(1), m_Model->GetTexture(2), m_Light->GetDirection(), m_Light->GetDiffuseColor(),
+	//	m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
+	//if (!result)
+	//{
+	//	return false;
+	//}
+
+	//scaleMatrix = XMMatrixScaling(1.0f, 1.0f, 1.0f);  // Build the scaling matrix.
+	//rotateMatrix = XMMatrixRotationY(40);  // Build the rotation matrix.
+	//translateMatrix = XMMatrixTranslation(0, -2.0f, -10.0f);  // Build the translation matrix.
+
+	//// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
+	//srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
+	//worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+
+	//// Render the model using the multitexture shader.
+	//m_Model->Render(m_Direct3D->GetDeviceContext());
+
 	////Normal Mapping
 	//result = m_NormalMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
 	//	m_Model->GetTexture(0), m_Model->GetTexture(1), m_Light->GetDirection(), m_Light->GetDiffuseColor());
@@ -731,14 +1091,24 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	//	return false;
 	//}
 
-	//Specular Mapping
-	/*result = m_SpecMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-		m_Model->GetTexture(0), m_Model->GetTexture(1), m_Model->GetTexture(2), m_Light->GetDirection(), m_Light->GetDiffuseColor(),
-		m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
-	if (!result)
-	{
-		return false;
-	}*/
+	//scaleMatrix = XMMatrixScaling(1.0f, 1.0f, 1.0f);  // Build the scaling matrix.
+	//rotateMatrix = XMMatrixRotationY(40);  // Build the rotation matrix.
+	//translateMatrix = XMMatrixTranslation(0, 5.0f, -10.0f);  // Build the translation matrix.
+
+	//// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
+	//srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
+	//worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+
+	//// Render the model using the multitexture shader.
+	//m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	////Normal Mapping
+	//result = m_NormalMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+	//	m_Model->GetTexture(0), m_Model->GetTexture(1), m_Light->GetDirection(), m_Light->GetDiffuseColor());
+	//if (!result)
+	//{
+	//	return false;
+	//}
 
 	// Enable the Z buffer and disable alpha blending now that 2D rendering is complete.
 	m_Direct3D->TurnZBufferOn();
@@ -764,7 +1134,7 @@ bool ApplicationClass::UpdateMouseStrings(int mouseX, int mouseY, bool mouseDown
 	strcat_s(finalString, tempString);
 
 	// Update the sentence vertex buffer with the new string information.
-	result = m_MouseStrings[0].UpdateText(m_Direct3D->GetDeviceContext(), m_Font, finalString, 10, 10, 1.0f, 1.0f, 1.0f);
+	result = m_MouseStrings[0].UpdateText(m_Direct3D->GetDeviceContext(), m_Font, finalString, 10, 50, 1.0f, 1.0f, 1.0f);
 	if (!result)
 	{
 		return false;
@@ -778,7 +1148,7 @@ bool ApplicationClass::UpdateMouseStrings(int mouseX, int mouseY, bool mouseDown
 	strcat_s(finalString, tempString);
 
 	// Update the sentence vertex buffer with the new string information.
-	result = m_MouseStrings[1].UpdateText(m_Direct3D->GetDeviceContext(), m_Font, finalString, 10, 35, 1.0f, 1.0f, 1.0f);
+	result = m_MouseStrings[1].UpdateText(m_Direct3D->GetDeviceContext(), m_Font, finalString, 10, 75, 1.0f, 1.0f, 1.0f);
 	if (!result)
 	{
 		return false;
@@ -795,7 +1165,7 @@ bool ApplicationClass::UpdateMouseStrings(int mouseX, int mouseY, bool mouseDown
 	}
 
 	// Update the sentence vertex buffer with the new string information.
-	result = m_MouseStrings[2].UpdateText(m_Direct3D->GetDeviceContext(), m_Font, finalString, 10, 60, 1.0f, 1.0f, 1.0f);
+	result = m_MouseStrings[2].UpdateText(m_Direct3D->GetDeviceContext(), m_Font, finalString, 10, 100, 1.0f, 1.0f, 1.0f);
 }
 
 bool ApplicationClass::UpdateFps()
@@ -860,6 +1230,29 @@ bool ApplicationClass::UpdateFps()
 
 	// Update the sentence vertex buffer with the new string information.
 	result = m_FpsString->UpdateText(m_Direct3D->GetDeviceContext(), m_Font, finalString, 10, 10, red, green, blue);
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool ApplicationClass::UpdateRenderCountString(int renderCount)
+{
+	char tempString[16], finalString[32];
+	bool result;
+
+
+	// Convert the render count integer to string format.
+	sprintf_s(tempString, "%d", renderCount);
+
+	// Setup the render count string.
+	strcpy_s(finalString, "Render Count: ");
+	strcat_s(finalString, tempString);
+
+	// Update the sentence vertex buffer with the new string information.
+	result = m_RenderCountString->UpdateText(m_Direct3D->GetDeviceContext(), m_Font, finalString, 10, 30, 1.0f, 1.0f, 1.0f);
 	if (!result)
 	{
 		return false;
