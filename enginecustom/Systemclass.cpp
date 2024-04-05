@@ -218,25 +218,33 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 	}
 	case WM_DROPFILES:
 	{
-		if (!m_isResizing)
-		{
-			HDROP hDrop = reinterpret_cast<HDROP>(wparam);
-			UINT numFiles = DragQueryFile(hDrop, 0xFFFFFFFF, nullptr, 0);
+		HDROP hDrop = reinterpret_cast<HDROP>(wparam);
+		UINT numFiles = DragQueryFile(hDrop, 0xFFFFFFFF, nullptr, 0);
 
-			if (numFiles > 0 && m_Application != nullptr) {
-				// Handle dropped files here
-				for (UINT i = 0; i < numFiles; ++i) {
-					// Get the file name
-					WCHAR filePath[MAX_PATH];
-					DragQueryFile(hDrop, i, filePath, MAX_PATH);
+		if (numFiles > 0) {
+			for (UINT i = 0; i < numFiles; ++i) {
+				WCHAR filePath[MAX_PATH];
+				DragQueryFile(hDrop, i, filePath, MAX_PATH);
+
+				// Get the file extension
+				std::wstring fileName = filePath;
+				std::wstring extension = fileName.substr(fileName.find_last_of(L".") + 1);
+
+				// Check if the file has a valid extension
+				if (extension == L"txt" || extension == L"kobj") {
+					// Handle dropped files with valid extensions
 					std::wcout << L"File dropped: " << filePath << std::endl;
 					m_Application->AddKobject(filePath);
 				}
+				else {
+					// Handle files with invalid extensions (optional)
+					std::wcout << L"Ignored file: " << filePath << std::endl;
+				}
 			}
-
-			DragFinish(hDrop);
 		}
-        return 0;
+
+		DragFinish(hDrop);
+		return 0;
 	}
 	// Any other messages send to the default message handler as our application won't make use of them.
 	default:
