@@ -39,7 +39,12 @@ bool SystemClass::Initialize()
 
 	// Create and initialize the input object.  This object will be used to handle reading the keyboard input from the user.
 	m_Input = new InputClass;
-	m_Input->Initialize();
+
+	result = m_Input->Initialize(m_hinstance, m_hwnd, screenWidth, screenHeight);
+	if (!result)
+	{
+		return false;
+	}
 
 	// Create and initialize the application class object.  This object will handle rendering all the graphics for this application.
 	m_Application = new ApplicationClass;
@@ -140,15 +145,15 @@ bool SystemClass::Frame()
 {
 	bool result;
 
-
-	// Check if the user pressed escape and wants to exit the application.
-	if (m_Input->IsKeyDown(VK_ESCAPE))
+	// Do the input frame processing.
+	result = m_Input->Frame();
+	if (!result)
 	{
 		return false;
 	}
 
 	// Do the frame processing for the application class object.
-	result = m_Application->Frame();
+	result = m_Application->Frame(m_Input);
 	if (!result)
 	{
 		return false;

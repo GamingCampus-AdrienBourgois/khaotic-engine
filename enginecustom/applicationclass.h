@@ -13,7 +13,9 @@
 #include <vector>
 #include <filesystem>
 
+#include "lightmapshaderclass.h"
 #include "multitextureshaderclass.h"
+#include "alphamapshaderclass.h"
 #include "bitmapclass.h"
 #include "textureshaderclass.h"
 #include "spriteclass.h"
@@ -22,6 +24,16 @@
 #include "fontclass.h"
 #include "textclass.h"
 #include "fpsclass.h"
+#include "inputclass.h"
+#include "normalmapshaderclass.h"
+#include "specmapshaderclass.h"
+#include "modellistclass.h"
+#include "positionclass.h"
+#include "frustumclass.h"
+#include "rendertextureclass.h"
+#include "displayplaneclass.h"
+#include "translateshaderclass.h"
+
 
 /////////////
 // GLOBALS //
@@ -45,7 +57,7 @@ public:
 
 	bool Initialize(int, int, HWND);
 	void Shutdown();
-	bool Frame();
+	bool Frame(InputClass*);
 
 	int GetScreenWidth() const;
 	int GetScreenHeight() const;
@@ -67,7 +79,11 @@ public:
 
 private:
 	bool Render(float, float, float, float);
+	bool UpdateMouseStrings(int, int, bool);
 	bool UpdateFps();
+	bool UpdateRenderCountString(int);
+	bool RenderSceneToTexture(float);
+
 private:
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
@@ -78,21 +94,35 @@ private:
 	std::vector<Object*> m_terrainChunk;
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
+	LightMapShaderClass* m_LightMapShader;
 	MultiTextureShaderClass* m_MultiTextureShader;
+	AlphaMapShaderClass* m_AlphaMapShader;
 	ModelClass* m_Model;
 	TextureShaderClass* m_TextureShader;
 	BitmapClass* m_Bitmap;
 	SpriteClass* m_Sprite;
     TimerClass* m_Timer;
+	TextClass* m_MouseStrings;
 	LightClass* m_Lights;
 	int m_numLights;
 	FontShaderClass* m_FontShader;
+	TextClass* m_RenderCountString;
 	FontClass* m_Font;
 	TextClass *m_TextString1, *m_TextString2, *m_TextString3;
 	FpsClass* m_Fps;
 	TextClass* m_FpsString;
 	int m_previousFps;
 	std::vector<Object*> m_object;
+	NormalMapShaderClass* m_NormalMapShader;
+	SpecMapShaderClass* m_SpecMapShader;
+	ModelListClass* m_ModelList;
+	PositionClass* m_Position;
+	FrustumClass* m_Frustum;
+	XMMATRIX m_baseViewMatrix;
+	RenderTextureClass* m_RenderTexture;
+	DisplayPlaneClass* m_DisplayPlane;
+	float m_screenWidth, m_screenHeight;
+	TranslateShaderClass* m_TranslateShader;
 };
 
 #endif

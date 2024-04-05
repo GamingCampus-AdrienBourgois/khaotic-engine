@@ -120,6 +120,39 @@
     <ClCompile Include="Timerclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="fpsclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="lightmapshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="alphamapshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="normalmapshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="specmapshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="frustumclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="modellistclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="positionclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="displayplaneclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="rendertextureclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="translateshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="systemclass.h">
@@ -209,6 +242,71 @@
     <ClInclude Include="Timerclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="fpsclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="lightmapshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="alphamapshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="normalmapshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="specmapshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="frustumclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="modellistclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="positionclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="displayplaneclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="rendertextureclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="translateshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="font01.tga">
+      <Filter>fonts</Filter>
+    </Image>
+    <Image Include="wall.tga">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="papier.tga">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="moss01.tga">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="stone01.tga">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="light01.tga">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="dirt01.tga">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="alpha01.tga">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="normal01.tga">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\grass.tga">
+      <Filter>Assets</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -230,11 +328,29 @@
     <None Include="light.vs">
       <Filter>shader</Filter>
     </None>
-    <None Include="Multitexture.ps">
-      <Filter>Texture</Filter>
+    <None Include="lightmap.vs">
+      <Filter>shader</Filter>
     </None>
-    <None Include="Multitexture.vs">
-      <Filter>Texture</Filter>
+    <None Include="lightmap.ps">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="alphamap.vs">
+      <Filter>texture</Filter>
+    </None>
+    <None Include="alphamap.ps">
+      <Filter>texture</Filter>
+    </None>
+    <None Include="normalmap.vs">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="normalmap.ps">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="specmap.vs">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="specmap.ps">
+      <Filter>shader</Filter>
     </None>
     <None Include="texture.ps">
       <Filter>Texture</Filter>
@@ -242,26 +358,18 @@
     <None Include="texture.vs">
       <Filter>Texture</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="font01.tga">
-      <Filter>Fonts</Filter>
-    </Image>
-    <Image Include="..\..\..\..\Downloads\grass.tga">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="moss01.tga">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="papier.tga">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="stone01.tga">
-      <Filter>Assets</Filter>
-    </Image>
-    <Image Include="wall.tga">
-      <Filter>Assets</Filter>
-    </Image>
+    <None Include="Multitexture.ps">
+      <Filter>Texture</Filter>
+    </None>
+    <None Include="Multitexture.vs">
+      <Filter>Texture</Filter>
+    </None>
+    <None Include="translate.vs">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="translate.ps">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="font01.txt">
@@ -278,6 +386,9 @@
     </Text>
     <Text Include="plane.txt">
       <Filter>Assets</Filter>
+    </Text>
+    <Text Include="square.txt">
+      <Filter>assets</Filter>
     </Text>
   </ItemGroup>
 </Project>
