@@ -153,6 +153,9 @@
     <ClCompile Include="translateshaderclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="reflectionshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="systemclass.h">
@@ -275,6 +278,9 @@
     <ClInclude Include="translateshaderclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="reflectionshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="font01.tga">
@@ -370,6 +376,8 @@
     <None Include="translate.ps">
       <Filter>shader</Filter>
     </None>
+    <None Include="reflection.vs" />
+    <None Include="reflection.ps" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="font01.txt">

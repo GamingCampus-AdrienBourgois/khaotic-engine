@@ -33,6 +33,7 @@
 #include "rendertextureclass.h"
 #include "displayplaneclass.h"
 #include "translateshaderclass.h"
+#include "reflectionshaderclass.h"
 
 
 /////////////
@@ -138,6 +139,7 @@ private :
 	NormalMapShaderClass* m_NormalMapShader;
 	SpecMapShaderClass* m_SpecMapShader;
 	TranslateShaderClass* m_TranslateShader;
+	ReflectionShaderClass* m_ReflectionShader;
 
 	BitmapClass* m_Bitmap;
 	SpriteClass* m_Sprite;
