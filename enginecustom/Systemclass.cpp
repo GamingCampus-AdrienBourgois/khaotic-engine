@@ -159,27 +159,8 @@ bool SystemClass::Frame()
 		return false;
 	}
 
-	// Start the Dear ImGui frame
-	m_imguiManager->NewFrame();
-
-	//ImGui Widget
-	ImGui::Begin("Khaotic Engine", NULL);
-
-	float speed = m_Application->GetSpeed();
-	m_imguiManager->WidgetSpeedSlider(&speed);
-	m_Application->SetSpeed(speed);
-	m_imguiManager->WidgetButton();
-	m_imguiManager->WidgetFPS();
-	m_imguiManager->WidgetAddObject(m_Application);
-	m_imguiManager->WidgetObjectWindow(m_Application);
-	m_imguiManager->WidgetTerrainWindow(m_Application);
-
-	ImGui::End();
-
-	//render imgui
-	m_imguiManager->Render();
-
-	this->m_Application->GetDirect3D()->m_swapChain->Present(0, NULL);
+	// Render ImGui
+	m_imguiManager->ImGuiWidgetRenderer(m_Application);
 
 	return true;
 }

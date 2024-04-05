@@ -29,6 +29,8 @@ public:
 	void WidgetObjectWindow(ApplicationClass* app);
 	void WidgetTerrainWindow(ApplicationClass* app);
 
+	void ImGuiWidgetRenderer(ApplicationClass* app);
+
 private:
 	ImGuiIO* io;
 };

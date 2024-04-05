@@ -155,3 +155,28 @@ void imguiManager::WidgetTerrainWindow(ApplicationClass* app)
 
 	ImGui::End();
 }
+
+void imguiManager::ImGuiWidgetRenderer(ApplicationClass* app)
+{
+	// Start the Dear ImGui frame
+	NewFrame();
+
+	//ImGui Widget
+	ImGui::Begin("Khaotic Engine", NULL);
+
+	float speed = app->GetSpeed();
+	WidgetSpeedSlider(&speed);
+	app->SetSpeed(speed);
+	WidgetButton();
+	WidgetFPS();
+	WidgetAddObject(app);
+	WidgetObjectWindow(app);
+	WidgetTerrainWindow(app);
+
+	ImGui::End();
+
+	//render imgui
+	Render();
+
+	app->GetDirect3D()->m_swapChain->Present(0, NULL);
+}

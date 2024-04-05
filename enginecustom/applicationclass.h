@@ -84,45 +84,76 @@ private:
 	bool UpdateRenderCountString(int);
 	bool RenderSceneToTexture(float);
 
-private:
+private :
+
+	// ------------------------------------- //
+	// ------------- DIRECT3D -------------- //
+	// ------------------------------------- //
+
 	D3DClass* m_Direct3D;
-	CameraClass* m_Camera;
 	IDXGISwapChain* m_swapChain;
-	float speed = 0.1f;
-	Object* m_SelectedObject;
-	std::vector<Object*> m_cubes;
-	std::vector<Object*> m_terrainChunk;
-	LightShaderClass* m_LightShader;
-	LightClass* m_Light;
-	LightMapShaderClass* m_LightMapShader;
-	MultiTextureShaderClass* m_MultiTextureShader;
-	AlphaMapShaderClass* m_AlphaMapShader;
 	ModelClass* m_Model;
-	TextureShaderClass* m_TextureShader;
-	BitmapClass* m_Bitmap;
-	SpriteClass* m_Sprite;
-    TimerClass* m_Timer;
-	TextClass* m_MouseStrings;
-	LightClass* m_Lights;
-	int m_numLights;
-	FontShaderClass* m_FontShader;
-	TextClass* m_RenderCountString;
-	FontClass* m_Font;
-	TextClass *m_TextString1, *m_TextString2, *m_TextString3;
-	FpsClass* m_Fps;
-	TextClass* m_FpsString;
-	int m_previousFps;
-	std::vector<Object*> m_object;
-	NormalMapShaderClass* m_NormalMapShader;
-	SpecMapShaderClass* m_SpecMapShader;
 	ModelListClass* m_ModelList;
-	PositionClass* m_Position;
-	FrustumClass* m_Frustum;
+
+	// ------------------------------------- //
+	// ------------- RENDERING ------------- //
+	// ------------------------------------- //
+
 	XMMATRIX m_baseViewMatrix;
 	RenderTextureClass* m_RenderTexture;
 	DisplayPlaneClass* m_DisplayPlane;
 	float m_screenWidth, m_screenHeight;
+	CameraClass* m_Camera;
+	PositionClass* m_Position;
+	FrustumClass* m_Frustum;
+
+	// ------------------------------------ //
+	// ------------- OBJECTS -------------- //
+	// ------------------------------------ //
+
+	Object* m_SelectedObject;
+	std::vector<Object*> m_cubes;
+	std::vector<Object*> m_terrainChunk;
+	float speed = 0.1f; // speed for the demo spinning object
+	std::vector<Object*> m_object;
+
+	// ----------------------------------- //
+	// ------------- LIGHTS -------------- //
+	// ----------------------------------- //
+
+	LightClass* m_Light;
+	LightClass* m_Lights;
+	int m_numLights;
+
+	// ----------------------------------- //
+	// ------------- SHADERS ------------- //
+	// ----------------------------------- //
+
+	LightShaderClass* m_LightShader;
+	LightMapShaderClass* m_LightMapShader;
+	MultiTextureShaderClass* m_MultiTextureShader;
+	AlphaMapShaderClass* m_AlphaMapShader;
+	TextureShaderClass* m_TextureShader;
+	FontShaderClass* m_FontShader;
+	NormalMapShaderClass* m_NormalMapShader;
+	SpecMapShaderClass* m_SpecMapShader;
 	TranslateShaderClass* m_TranslateShader;
+
+	BitmapClass* m_Bitmap;
+	SpriteClass* m_Sprite;
+
+	// ------------------------------------------------- //
+	// ------------- FPS AND INFO ON SCREEN ------------ //
+	// ------------------------------------------------- //
+
+	TimerClass* m_Timer;
+	TextClass* m_MouseStrings;
+	TextClass* m_RenderCountString;
+	FontClass* m_Font;
+	TextClass* m_TextString1, * m_TextString2, * m_TextString3;
+	FpsClass* m_Fps;
+	TextClass* m_FpsString;
+	int m_previousFps;
 };
 
 #endif

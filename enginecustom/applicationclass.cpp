@@ -69,8 +69,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	GenerateTerrain();
-
 	// Create the camera object.
 	m_Camera = new CameraClass;
 	if (!m_Camera)
@@ -245,7 +243,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Set the file name of the model.
-	strcpy_s(modelFilename, "plane.txt");
+	strcpy_s(modelFilename, "cube.txt");
 
 	// Set the file name of the textures.
 	strcpy_s(textureFilename1, "stone01.tga");
@@ -388,7 +386,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
-
 
 	return true;
 }
@@ -717,13 +714,6 @@ bool ApplicationClass::Frame(InputClass* Input)
 
 	// Render the scene to a render texture.
 	result = RenderSceneToTexture(rotation);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Render the graphics scene.
-	result = Render(rotation, x, y, z);
 	if (!result)
 	{
 		return false;
