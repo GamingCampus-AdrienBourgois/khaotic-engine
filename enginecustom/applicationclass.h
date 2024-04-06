@@ -11,7 +11,6 @@
 #include "lightshaderclass.h"
 #include "lightclass.h"
 #include "lightmapshaderclass.h"
-#include "multitextureshaderclass.h"
 #include "alphamapshaderclass.h"
 #include "bitmapclass.h"
 #include "spriteclass.h"
@@ -70,7 +69,6 @@ private:
 	LightClass* m_Light;
 	LightClass* m_Lights;
 	LightMapShaderClass* m_LightMapShader;
-	MultiTextureShaderClass* m_MultiTextureShader;
 	AlphaMapShaderClass* m_AlphaMapShader;
 	ModelClass* m_Model;
 	TextureShaderClass* m_TextureShader;

@@ -125,6 +125,7 @@
     <Image Include="moss01.tga" />
     <Image Include="normal01.tga" />
     <Image Include="papier.tga" />
+    <Image Include="spec02.tga" />
     <Image Include="stone01.tga" />
     <Image Include="wall.tga" />
   </ItemGroup>
