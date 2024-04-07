@@ -29,7 +29,6 @@
 #include "frustumclass.h"
 #include "rendertextureclass.h"
 #include "displayplaneclass.h"
-#include "translateshaderclass.h"
 
 
 /////////////
@@ -94,7 +93,6 @@ private:
 	RenderTextureClass* m_RenderTexture;
 	DisplayPlaneClass* m_DisplayPlane;
 	float m_screenWidth, m_screenHeight;
-	TranslateShaderClass* m_TranslateShader;
 };
 
 #endif

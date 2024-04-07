@@ -5,6 +5,8 @@ ShaderManagerClass::ShaderManagerClass()
     m_TextureShader = 0;
     m_LightShader = 0;
     m_NormalMapShader = 0;
+    m_MultitextureShader = 0;
+    m_TranslateShader = 0;
 }
 
 
@@ -58,6 +60,15 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
         return false;
     }
 
+    // Create and initialize the translate shader object.
+    m_TranslateShader = new TranslateShaderClass;
+
+    result = m_TranslateShader->Initialize(device, hwnd);
+    if (!result)
+    {
+        return false;
+    }
+
     return true;
 }
 
@@ -88,6 +99,14 @@ void ShaderManagerClass::Shutdown()
     }
 
     // Release the multitexture shader object.
+    if (m_TranslateShader)
+    {
+        m_TranslateShader->Shutdown();
+        delete m_TranslateShader;
+        m_TranslateShader = 0;
+    }
+    
+    // Release the multitexture shader object.
     if (m_MultitextureShader)
     {
         m_MultitextureShader->Shutdown();
@@ -96,6 +115,7 @@ void ShaderManagerClass::Shutdown()
     }
 
     return;
+      
 }
 
 bool ShaderManagerClass::RenderTextureShader(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
@@ -159,6 +179,21 @@ bool ShaderManagerClass::RenderMultitextureShader(ID3D11DeviceContext* deviceCon
 
 
     result = m_MultitextureShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture1, texture2);
+    if (!result)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ShaderManagerClass::RenderTranslateShader(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
+    ID3D11ShaderResourceView* texture1, float valeur)
+{
+    bool result;
+
+
+    result = m_TranslateShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture1, valeur);
     if (!result)
     {
         return false;

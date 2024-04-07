@@ -29,7 +29,6 @@ ApplicationClass::ApplicationClass()
 	m_Position = 0;
 	m_Frustum = 0;
 	m_DisplayPlane = 0;
-	m_TranslateShader = 0;
 }
 
 
@@ -258,17 +257,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	// Create and initialize the translate shader object.
-	m_TranslateShader = new TranslateShaderClass;
-
-	result = m_TranslateShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the translate shader object.", L"Error", MB_OK);
-		return false;
-	}
-
-
 	// Create and initialize the light shader object.
 	m_LightShader = new LightShaderClass;
 
@@ -415,14 +403,6 @@ void ApplicationClass::Shutdown()
 		m_ShaderManager->Shutdown();
 		delete m_ShaderManager;
 		m_ShaderManager = 0;
-	}
-
-	// Release the translate shader object.
-	if (m_TranslateShader)
-	{
-		m_TranslateShader->Shutdown();
-		delete m_TranslateShader;
-		m_TranslateShader = 0;
 	}
 
 	// Release the frustum class object.
@@ -798,12 +778,6 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	// Render the display plane using the texture shader and the render texture resource.
 	m_DisplayPlane->Render(m_Direct3D->GetDeviceContext());
 
-	result = m_TranslateShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-		m_Model->GetTexture(0), textureTranslation);
-	if (!result)
-	{
-		return false;
-	}
 
 	// Setup matrices - Bottom left display plane.
 	worldMatrix = XMMatrixTranslation(-1.5f, -1.5f, 0.0f);
@@ -1064,6 +1038,21 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 
 	result = m_ShaderManager->RenderMultitextureShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
 		m_Model->GetTexture(0), m_Model->GetTexture(5));
+	if (!result)
+	{
+		return false;
+	}
+
+	// Setup matrices.
+	rotateMatrix = XMMatrixRotationY(rotation);
+	translateMatrix = XMMatrixTranslation(0.0f, -8.0f, 0.0f);
+	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
+
+	// Render the model using the Translation shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_ShaderManager->RenderTranslateShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0), textureTranslation);
 	if (!result)
 	{
 		return false;
