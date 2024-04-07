@@ -7,6 +7,7 @@ ShaderManagerClass::ShaderManagerClass()
     m_NormalMapShader = 0;
     m_MultitextureShader = 0;
     m_TranslateShader = 0;
+    m_AlphaMapShader = 0;
 }
 
 
@@ -69,6 +70,15 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
         return false;
     }
 
+    // Create and initialize the translate shader object.
+    m_AlphaMapShader = new AlphaMapShaderClass;
+
+    result = m_AlphaMapShader->Initialize(device, hwnd);
+    if (!result)
+    {
+        return false;
+    }
+
     return true;
 }
 
@@ -99,19 +109,27 @@ void ShaderManagerClass::Shutdown()
     }
 
     // Release the multitexture shader object.
+    if (m_MultitextureShader)
+    {
+        m_MultitextureShader->Shutdown();
+        delete m_MultitextureShader;
+        m_MultitextureShader = 0;
+    }
+
+    // Release the multitexture shader object.
     if (m_TranslateShader)
     {
         m_TranslateShader->Shutdown();
         delete m_TranslateShader;
         m_TranslateShader = 0;
     }
-    
-    // Release the multitexture shader object.
-    if (m_MultitextureShader)
+
+    // Release the alpha map shader object.
+    if (m_AlphaMapShader)
     {
-        m_MultitextureShader->Shutdown();
-        delete m_MultitextureShader;
-        m_MultitextureShader = 0;
+        m_AlphaMapShader->Shutdown();
+        delete m_AlphaMapShader;
+        m_AlphaMapShader = 0;
     }
 
     return;
@@ -194,6 +212,21 @@ bool ShaderManagerClass::RenderTranslateShader(ID3D11DeviceContext* deviceContex
 
 
     result = m_TranslateShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture1, valeur);
+    if (!result)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ShaderManagerClass::RenderAlphaMapShader(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
+    ID3D11ShaderResourceView* texture1, ID3D11ShaderResourceView* texture2, ID3D11ShaderResourceView* texture3)
+{
+    bool result;
+
+
+    result = m_AlphaMapShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture1, texture2, texture3);
     if (!result)
     {
         return false;

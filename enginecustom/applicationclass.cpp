@@ -3,8 +3,7 @@
 ApplicationClass::ApplicationClass()
 {
 	m_Direct3D = 0;
-	m_Camera = 0; 
-	m_AlphaMapShader = 0;
+	m_Camera = 0;
 	m_Model = 0;
 	m_LightShader = 0;
 	m_LightMapShader = 0;
@@ -314,16 +313,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	// Create and initialize the alpha map shader object.
-	m_AlphaMapShader = new AlphaMapShaderClass;
-
-	result = m_AlphaMapShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the alpha map shader object.", L"Error", MB_OK);
-		return false;
-	}
-
 	// Create and initialize the font shader object.
 	m_FontShader = new FontShaderClass;
 
@@ -565,14 +554,6 @@ void ApplicationClass::Shutdown()
 		m_Model->Shutdown();
 		delete m_Model;
 		m_Model = 0;
-	}
-
-	// Release the alpha map shader object.
-	if (m_AlphaMapShader)
-	{
-		m_AlphaMapShader->Shutdown();
-		delete m_AlphaMapShader;
-		m_AlphaMapShader = 0;
 	}
 }
 
@@ -985,6 +966,21 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 
 	// Setup matrices.
 	rotateMatrix = XMMatrixRotationY(rotation);
+	translateMatrix = XMMatrixTranslation(0.0f, 7.0f, 0.0f);
+	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
+
+	// Render the model using the Translation shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_ShaderManager->RenderAlphaMapShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0), m_Model->GetTexture(5), m_Model->GetTexture(3));
+	if (!result)
+	{
+		return false;
+	}
+
+	// Setup matrices.
+	rotateMatrix = XMMatrixRotationY(rotation);
 	translateMatrix = XMMatrixTranslation(0.0f, 4.0f, 0.0f);
 	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
 
@@ -1058,6 +1054,8 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		return false;
 	}
 
+	
+
 	// Lighting, utilise plusieurs lights donc Multiple Points Lighting
 	//result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
 	//	diffuseColor, lightPosition);
@@ -1068,14 +1066,6 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 
 	// Lightmapping, utiliser light01.tga en deuxieme texture
 	//result = m_LightMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-	//	m_Model->GetTexture(0), m_Model->GetTexture(1));
-	//if (!result)
-	//{
-	//	return false;
-	//}
-
-	// MultiTexturing
-	//result = m_MultiTextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
 	//	m_Model->GetTexture(0), m_Model->GetTexture(1));
 	//if (!result)
 	//{
@@ -1128,14 +1118,6 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 
 	//// Render the model using the multitexture shader.
 	//m_Model->Render(m_Direct3D->GetDeviceContext());
-
-	////Normal Mapping
-	//result = m_NormalMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-	//	m_Model->GetTexture(0), m_Model->GetTexture(1), m_Light->GetDirection(), m_Light->GetDiffuseColor());
-	//if (!result)
-	//{
-	//	return false;
-	//}
 
 	// Enable the Z buffer and disable alpha blending now that 2D rendering is complete.
 	m_Direct3D->TurnZBufferOn();
