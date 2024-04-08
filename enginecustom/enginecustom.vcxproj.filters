@@ -398,5 +398,6 @@
     <Text Include="square.txt">
       <Filter>assets</Filter>
     </Text>
+    <Text Include="savefile\camera_data.txt" />
   </ItemGroup>
 </Project>

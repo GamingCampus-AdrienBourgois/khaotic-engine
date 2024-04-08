@@ -84,6 +84,8 @@ private:
 	bool UpdateFps();
 	bool UpdateRenderCountString(int);
 	bool RenderSceneToTexture(float);
+	void SaveCameraData(const std::string& filename);
+	void LoadCameraData(const std::string& filename);
 
 private :
 

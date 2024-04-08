@@ -1,4 +1,6 @@
 #include "applicationclass.h"
+#include <fstream>
+#include <iostream>
 
 ApplicationClass::ApplicationClass()
 {
@@ -56,6 +58,9 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_screenWidth = screenWidth;
 	m_screenHeight = screenHeight;
 
+	//loadsave
+	
+
 	// Create the Direct3D object.
 	m_Direct3D = new D3DClass;
 	if (!m_Direct3D)
@@ -70,16 +75,22 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+
+	
+
+
 	// Create the camera object.
 	m_Camera = new CameraClass;
+	LoadCameraData("camera_data.txt");
+	
 	if (!m_Camera)
 	{
 		return false;
 	}
 
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -12.0f);
-	m_Camera->SetRotation(0.0f, 0.0f, 0.0f);
+	//m_Camera->SetPosition(0.0f, 0.0f, -12.0f);
+	//m_Camera->SetRotation(0.0f, 0.0f, 0.0f);
 	m_Camera->Render();
 	m_Camera->GetViewMatrix(m_baseViewMatrix);
 
@@ -394,6 +405,11 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void ApplicationClass::Shutdown()
 {
+	//save 
+
+	SaveCameraData("camera_data.txt");
+
+
 	// Release the frustum class object.
 	if (m_Frustum)
 	{
@@ -772,6 +788,40 @@ bool ApplicationClass::RenderSceneToTexture(float rotation)
 	m_Direct3D->ResetViewport();
 
 	return true;
+}
+
+void ApplicationClass::SaveCameraData(const std::string& filename)
+{
+	std::ofstream outputFile(filename, std::ios::out | std::ios::trunc); // Open for writing, truncate existing content
+	if (outputFile.is_open()) {
+		XMFLOAT3 position = m_Camera->GetPosition();
+		XMFLOAT3 rotation = m_Camera->GetRotation();
+
+		outputFile << position.x << " " << position.y << " " << position.z << std::endl;
+		outputFile << rotation.x << " " << rotation.y << " " << rotation.z << std::endl;
+
+		outputFile.close();
+	}
+	else {
+		std::cerr << "Failed to save camera data to file: " << filename << std::endl;
+	}
+}
+
+void ApplicationClass::LoadCameraData(const std::string& filename)
+{
+	std::ifstream inputFile(filename);
+	if (inputFile.is_open()) {
+		float posX, posY, posZ, rotX, rotY;
+		inputFile >> posX >> posY >> posZ >> rotX >> rotY;
+		m_Camera->SetPosition(posX, posY, posZ);
+		m_Camera->SetRotation(rotX, rotY, 0.0f);
+		inputFile.close();
+	}
+	else {
+		// If file doesn't exist or cannot be loaded, set default camera position and rotation
+		m_Camera->SetPosition(0.0f, 0.0f, -12.0f);
+		m_Camera->SetRotation(0.0f, 0.0f, 0.0f);
+	}
 }
 
 bool ApplicationClass::Render(float rotation, float x, float y, float z)

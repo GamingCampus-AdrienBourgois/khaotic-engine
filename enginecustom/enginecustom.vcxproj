@@ -158,6 +158,7 @@
     <Text Include="cube.txt" />
     <Text Include="font01.txt" />
     <Text Include="plane.txt" />
+    <Text Include="savefile\camera_data.txt" />
     <Text Include="sphere.txt" />
     <Text Include="square.txt" />
   </ItemGroup>
