@@ -216,8 +216,8 @@ void imguiManager::WidgetLightWindow(ApplicationClass* app)
 		std::string headerName = "Light " + std::to_string(index);
 		if (ImGui::CollapsingHeader(headerName.c_str()))
 		{
-			XMVECTOR position = light->GetPosition();
-			XMVECTOR color = light->GetColor();
+			XMVECTOR position = app->GetLightPosition(index);
+			XMVECTOR color = app->GetLightColor(index);
 			float pos[3] = { XMVectorGetX(position), XMVectorGetY(position), XMVectorGetZ(position) };
 			float col[3] = { XMVectorGetX(color), XMVectorGetY(color), XMVectorGetZ(color) };
 
@@ -226,12 +226,12 @@ void imguiManager::WidgetLightWindow(ApplicationClass* app)
 
 			if (ImGui::DragFloat3(posLabel.c_str(), pos))
 			{
-				light->SetPosition(XMVectorSet(pos[0], pos[1], pos[2], 0.0f));
+				app->SetLightPosition(index, XMVectorSet(pos[0], pos[1], pos[2], 0.0f));
 			}
 
 			if (ImGui::ColorEdit3(colLabel.c_str(), col))
 			{
-				light->SetColor(XMVectorSet(col[0], col[1], col[2], 0.0f));
+				app->SetLightColor(index, XMVectorSet(col[0], col[1], col[2], 0.0f));
 			}
 
 			ImGui::Separator();
@@ -246,7 +246,7 @@ void imguiManager::WidgetLightWindow(ApplicationClass* app)
 			ImGui::Separator();
 		}
 		index++;
-	})
+	};
 
 	ImGui::End();
 }

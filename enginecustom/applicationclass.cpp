@@ -1449,3 +1449,18 @@ void ApplicationClass::SetLightPosition(int index, XMVECTOR position)
 	//set the position
 	m_Lights[index]->SetPosition(lightPosition.x, lightPosition.y, lightPosition.z);
 }
+
+void ApplicationClass::DeleteLight(int index)
+{
+	if (index < 0 || index >= m_Lights.size())
+	{
+		// Index out of bounds
+		return;
+	}
+
+	// Delete the light object
+	delete m_Lights[index];
+
+	// Remove the light from the vector
+	m_Lights.erase(m_Lights.begin() + index);
+}

@@ -84,6 +84,8 @@ public:
 	void SetLightPosition(int index, XMVECTOR color);
 	void SetLightColor(int index, XMVECTOR color);
 
+	void DeleteLight(int index);
+
 	std::vector<LightClass*> GetLights() const { return m_Lights; };
 
 private:

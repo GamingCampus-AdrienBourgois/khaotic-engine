@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -118,12 +118,12 @@
     <None Include="packages.config" />
     <None Include="reflection.ps" />
     <None Include="reflection.vs" />
-    <FxCompile Include="specmap.ps">
+    <None Include="specmap.ps">
       <FileType>Document</FileType>
-    </FxCompile>
-    <FxCompile Include="specmap.vs">
+    </None>
+    <None Include="specmap.vs">
       <FileType>Document</FileType>
-    </FxCompile>
+    </None>
     <None Include="texture.ps" />
     <None Include="texture.vs" />
   </ItemGroup>
