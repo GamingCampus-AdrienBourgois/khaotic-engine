@@ -6,7 +6,6 @@ ApplicationClass::ApplicationClass()
 	m_Camera = 0;
 	m_Model = 0;
 	m_LightShader = 0;
-	m_LightMapShader = 0;
 	m_Light = 0;
 	m_TextureShader = 0;
 	m_Bitmap = 0;
@@ -21,7 +20,6 @@ ApplicationClass::ApplicationClass()
 	m_Fps = 0;
 	m_FpsString = 0;
 	m_ShaderManager = 0;
-	m_NormalMapShader = 0;
 	m_SpecMapShader = 0;
 	m_RenderCountString = 0;
 	m_ModelList = 0;
@@ -89,16 +87,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the specular map shader object.", L"Error", MB_OK);
-		return false;
-	}
-
-	// Create and initialize the normal map shader object.
-	m_NormalMapShader = new NormalMapShaderClass;
-
-	result = m_NormalMapShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the normal map shader object.", L"Error", MB_OK);
 		return false;
 	}
 
@@ -280,20 +268,20 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Create and initialize the light objects array.
 	m_Lights = new LightClass[m_numLights];
 
+	m_Lights[0].SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);  // White
+	m_Lights[0].SetPosition(10.0f, -5.0f, -15.0f);
+
 	// Manually set the color and position of each light.
-	m_Lights[0].SetDiffuseColor(1.0f, 0.0f, 0.0f, 1.0f);  // Red
-	m_Lights[0].SetPosition(-3.0f, 1.0f, 3.0f);
+	m_Lights[1].SetDiffuseColor(1.0f, 0.0f, 0.0f, 1.0f);  // Red
+	m_Lights[1].SetPosition(-3.0f, 1.0f, 3.0f);
 
-	m_Lights[1].SetDiffuseColor(0.0f, 1.0f, 0.0f, 1.0f);  // Green
-	m_Lights[1].SetPosition(3.0f, 1.0f, 3.0f);
+	m_Lights[2].SetDiffuseColor(0.0f, 1.0f, 0.0f, 1.0f);  // Green
+	m_Lights[2].SetPosition(3.0f, 1.0f, 3.0f);
 
-	m_Lights[2].SetDiffuseColor(0.0f, 0.0f, 1.0f, 1.0f);  // Blue
-	m_Lights[2].SetPosition(-3.0f, 1.0f, -3.0f);
+	m_Lights[3].SetDiffuseColor(0.0f, 0.0f, 1.0f, 1.0f);  // Blue
+	m_Lights[3].SetPosition(-3.0f, 1.0f, -3.0f);
 
-	m_Lights[3].SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);  // White
-	m_Lights[3].SetPosition(3.0f, 1.0f, -3.0f);
-
-
+	
 	// Create and initialize the normal map shader object.
 	m_ShaderManager = new ShaderManagerClass;
 
@@ -303,15 +291,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	// Create and initialize the light map shader object.
-	m_LightMapShader = new LightMapShaderClass;
-
-	result = m_LightMapShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the light map shader object.", L"Error", MB_OK);
-		return false;
-	}
+	
 
 	// Create and initialize the font shader object.
 	m_FontShader = new FontShaderClass;
@@ -386,6 +366,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void ApplicationClass::Shutdown()
 {
+
 	// Release the shader manager object.
 	if (m_ShaderManager)
 	{
@@ -532,13 +513,7 @@ void ApplicationClass::Shutdown()
 		m_LightShader = 0;
 	}
 
-	// Release the normal map shader object.
-	if (m_NormalMapShader) 
-	{
-		m_NormalMapShader->Shutdown();
-		delete m_NormalMapShader;
-		m_NormalMapShader = 0;
-	}
+	
 
 	// Release the specular map shader object.
 	if (m_SpecMapShader)
@@ -759,6 +734,11 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	// Render the display plane using the texture shader and the render texture resource.
 	m_DisplayPlane->Render(m_Direct3D->GetDeviceContext());
 
+	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_DisplayPlane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_RenderTexture->GetShaderResourceView());
+	if (!result)
+	{
+		return false;
+	}
 
 	// Setup matrices - Bottom left display plane.
 	worldMatrix = XMMatrixTranslation(-1.5f, -1.5f, 0.0f);
@@ -966,7 +946,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 
 	// Setup matrices.
 	rotateMatrix = XMMatrixRotationY(rotation);
-	translateMatrix = XMMatrixTranslation(0.0f, 7.0f, 0.0f);
+	translateMatrix = XMMatrixTranslation(-5.0f, 1.0f, -20.0f);
 	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
 
 	// Render the model using the Translation shader.
@@ -981,7 +961,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 
 	// Setup matrices.
 	rotateMatrix = XMMatrixRotationY(rotation);
-	translateMatrix = XMMatrixTranslation(0.0f, 4.0f, 0.0f);
+	translateMatrix = XMMatrixTranslation(-5.0f, -5.0f, -20.0f);
 	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
 
 	// Render the model using the texture shader.
@@ -996,40 +976,26 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 
 	// Setup matrices.
 	rotateMatrix = XMMatrixRotationY(rotation);
-	translateMatrix = XMMatrixTranslation(0.0f, 1.0f, 0.0f);
+	translateMatrix = XMMatrixTranslation(0.0f, 1.0f, -20.0f);
 	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
 
 	// Render the model using the light shader.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
-	result = m_ShaderManager->RenderLightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-		m_Model->GetTexture(0), m_Light->GetDirection(), m_Light->GetDiffuseColor());
+	result = m_ShaderManager->RenderNormalMapShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0), m_Model->GetTexture(1), m_Lights->GetDirection(), m_Lights->GetDiffuseColor());
 	if (!result)
 	{
 		return false;
 	}
+	
 
 	// Setup matrices.
 	rotateMatrix = XMMatrixRotationY(rotation);
-	translateMatrix = XMMatrixTranslation(0.0f, -2.0f, 0.0f);
+	translateMatrix = XMMatrixTranslation(0.0f, -2.0f, -20.0f);
 	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
 
 	// Render the model using the normal map shader.
-	m_Model->Render(m_Direct3D->GetDeviceContext());
-
-	result = m_ShaderManager->RenderNormalMapShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-		m_Model->GetTexture(0), m_Model->GetTexture(1), m_Light->GetDirection(), m_Light->GetDiffuseColor());
-	if (!result)
-	{
-		return false;
-	}
-
-	// Setup matrices.
-	rotateMatrix = XMMatrixRotationY(rotation);
-	translateMatrix = XMMatrixTranslation(0.0f, -5.0f, 0.0f);
-	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
-
-	// Render the model using the Multitexture shader.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
 	result = m_ShaderManager->RenderMultitextureShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
@@ -1038,13 +1004,14 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	{
 		return false;
 	}
+	
 
 	// Setup matrices.
 	rotateMatrix = XMMatrixRotationY(rotation);
-	translateMatrix = XMMatrixTranslation(0.0f, -8.0f, 0.0f);
+	translateMatrix = XMMatrixTranslation(0.0f, -5.0f, -20.0f);
 	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
 
-	// Render the model using the Translation shader.
+	// Render the model using the Multitexture shader.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
 	result = m_ShaderManager->RenderTranslateShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
@@ -1054,6 +1021,15 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		return false;
 	}
 
+	// Setup matrices.
+	rotateMatrix = XMMatrixRotationY(rotation);
+	translateMatrix = XMMatrixTranslation(-5.0f, -2.0f, -20.0f);
+	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
+
+	// Render the model using the Translation shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	
 	
 
 	// Lighting, utilise plusieurs lights donc Multiple Points Lighting
@@ -1071,14 +1047,6 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	//{
 	//	return false;
 	//}
-
-	// Alphamapping
-	/*result = m_AlphaMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-		m_Model->GetTexture(0), m_Model->GetTexture(1), m_Model->GetTexture(2));
-	if (!result)
-	{
-		return false;
-	}*/
 
 	////Specular Mapping
 	//result = m_SpecMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,

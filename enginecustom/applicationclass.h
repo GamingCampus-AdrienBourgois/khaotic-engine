@@ -66,14 +66,13 @@ private:
 	LightShaderClass* m_LightShader;
 	LightClass* m_Light;
 	LightClass* m_Lights;
-	LightMapShaderClass* m_LightMapShader;
+	int m_numLights;
 	ModelClass* m_Model;
 	TextureShaderClass* m_TextureShader;
 	BitmapClass* m_Bitmap;
 	SpriteClass* m_Sprite;
     TimerClass* m_Timer;
 	TextClass* m_MouseStrings;
-	int m_numLights;
 	FontShaderClass* m_FontShader;
 	TextClass* m_RenderCountString;
 	FontClass* m_Font;
@@ -81,7 +80,6 @@ private:
 	FpsClass* m_Fps;
 	TextClass* m_FpsString;
 	int m_previousFps;
-	NormalMapShaderClass* m_NormalMapShader;
 	SpecMapShaderClass* m_SpecMapShader;
 	ShaderManagerClass* m_ShaderManager;
 	ModelListClass* m_ModelList;
