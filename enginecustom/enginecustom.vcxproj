@@ -25,6 +25,14 @@
     <ClCompile Include="Cameraclass.cpp" />
     <ClCompile Include="Colorshaderclass.cpp" />
     <ClCompile Include="d3dclass.cpp" />
+    <ClCompile Include="imguiManager.cpp" />
+    <ClCompile Include="include\backends\imgui_impl_dx11.cpp" />
+    <ClCompile Include="include\backends\imgui_impl_win32.cpp" />
+    <ClCompile Include="include\imgui.cpp" />
+    <ClCompile Include="include\imgui_demo.cpp" />
+    <ClCompile Include="include\imgui_draw.cpp" />
+    <ClCompile Include="include\imgui_tables.cpp" />
+    <ClCompile Include="include\imgui_widgets.cpp" />
     <ClCompile Include="displayplaneclass.cpp" />
     <ClCompile Include="fontclass.cpp" />
     <ClCompile Include="fontshaderclass.cpp" />
@@ -36,11 +44,13 @@
     <ClCompile Include="Lightshaderclass.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="modelclass.cpp" />
+    <ClCompile Include="object.cpp" />
     <ClCompile Include="modellistclass.cpp" />
     <ClCompile Include="Multitextureshaderclass.cpp" />
     <ClCompile Include="normalmapshaderclass.cpp" />
     <ClCompile Include="shadermanagerclass.cpp" />
     <ClCompile Include="positionclass.cpp" />
+    <ClCompile Include="reflectionshaderclass.cpp" />
     <ClCompile Include="rendertextureclass.cpp" />
     <ClCompile Include="specmapshaderclass.cpp" />
     <ClCompile Include="Spriteclass.cpp" />
@@ -58,6 +68,15 @@
     <ClInclude Include="Cameraclass.h" />
     <ClInclude Include="Colorshaderclass.h" />
     <ClInclude Include="d3dclass.h" />
+    <ClInclude Include="imguiManager.h" />
+    <ClInclude Include="include\backends\imgui_impl_dx11.h" />
+    <ClInclude Include="include\backends\imgui_impl_win32.h" />
+    <ClInclude Include="include\imconfig.h" />
+    <ClInclude Include="include\imgui.h" />
+    <ClInclude Include="include\imgui_internal.h" />
+    <ClInclude Include="include\imstb_rectpack.h" />
+    <ClInclude Include="include\imstb_textedit.h" />
+    <ClInclude Include="include\imstb_truetype.h" />
     <ClInclude Include="displayplaneclass.h" />
     <ClInclude Include="fontclass.h" />
     <ClInclude Include="fontshaderclass.h" />
@@ -68,11 +87,13 @@
     <ClInclude Include="lightmapshaderclass.h" />
     <ClInclude Include="lightshaderclass.h" />
     <ClInclude Include="modelclass.h" />
+    <ClInclude Include="object.h" />
     <ClInclude Include="modellistclass.h" />
     <ClInclude Include="Multitextureshaderclass.h" />
     <ClInclude Include="normalmapshaderclass.h" />
     <ClInclude Include="shadermanagerclass.h" />
     <ClInclude Include="positionclass.h" />
+    <ClInclude Include="reflectionshaderclass.h" />
     <ClInclude Include="rendertextureclass.h" />
     <ClInclude Include="specmapshaderclass.h" />
     <ClInclude Include="Spriteclass.h" />
@@ -96,6 +117,9 @@
     <None Include="Multitexture.vs" />
     <None Include="normalmap.ps" />
     <None Include="normalmap.vs" />
+    <None Include="packages.config" />
+    <None Include="reflection.ps" />
+    <None Include="reflection.vs" />
     <None Include="specmap.ps" />
     <None Include="specmap.vs" />
     <None Include="texture.ps" />
@@ -118,6 +142,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\..\..\..\Downloads\grass.tga" />
     <Image Include="alpha01.tga" />
     <Image Include="dirt01.tga" />
     <Image Include="font01.tga" />
@@ -130,6 +155,7 @@
     <Image Include="wall.tga" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="..\..\..\..\Downloads\chunk.txt" />
     <Text Include="cube.txt" />
     <Text Include="font01.txt" />
     <Text Include="plane.txt" />
@@ -231,6 +257,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)enginecustom\include\backends;$(SolutionDir)enginecustom\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -245,6 +273,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)enginecustom\include\backends;$(SolutionDir)enginecustom\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

@@ -16,13 +16,13 @@
 //////////////
 // INCLUDES //
 //////////////
+#include "imguiManager.h"
 #include "d3d11.h"
-#include "directxmath.h"
 #include "fontshaderclass.h"
 #include "fontclass.h"
 #include "textclass.h"
-using namespace DirectX;
 
+using namespace DirectX;
 
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: D3DClass
@@ -42,8 +42,12 @@ public:
 
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetDeviceContext();
+	XMMATRIX GetProjectionMatrix(XMMATRIX& projectionMatrix);
+	IDXGISwapChain* m_swapChain;
+	IDXGISwapChain* GetSwapChain();
+	void ResizeSwapChain(int, int);
 
-	void GetProjectionMatrix(XMMATRIX&);
+	XMMATRIX GetProjectionMatrix();
 	void GetWorldMatrix(XMMATRIX&);
 	void GetOrthoMatrix(XMMATRIX&);
 
@@ -52,6 +56,9 @@ public:
 	void SetBackBufferRenderTarget();
 	void ResetViewport();
 
+	void ReleaseResources();
+	void ResetResources(int newWidth, int newHeight);
+	
 	void TurnZBufferOn();
 	void TurnZBufferOff();
 
@@ -62,7 +69,6 @@ private:
 	bool m_vsync_enabled;
 	int m_videoCardMemory;
 	char m_videoCardDescription[128];
-	IDXGISwapChain* m_swapChain;
 	ID3D11Device* m_device;
 	ID3D11DeviceContext* m_deviceContext;
 	ID3D11RenderTargetView* m_renderTargetView;

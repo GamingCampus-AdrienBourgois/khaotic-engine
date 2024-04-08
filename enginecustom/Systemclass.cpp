@@ -1,9 +1,14 @@
 #include "systemclass.h"
+#include <iostream>
+#include <shellapi.h> // Include for DragAcceptFiles and DragQueryFile
+#include <windows.h>
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 SystemClass::SystemClass()
 {
 	m_Input = 0;
 	m_Application = 0;
+	m_imguiManager = 0;
 }
 
 SystemClass::SystemClass(const SystemClass& other)
@@ -24,6 +29,10 @@ bool SystemClass::Initialize()
 	// Initialize the width and height of the screen to zero before sending the variables into the function.
 	screenWidth = 0;
 	screenHeight = 0;
+	
+	m_initialWindowWidth = 0;
+	m_initialWindowHeight = 0;
+	m_isDirect3DInitialized = false;
 
 	// Initialize the windows api.
 	InitializeWindows(screenWidth, screenHeight);
@@ -46,6 +55,19 @@ bool SystemClass::Initialize()
 		return false;
 	}
 
+	m_isDirect3DInitialized = true;
+
+	// If we received a WM_SIZE message before Direct3D was initialized, resize the swap chain now
+	if (m_initialWindowWidth > 0 && m_initialWindowHeight > 0)
+	{
+		m_Application->GetDirect3D()->ResizeSwapChain(m_initialWindowWidth, m_initialWindowHeight);
+	}
+
+	// Initialize imgui
+	m_imguiManager = new imguiManager;
+	m_imguiManager->Initialize(m_hwnd, m_Application->GetDirect3D()->GetDevice(), m_Application->GetDirect3D()->GetDeviceContext());
+
+
 	return true;
 }
 
@@ -66,6 +88,14 @@ void SystemClass::Shutdown()
 		m_Input = 0;
 	}
 
+	// Shutdown imgui
+	if (m_imguiManager)
+	{
+		m_imguiManager->Shutdown();
+		delete m_imguiManager;
+		m_imguiManager = 0;
+	}
+
 	// Shutdown the window.
 	ShutdownWindows();
 
@@ -76,7 +106,6 @@ void SystemClass::Run()
 {
 	MSG msg;
 	bool done, result;
-
 
 	// Initialize the message structure.
 	ZeroMemory(&msg, sizeof(MSG));
@@ -130,12 +159,99 @@ bool SystemClass::Frame()
 		return false;
 	}
 
+	// Render ImGui 
+	m_imguiManager->ImGuiWidgetRenderer(m_Application);
+
 	return true;
 }
 
 LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
-	return DefWindowProc(hwnd, umsg, wparam, lparam);
+
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, umsg, wparam, lparam))
+	{
+		return true;
+	}
+
+	switch (umsg)
+	{
+		// Check if a key has been pressed on the keyboard.
+	case WM_KEYDOWN:
+	{
+		// If a key is pressed send it to the input object so it can record that state.
+		m_Input->KeyDown((unsigned int)wparam);
+		return 0;
+	}
+
+	// Check if a key has been released on the keyboard.
+	case WM_KEYUP:
+	{
+		// If a key is released then send it to the input object so it can unset the state for that key.
+		m_Input->KeyUp((unsigned int)wparam);
+		return 0;
+	}
+	case WM_SIZE:
+	{
+		int newWidth = LOWORD(lparam);
+		int newHeight = HIWORD(lparam);
+
+		// If Direct3D is initialized, update the swap chain. Otherwise, store the window dimensions
+		if (m_isDirect3DInitialized && m_Application && m_Application->GetDirect3D())
+		{
+			m_Application->GetDirect3D()->ResizeSwapChain(newWidth, newHeight);
+		}
+		else
+		{
+			m_initialWindowWidth = newWidth;
+			m_initialWindowHeight = newHeight;
+		}
+	}
+	case WM_ENTERSIZEMOVE:
+	{
+		m_isResizing = true;
+		break;
+	}
+	case WM_EXITSIZEMOVE:
+	{
+		m_isResizing = false;
+		break;
+	}
+	case WM_DROPFILES:
+	{
+		HDROP hDrop = reinterpret_cast<HDROP>(wparam);
+		UINT numFiles = DragQueryFile(hDrop, 0xFFFFFFFF, nullptr, 0);
+
+		if (numFiles > 0) {
+			for (UINT i = 0; i < numFiles; ++i) {
+				WCHAR filePath[MAX_PATH];
+				DragQueryFile(hDrop, i, filePath, MAX_PATH);
+
+				// Get the file extension
+				std::wstring fileName = filePath;
+				std::wstring extension = fileName.substr(fileName.find_last_of(L".") + 1);
+
+				// Check if the file has a valid extension
+				if (extension == L"txt" || extension == L"kobj") {
+					// Handle dropped files with valid extensions
+					std::wcout << L"File dropped: " << filePath << std::endl;
+					m_Application->AddKobject(filePath);
+				}
+				else {
+					// Handle files with invalid extensions (optional)
+					std::wcout << L"Ignored file: " << filePath << std::endl;
+				}
+			}
+		}
+
+		DragFinish(hDrop);
+		return 0;
+	}
+	// Any other messages send to the default message handler as our application won't make use of them.
+	default:
+	{
+		return DefWindowProc(hwnd, umsg, wparam, lparam);
+	}
+	}
 }
 
 void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
@@ -152,7 +268,7 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	m_hinstance = GetModuleHandle(NULL);
 
 	// Give the application a name.
-	m_applicationName = L"Engine";
+	m_applicationName = L"Khaotic Engine";
 
 	// Setup the windows class with default settings.
 	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
@@ -205,7 +321,7 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 
 	// Create the window with the screen settings and get the handle to it.
 	m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
-		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
+		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
 		posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL);
 
 	// Bring the window up on the screen and set it as main focus.
@@ -214,7 +330,10 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	SetFocus(m_hwnd);
 
 	// Hide the mouse cursor.
-	ShowCursor(false);
+	ShowCursor(true);
+
+	//drag and drop 
+	DragAcceptFiles(m_hwnd, TRUE);
 
 	return;
 }
@@ -241,6 +360,11 @@ void SystemClass::ShutdownWindows()
 	// Release the pointer to this class.
 	ApplicationHandle = NULL;
 
+	//Releases COM references that ImGui was given on setup
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
+
 	return;
 }
 
@@ -260,6 +384,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 	{
 		PostQuitMessage(0);
 		return 0;
+	}
+
+	case WM_DROPFILES:
+	{
+		ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
+		return(0);
 	}
 
 	// All other messages pass to the message handler in the system class.

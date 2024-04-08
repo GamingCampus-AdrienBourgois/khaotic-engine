@@ -3,9 +3,9 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include <windows.h>
 #include "inputclass.h"
 #include "applicationclass.h"
+#include "imguiManager.h"
 
 class SystemClass
 {
@@ -32,6 +32,12 @@ private:
 
 	InputClass* m_Input;
 	ApplicationClass* m_Application;
+	imguiManager* m_imguiManager;
+
+	int m_initialWindowWidth;
+	int m_initialWindowHeight;
+	bool m_isDirect3DInitialized;
+	bool m_isResizing = false;
 };
 
 

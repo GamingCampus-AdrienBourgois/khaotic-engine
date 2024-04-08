@@ -25,6 +25,7 @@ ApplicationClass::ApplicationClass()
 	m_Position = 0;
 	m_Frustum = 0;
 	m_DisplayPlane = 0;
+	m_ReflectionShader = 0;
 }
 
 
@@ -58,7 +59,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	// Initialize the Direct3D object.
 	result = m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
 	if (!result)
 	{
@@ -357,6 +357,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
+	
 	return true;
 }
 
@@ -420,6 +421,7 @@ void ApplicationClass::Shutdown()
 		delete[] m_MouseStrings;
 		m_MouseStrings = 0;
 	}
+
 	// Release the text object for the fps string.
 	if (m_FpsString)
 	{
@@ -523,7 +525,7 @@ void ApplicationClass::Shutdown()
 bool ApplicationClass::Frame(InputClass* Input)
 {
 	int mouseX, mouseY, currentMouseX, currentMouseY;
-	bool result, mouseDown, keyDown, buttonQ, buttonD, buttonZ, buttonS, buttonA, buttonE;
+	bool result, leftMouseDown, rightMouseDown, keyDown, buttonQ, buttonD, buttonZ, buttonS, buttonA, buttonE;
 	float rotationY, rotationX, positionX, positionY, positionZ;
 	static float textureTranslation = 0.0f;
 
@@ -551,6 +553,10 @@ bool ApplicationClass::Frame(InputClass* Input)
 	// Get the location of the mouse from the input object,
 	Input->GetMouseLocation(mouseX, mouseY);
 
+	// Check if the mouse has been pressed.
+	leftMouseDown = Input->IsLeftMousePressed();
+	rightMouseDown = Input->IsRightMousePressed();
+
 	currentMouseX = mouseX;
 
 	float deltaX = currentMouseX - lastMouseX;  // Calculez le d�placement de la souris
@@ -571,7 +577,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	keyDown = Input->IsRightArrowPressed();
 	m_Position->TurnRight(keyDown);
 
-	m_Position->TurnMouse(deltaX, deltaY);
+	m_Position->TurnMouse(deltaX, deltaY, rightMouseDown);
 
 	// Get the current view point rotation.
 	m_Position->GetRotation(rotationY, rotationX);
@@ -606,7 +612,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	}
 
 	// Update the rotation variable each frame.
-	rotation -= 0.0174532925f * 0.8f;
+	rotation -= 0.0174532925f * speed;
 	if (rotation < 0.0f)
 	{
 		rotation += 360.0f;
@@ -631,7 +637,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	mouseDown = Input->IsMousePressed();
 
 	// Update the mouse strings each frame.
-	result = UpdateMouseStrings(mouseX, mouseY, mouseDown);
+	result = UpdateMouseStrings(mouseX, mouseY, leftMouseDown);
 	if (!result)
 	{
 		return false;
@@ -667,7 +673,6 @@ bool ApplicationClass::RenderSceneToTexture(float rotation)
 	m_RenderTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), 0.0f, 0.5f, 1.0f, 1.0f);
 
 	// Set the position of the camera for viewing the cube.
-	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
 	m_Camera->Render();
 
 	// Get the matrices.
@@ -706,7 +711,6 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
 	// Generate the view matrix based on the camera's position.
-	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
 	m_Camera->Render();
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
@@ -714,6 +718,103 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 	m_Direct3D->GetOrthoMatrix(orthoMatrix);
+
+	// Get the light properties.
+	for (i = 0; i < m_numLights; i++)
+	{
+		// Create the diffuse color array from the four light colors.
+		diffuseColor[i] = m_Lights[i].GetDiffuseColor();
+
+		// Create the light position array from the four light positions.
+		lightPosition[i] = m_Lights[i].GetPosition();
+	}
+
+	scaleMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);  // Build the scaling matrix.
+	rotateMatrix = XMMatrixRotationY(rotation);  // Build the rotation matrix.
+	translateMatrix = XMMatrixTranslation(x, y, z);  // Build the translation matrix.
+
+	// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
+	srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
+	worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	// Render the model using the light shader.
+	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
+		diffuseColor, lightPosition);
+
+	for (auto cube : m_cubes)
+	{
+
+		scaleMatrix = cube->GetScaleMatrix();
+
+		if (cube->m_demoSpinning)
+			rotateMatrix = XMMatrixRotationY(rotation);
+		else
+		{
+			rotateMatrix = cube->GetRotateMatrix();
+		}
+
+
+		translateMatrix = cube->GetTranslateMatrix();
+		srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
+		worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+
+		cube->Render(m_Direct3D->GetDeviceContext());
+
+		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
+			diffuseColor, lightPosition);
+		if (!result)
+		{
+			return false;
+		}
+	}
+
+	for (auto object : m_object)
+	{
+		scaleMatrix = object->GetScaleMatrix();
+		if (object->m_demoSpinning)
+			rotateMatrix = XMMatrixRotationY(rotation);
+		else
+		{
+			rotateMatrix = object->GetRotateMatrix();
+		}
+		translateMatrix = object->GetTranslateMatrix();
+		srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
+		worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+
+		object->Render(m_Direct3D->GetDeviceContext());
+
+		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
+			diffuseColor, lightPosition);
+
+		if (!result)
+		{
+			return false;
+		}
+	}
+
+	// Render terrain
+	for (auto chunk : m_terrainChunk)
+	{
+
+		scaleMatrix = chunk->GetScaleMatrix();
+		rotateMatrix = chunk->GetRotateMatrix();
+		translateMatrix = chunk->GetTranslateMatrix();
+
+		srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
+		worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+
+		chunk->Render(m_Direct3D->GetDeviceContext());
+
+		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), chunk->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, chunk->GetTexture(1),
+			diffuseColor, lightPosition);
+		if (!result)
+		{
+			return false;
+		}
+	}
 
 	// Setup matrices - Top display plane.
 	worldMatrix = XMMatrixTranslation(0.0f, 1.5f, 0.0f);
@@ -749,16 +850,6 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	if (!result)
 	{
 		return false;
-	}
-
-	// Get the light properties.
-	for (i = 0; i < m_numLights; i++)
-	{
-		// Create the diffuse color array from the four light colors.
-		diffuseColor[i] = m_Lights[i].GetDiffuseColor();
-
-		// Create the light position array from the four light positions.
-		lightPosition[i] = m_Lights[i].GetPosition();
 	}
 
 	// Construct the frustum.
@@ -928,6 +1019,33 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	//srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
 	//worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
+	// Render the model using the multitexture shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	scaleMatrix = XMMatrixScaling(2.0f, 2.0f, 2.0f);  // Build the scaling matrix.
+	rotateMatrix = XMMatrixRotationY(-rotation);  // Build the rotation matrix.
+	translateMatrix = XMMatrixTranslation(-x, -y, -z);  // Build the translation matrix.
+
+	// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
+	srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
+	worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+
+	// Get the light properties.
+	for (i = 0; i < m_numLights; i++)
+	{
+		// Create the diffuse color array from the four light colors.
+		diffuseColor[i] = m_Lights[i].GetDiffuseColor();
+
+		// Create the light position array from the four light positions.
+		lightPosition[i] = m_Lights[i].GetPosition();
+	}
+
+
+
+	// Render the model using the multitexture shader.
+	//result = m_MultiTextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+	//	m_Model->GetTexture(0), m_Model->GetTexture(1));
+
 	//// Render the model using the multitexture shader.
 	//m_Model->Render(m_Direct3D->GetDeviceContext());
 
@@ -1041,26 +1159,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	//	return false;
 	//}
 
-	////Specular Mapping
-	//result = m_SpecMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-	//	m_Model->GetTexture(0), m_Model->GetTexture(1), m_Model->GetTexture(2), m_Light->GetDirection(), m_Light->GetDiffuseColor(),
-	//	m_Camera->GetPosition(), m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
-	//if (!result)
-	//{
-	//	return false;
-	//}
-
-	//scaleMatrix = XMMatrixScaling(1.0f, 1.0f, 1.0f);  // Build the scaling matrix.
-	//rotateMatrix = XMMatrixRotationY(40);  // Build the rotation matrix.
-	//translateMatrix = XMMatrixTranslation(0, -2.0f, -10.0f);  // Build the translation matrix.
-
-	//// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
-	//srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
-	//worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
-
-	//// Render the model using the multitexture shader.
-	//m_Model->Render(m_Direct3D->GetDeviceContext());
-		
+	
 	// Enable the Z buffer and disable alpha blending now that 2D rendering is complete.
 	m_Direct3D->TurnZBufferOn();
 	m_Direct3D->DisableAlphaBlending();
@@ -1069,6 +1168,134 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	m_Direct3D->EndScene();
 
 	return true;
+}
+
+D3DClass* ApplicationClass::GetDirect3D()
+{
+	return m_Direct3D;
+}
+
+int ApplicationClass::GetScreenWidth() const
+{
+	return GetSystemMetrics(SM_CXSCREEN);
+}
+
+int ApplicationClass::GetScreenHeight() const
+{
+	return GetSystemMetrics(SM_CYSCREEN);
+}
+
+void ApplicationClass::GenerateTerrain()
+{
+	char modelFilename[128];
+	char textureFilename[128];
+	char textureFilename2[128];
+	char textureFilename3[128];
+
+	XMMATRIX scaleMatrix;
+	int scaleX, scaleY, scaleZ;
+
+	scaleX = 10.0f;
+	scaleY = 1.0f;
+	scaleZ = 10.0f;
+
+	scaleMatrix = XMMatrixScaling(scaleX, scaleY, scaleZ);
+
+	// Set the file name of the model.
+	strcpy_s(modelFilename, "plane.txt");
+	strcpy_s(textureFilename, "stone01.tga");
+	strcpy_s(textureFilename2, "moss01.tga");
+	strcpy_s(textureFilename3, "alpha01.tga");
+
+	// for loop to generate terrain chunks for a 10x10 grid
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			Object* newTerrain = new Object();
+			newTerrain->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2, textureFilename3);
+
+			newTerrain->SetScaleMatrix(scaleMatrix);
+
+			newTerrain->SetTranslateMatrix(XMMatrixTranslation(i / 2 * (scaleX * 2), -5.0f, j * (scaleZ * 2)));
+
+			m_terrainChunk.push_back(newTerrain);
+
+		}
+	}
+
+}
+
+void ApplicationClass::AddKobject(WCHAR* filepath)
+{
+	char modelFilename[128];
+	char textureFilename[128];
+	char textureFilename2[128];
+	char textureFilename3[128];
+
+	filesystem::path p(filepath);
+	string filename = p.stem().string();
+
+	size_t convertedChars = 0;
+	wcstombs_s(&convertedChars, modelFilename, sizeof(modelFilename), filepath, _TRUNCATE);
+
+
+	// Set the name of the texture file that we will be loading.
+	strcpy_s(textureFilename, "stone01.tga");
+	strcpy_s(textureFilename2, "moss01.tga");
+	strcpy_s(textureFilename3, "alpha01.tga");
+
+	Object* newObject = new Object();
+	newObject->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2, textureFilename3);
+
+	newObject->SetTranslateMatrix(XMMatrixTranslation(0.0f, 0.0f, 0.0f));
+	newObject->SetName(filename);
+
+	m_object.push_back(newObject);
+}
+
+void ApplicationClass::AddCube()
+{
+	char modelFilename[128];
+	char textureFilename[128];
+	char textureFilename2[128];
+	char textureFilename3[128];
+
+	// Set the file name of the model.
+	strcpy_s(modelFilename, "cube.txt");
+
+	// Set the name of the texture file that we will be loading.
+	strcpy_s(textureFilename, "stone01.tga");
+	strcpy_s(textureFilename2, "moss01.tga");
+	strcpy_s(textureFilename3, "alpha01.tga");
+	static int cubeCount = 0;
+	float position = cubeCount * 2.0f;
+	Object* newCube = new Object();
+	newCube->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2, textureFilename3);
+
+	newCube->SetTranslateMatrix(XMMatrixTranslation(position, 0.0f, 0.0f));
+
+	m_cubes.push_back(newCube);
+}
+
+void ApplicationClass::DeleteKobject(int index)
+{
+	if (index < m_object.size())
+	{
+		m_object[index]->Shutdown();
+		delete m_object[index];
+		m_object.erase(m_object.begin() + index);
+	}
+}
+
+void ApplicationClass::DeleteTerrain()
+{
+	for (auto cube : m_terrainChunk)
+	{
+		cube->Shutdown();
+		delete cube;
+	}
+	m_terrainChunk.clear();
 }
 
 bool ApplicationClass::UpdateMouseStrings(int mouseX, int mouseY, bool mouseDown)

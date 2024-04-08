@@ -108,37 +108,39 @@ void PositionClass::TurnRight(bool keydown)
     return;
 }
 
-void PositionClass::TurnMouse(float deltaX, float deltaY)
+void PositionClass::TurnMouse(float deltaX, float deltaY, bool rightMouseDown)
 {
     float speed = 0.1f;
     // The turning speed is proportional to the horizontal mouse movement
     m_horizontalTurnSpeed = deltaX * speed;
 
-    // Update the rotation using the turning speed
-    m_rotationY += m_horizontalTurnSpeed;
-    if (m_rotationY < 0.0f)
+    if (rightMouseDown)
     {
-        m_rotationY += 360.0f;
-    }
-    else if (m_rotationY > 360.0f)
-    {
-        m_rotationY -= 360.0f;
-    }
+        // Update the rotation using the turning speed
+        m_rotationY += m_horizontalTurnSpeed;
+        if (m_rotationY < 0.0f)
+        {
+            m_rotationY += 360.0f;
+        }
+        else if (m_rotationY > 360.0f)
+        {
+            m_rotationY -= 360.0f;
+        }
 
-    // The turning speed is proportional to the vertical mouse movement
-    m_verticalTurnSpeed = deltaY * speed;
+        // The turning speed is proportional to the vertical mouse movement
+        m_verticalTurnSpeed = deltaY * speed;
 
-    // Update the rotation using the turning speed
-    m_rotationX += m_verticalTurnSpeed;
-    if (m_rotationX < -90.0f)
-    {
-        m_rotationX = -90.0f;
+        // Update the rotation using the turning speed
+        m_rotationX += m_verticalTurnSpeed;
+        if (m_rotationX < -90.0f)
+        {
+            m_rotationX = -90.0f;
+        }
+        else if (m_rotationX > 90.0f)
+        {
+            m_rotationX = 90.0f;
+        }
     }
-    else if (m_rotationX > 90.0f)
-    {
-        m_rotationX = 90.0f;
-    }
-
     return;
 }
 
