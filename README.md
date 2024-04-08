@@ -1,11 +1,29 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/Ki-dD_5X)
 
-# Khaotic Engine
+# Khaotic Engine - C++ Custom Engine
 
-A custom engine build with chaos and DirectX11 in less than 5 weeks in C++.
+Khaotic Engine est un moteur de rendu fait en c++ réalisé par une petite équipe dans le but d'apprendre a utilisé les API de rendu (OpenGL,DirectX 11/12 et Vulkan).
+
+Ce moteur est basé sur DirectX11 utilise ImGui avec une couche d'abstraction pour permetre son usage avec d'autre API.
+
+---
+
+Khaotic Engine is a rendering engine made in C++ by a small team with the aim of learning how to use rendering APIs (OpenGL, DirectX 11/12 and Vulkan).
+
+This DirectX11-based engine uses ImGui with an abstraction layer to enable its use with other APIs.
+
+
+
+## Demo
+
+Insert gif or link to demo
+
 
 ## Engine Build by :
+
 - [@CatChow0](https://github.com/CatChow0)
 - [@miragefr0st](https://github.com/miragefr0st)
 - [@StratiX0](https://github.com/StratiX0)
 - [@Kagutsuchi84](https://github.com/Mattys8423)
+- [@Harpie94](https://github.com/Harpie94)
+- [@axelpicou](https://github.com/axelpicou)
+- [@GolfOcean334](https://github.com/GolfOcean334)
