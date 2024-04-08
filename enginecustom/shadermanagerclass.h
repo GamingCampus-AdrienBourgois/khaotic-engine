@@ -10,6 +10,7 @@
 #include "Multitextureshaderclass.h"
 #include "translateshaderclass.h"
 #include "alphamapshaderclass.h"
+#include "specmapshaderclass.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -29,6 +30,8 @@ public:
     bool RenderMultitextureShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, ID3D11ShaderResourceView*);
     bool RenderTranslateShader(ID3D11DeviceContext*,int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, float);
     bool RenderAlphaMapShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, ID3D11ShaderResourceView*, ID3D11ShaderResourceView*);
+    bool RenderSpecMapShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, ID3D11ShaderResourceView*, ID3D11ShaderResourceView*,
+        XMFLOAT3, XMFLOAT4, XMFLOAT3, XMFLOAT4, float);
 
 private:
     TextureShaderClass* m_TextureShader;
@@ -36,6 +39,7 @@ private:
     MultiTextureShaderClass* m_MultitextureShader;
     TranslateShaderClass* m_TranslateShader;
     AlphaMapShaderClass* m_AlphaMapShader;
+    SpecMapShaderClass* m_SpecMapShader;
 };
 
 #endif

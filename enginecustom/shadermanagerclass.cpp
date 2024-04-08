@@ -7,6 +7,7 @@ ShaderManagerClass::ShaderManagerClass()
     m_MultitextureShader = 0;
     m_TranslateShader = 0;
     m_AlphaMapShader = 0;
+    m_SpecMapShader = 0;
 }
 
 
@@ -60,10 +61,19 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
         return false;
     }
 
-    // Create and initialize the translate shader object.
+    // Create and initialize the alpha map shader object.
     m_AlphaMapShader = new AlphaMapShaderClass;
 
     result = m_AlphaMapShader->Initialize(device, hwnd);
+    if (!result)
+    {
+        return false;
+    }
+
+    // Create and initialize the specular map shader object.
+    m_SpecMapShader = new SpecMapShaderClass;
+
+    result = m_SpecMapShader->Initialize(device, hwnd);
     if (!result)
     {
         return false;
@@ -112,6 +122,14 @@ void ShaderManagerClass::Shutdown()
         m_AlphaMapShader->Shutdown();
         delete m_AlphaMapShader;
         m_AlphaMapShader = 0;
+    }
+
+    // Release the specular map shader object.
+    if (m_SpecMapShader)
+    {
+        m_SpecMapShader->Shutdown();
+        delete m_SpecMapShader;
+        m_SpecMapShader = 0;
     }
 
     return;
@@ -185,6 +203,23 @@ bool ShaderManagerClass::RenderAlphaMapShader(ID3D11DeviceContext* deviceContext
 
 
     result = m_AlphaMapShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture1, texture2, texture3);
+    if (!result)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ShaderManagerClass::RenderSpecMapShader(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
+    ID3D11ShaderResourceView* texture1, ID3D11ShaderResourceView* texture2, ID3D11ShaderResourceView* texture3,
+    XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor, XMFLOAT3 cameraPosition, XMFLOAT4 specularColor, float specularPower)
+{
+    bool result;
+
+
+    result = m_SpecMapShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture1, texture2, texture3, lightDirection, 
+        diffuseColor, cameraPosition, specularColor, specularPower);
     if (!result)
     {
         return false;

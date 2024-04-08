@@ -20,8 +20,6 @@
 #include "textclass.h"
 #include "fpsclass.h"
 #include "inputclass.h"
-#include "normalmapshaderclass.h"
-#include "specmapshaderclass.h"
 #include "shadermanagerclass.h"
 #include "modellistclass.h"
 #include "positionclass.h"
@@ -80,7 +78,6 @@ private:
 	FpsClass* m_Fps;
 	TextClass* m_FpsString;
 	int m_previousFps;
-	SpecMapShaderClass* m_SpecMapShader;
 	ShaderManagerClass* m_ShaderManager;
 	ModelListClass* m_ModelList;
 	PositionClass* m_Position;
