@@ -1179,8 +1179,13 @@ void ApplicationClass::GenerateTerrain()
 	char textureFilename3[128];
 
 	XMMATRIX scaleMatrix;
+	int scaleX, scaleY, scaleZ;
 
-	scaleMatrix = XMMatrixScaling(5.0f, 1.0f, 5.0f);
+	scaleX = 10.0f;
+	scaleY = 1.0f;
+	scaleZ = 10.0f;
+
+	scaleMatrix = XMMatrixScaling(scaleX, scaleY, scaleZ);
 
 	// Set the file name of the model.
 	strcpy_s(modelFilename, "plane.txt");
@@ -1198,7 +1203,7 @@ void ApplicationClass::GenerateTerrain()
 
 			newTerrain->SetScaleMatrix(scaleMatrix);
 
-			newTerrain->SetTranslateMatrix(XMMatrixTranslation(i / 2 * 10, -5.0f, j * 10));
+			newTerrain->SetTranslateMatrix(XMMatrixTranslation(i / 2 * (scaleX * 2), -5.0f, j * (scaleZ * 2)));
 
 			m_terrainChunk.push_back(newTerrain);
 
