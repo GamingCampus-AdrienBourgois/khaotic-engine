@@ -618,7 +618,7 @@ void ApplicationClass::Shutdown()
 bool ApplicationClass::Frame(InputClass* Input)
 {
 	int mouseX, mouseY, currentMouseX, currentMouseY;
-	bool result, mouseDown, keyDown, buttonQ, buttonD, buttonZ, buttonS, buttonA, buttonE;
+	bool result, leftMouseDown, rightMouseDown, keyDown, buttonQ, buttonD, buttonZ, buttonS, buttonA, buttonE;
 	float rotationY, rotationX, positionX, positionY, positionZ;
 
 	float frameTime;
@@ -645,6 +645,10 @@ bool ApplicationClass::Frame(InputClass* Input)
 	// Get the location of the mouse from the input object,
 	Input->GetMouseLocation(mouseX, mouseY);
 
+	// Check if the mouse has been pressed.
+	leftMouseDown = Input->IsLeftMousePressed();
+	rightMouseDown = Input->IsRightMousePressed();
+
 	currentMouseX = mouseX;
 
 	float deltaX = currentMouseX - lastMouseX;  // Calculez le d�placement de la souris
@@ -665,7 +669,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	keyDown = Input->IsRightArrowPressed();
 	m_Position->TurnRight(keyDown);
 
-	m_Position->TurnMouse(deltaX, deltaY);
+	m_Position->TurnMouse(deltaX, deltaY, rightMouseDown);
 
 	// Get the current view point rotation.
 	m_Position->GetRotation(rotationY, rotationX);
@@ -721,11 +725,8 @@ bool ApplicationClass::Frame(InputClass* Input)
 		return false;
 	}
 
-	// Check if the mouse has been pressed.
-	mouseDown = Input->IsMousePressed();
-
 	// Update the mouse strings each frame.
-	result = UpdateMouseStrings(mouseX, mouseY, mouseDown);
+	result = UpdateMouseStrings(mouseX, mouseY, leftMouseDown);
 	if (!result)
 	{
 		return false;
@@ -1031,7 +1032,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	// Render the model using the light shader.
 	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
 		diffuseColor, lightPosition);
-	
+
 	for (auto cube : m_cubes)
 	{
 
@@ -1078,7 +1079,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 			diffuseColor, lightPosition);
 
 		if (!result)
-			{
+		{
 			return false;
 		}
 	}
@@ -1097,7 +1098,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 		chunk->Render(m_Direct3D->GetDeviceContext());
 
 		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
-						diffuseColor, lightPosition);
+			diffuseColor, lightPosition);
 		if (!result)
 		{
 			return false;
