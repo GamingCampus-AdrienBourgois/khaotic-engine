@@ -162,7 +162,6 @@ private :
 	TextClass* m_MouseStrings;
 	TextClass* m_RenderCountString;
 	FontClass* m_Font;
-	TextClass* m_TextString1, * m_TextString2, * m_TextString3;
 	FpsClass* m_Fps;
 	TextClass* m_FpsString;
 	int m_previousFps;

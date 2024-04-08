@@ -17,9 +17,6 @@ ApplicationClass::ApplicationClass()
 	m_MouseStrings = 0;
 	m_FontShader = 0;
 	m_Font = 0;
-	m_TextString1 = 0;
-	m_TextString2 = 0;
-	m_TextString3 = 0;
 	m_Fps = 0;
 	m_FpsString = 0;
 	m_NormalMapShader = 0;
@@ -117,38 +114,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Font = new FontClass;
 
 	result = m_Font->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), 0);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Set the strings we want to display.
-	strcpy_s(testString1, "Yo");
-	strcpy_s(testString2, "Les");
-	strcpy_s(testString3, "Noobs !");
-
-	// Create and initialize the first text object.
-	m_TextString1 = new TextClass;
-
-	result = m_TextString1->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, 32, m_Font, testString1, 25, screenHeight / 2 - m_Font->GetFontHeight(), 1.0f, 1.0f, 1.0f);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Create and initialize the second text object.
-	m_TextString2 = new TextClass;
-
-	result = m_TextString2->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, 32, m_Font, testString2, 250, screenHeight / 2 - m_Font->GetFontHeight(), 0.0f, 1.0f, 1.0f);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Create and initialize the second text object.
-	m_TextString3 = new TextClass;
-
-	result = m_TextString3->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, 32, m_Font, testString3, screenWidth / 2 - m_Font->GetSentencePixelLength(testString3), screenHeight / 2 - m_Font->GetFontHeight(), 1.0f, 1.0f, 0.0f);
 	if (!result)
 	{
 		return false;
@@ -460,28 +425,6 @@ void ApplicationClass::Shutdown()
 	{
 		delete m_Fps;
 		m_Fps = 0;
-	}
-
-	// Release the text string objects.
-	if (m_TextString3)
-	{
-		m_TextString3->Shutdown();
-		delete m_TextString3;
-		m_TextString3 = 0;
-	}
-
-	if (m_TextString2)
-	{
-		m_TextString2->Shutdown();
-		delete m_TextString2;
-		m_TextString2 = 0;
-	}
-
-	if (m_TextString1)
-	{
-		m_TextString1->Shutdown();
-		delete m_TextString1;
-		m_TextString1 = 0;
 	}
 
 	// Release the font object.
@@ -915,36 +858,6 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 
 	result = m_FontShader->Render(m_Direct3D->GetDeviceContext(), m_FpsString->GetIndexCount(), worldMatrix, m_baseViewMatrix, orthoMatrix,
 		m_Font->GetTexture(), m_FpsString->GetPixelColor());
-	if (!result)
-	{
-		return false;
-	}
-
-	// Render the first text string using the font shader.
-	m_TextString1->Render(m_Direct3D->GetDeviceContext());
-
-	result = m_FontShader->Render(m_Direct3D->GetDeviceContext(), m_TextString1->GetIndexCount(), worldMatrix, m_baseViewMatrix, orthoMatrix,
-		m_Font->GetTexture(), m_TextString1->GetPixelColor());
-	if (!result)
-	{
-		return false;
-	}
-
-	// Render the second text string using the font shader.
-	m_TextString2->Render(m_Direct3D->GetDeviceContext());
-
-	result = m_FontShader->Render(m_Direct3D->GetDeviceContext(), m_TextString2->GetIndexCount(), worldMatrix, m_baseViewMatrix, orthoMatrix,
-		m_Font->GetTexture(), m_TextString2->GetPixelColor());
-	if (!result)
-	{
-		return false;
-	}
-
-	// Render the second text string using the font shader.
-	m_TextString3->Render(m_Direct3D->GetDeviceContext());
-
-	result = m_FontShader->Render(m_Direct3D->GetDeviceContext(), m_TextString3->GetIndexCount(), worldMatrix, m_baseViewMatrix, orthoMatrix,
-		m_Font->GetTexture(), m_TextString3->GetPixelColor());
 	if (!result)
 	{
 		return false;
