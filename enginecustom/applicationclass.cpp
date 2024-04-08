@@ -626,7 +626,15 @@ bool ApplicationClass::Frame(InputClass* Input)
 
 	// Set the postion and rotation of the camera.
 	m_Camera->SetPosition(positionX, positionY, positionZ);
-	m_Camera->SetRotation(rotationX, rotationY, 0.0f);
+	
+	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
+	{
+		m_Camera->SetRotation(rotationX, rotationY, 0.0f);
+		m_Camera->Render();
+	}
+
+	
+	
 	m_Camera->Render();
 
 	// Render the graphics scene.
