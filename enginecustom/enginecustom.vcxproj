@@ -93,6 +93,7 @@
     <ClInclude Include="positionclass.h" />
     <ClInclude Include="reflectionshaderclass.h" />
     <ClInclude Include="rendertextureclass.h" />
+    <ClInclude Include="resources.h" />
     <ClInclude Include="specmapshaderclass.h" />
     <ClInclude Include="Spriteclass.h" />
     <ClInclude Include="systemclass.h" />
@@ -150,6 +151,7 @@
     <Image Include="alpha01.tga" />
     <Image Include="dirt01.tga" />
     <Image Include="font01.tga" />
+    <Image Include="KhaoticIcon.ico" />
     <Image Include="light01.tga" />
     <Image Include="moss01.tga" />
     <Image Include="normal01.tga" />
@@ -174,6 +176,9 @@
       <SubType>Designer</SubType>
       <FileType>Document</FileType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resources.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

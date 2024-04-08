@@ -276,8 +276,8 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = m_hinstance;
-	wc.hIcon = LoadIcon(NULL, IDI_WINLOGO);
-	wc.hIconSm = wc.hIcon;
+	wc.hIcon = LoadIcon(m_hinstance,MAKEINTRESOURCE(IDI_ICON1));
+	wc.hIconSm = LoadIcon(m_hinstance, MAKEINTRESOURCE(IDI_ICON1));
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	wc.lpszMenuName = NULL;

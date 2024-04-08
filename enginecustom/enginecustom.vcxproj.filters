@@ -281,6 +281,9 @@
     <ClInclude Include="reflectionshaderclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="resources.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="font01.tga">
@@ -311,6 +314,9 @@
       <Filter>assets</Filter>
     </Image>
     <Image Include="..\..\..\..\Downloads\grass.tga">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="KhaoticIcon.ico">
       <Filter>Assets</Filter>
     </Image>
   </ItemGroup>
@@ -372,6 +378,8 @@
     </None>
     <None Include="reflection.vs" />
     <None Include="reflection.ps" />
+    <None Include="specmap.ps" />
+    <None Include="specmap.vs" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="font01.txt">
@@ -394,11 +402,8 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="specmap.vs">
-      <Filter>shader</Filter>
-    </FxCompile>
-    <FxCompile Include="specmap.ps">
-      <Filter>shader</Filter>
-    </FxCompile>
+    <ResourceCompile Include="resources.rc">
+      <Filter>Fichiers de ressources</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

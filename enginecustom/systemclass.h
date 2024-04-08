@@ -6,6 +6,7 @@
 #include "inputclass.h"
 #include "applicationclass.h"
 #include "imguiManager.h"
+#include "resources.h"
 
 class SystemClass
 {
