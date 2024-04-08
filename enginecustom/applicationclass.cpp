@@ -977,22 +977,6 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 		return false;
 	}
 
-	// Put the bitmap vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	result = m_Bitmap->Render(m_Direct3D->GetDeviceContext());
-	if (!result)
-	{
-		return false;
-	}
-
-	m_Bitmap->SetRenderLocation(1200, 50);
-
-	// Render the bitmap with the texture shader.
-	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Bitmap->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix, m_Bitmap->GetTexture());
-	if (!result)
-	{
-		return false;
-	}
-
 	//scaleMatrix = XMMatrixScaling(0.75f, 0.75f, 0.75f);  // Build the scaling matrix.
 	//rotateMatrix = XMMatrixRotationY(rotation);  // Build the rotation matrix.
 	//translateMatrix = XMMatrixTranslation(x, y, z);  // Build the translation matrix.
