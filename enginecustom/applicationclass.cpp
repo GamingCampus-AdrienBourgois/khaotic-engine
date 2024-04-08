@@ -794,6 +794,103 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 	m_Direct3D->GetOrthoMatrix(orthoMatrix);
 
+	// Get the light properties.
+	for (i = 0; i < m_numLights; i++)
+	{
+		// Create the diffuse color array from the four light colors.
+		diffuseColor[i] = m_Lights[i].GetDiffuseColor();
+
+		// Create the light position array from the four light positions.
+		lightPosition[i] = m_Lights[i].GetPosition();
+	}
+
+	scaleMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);  // Build the scaling matrix.
+	rotateMatrix = XMMatrixRotationY(rotation);  // Build the rotation matrix.
+	translateMatrix = XMMatrixTranslation(x, y, z);  // Build the translation matrix.
+
+	// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
+	srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
+	worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	// Render the model using the light shader.
+	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
+		diffuseColor, lightPosition);
+
+	for (auto cube : m_cubes)
+	{
+
+		scaleMatrix = cube->GetScaleMatrix();
+
+		if (cube->m_demoSpinning)
+			rotateMatrix = XMMatrixRotationY(rotation);
+		else
+		{
+			rotateMatrix = cube->GetRotateMatrix();
+		}
+
+
+		translateMatrix = cube->GetTranslateMatrix();
+		srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
+		worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+
+		cube->Render(m_Direct3D->GetDeviceContext());
+
+		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
+			diffuseColor, lightPosition);
+		if (!result)
+		{
+			return false;
+		}
+	}
+
+	for (auto object : m_object)
+	{
+		scaleMatrix = object->GetScaleMatrix();
+		if (object->m_demoSpinning)
+			rotateMatrix = XMMatrixRotationY(rotation);
+		else
+		{
+			rotateMatrix = object->GetRotateMatrix();
+		}
+		translateMatrix = object->GetTranslateMatrix();
+		srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
+		worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+
+		object->Render(m_Direct3D->GetDeviceContext());
+
+		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
+			diffuseColor, lightPosition);
+
+		if (!result)
+		{
+			return false;
+		}
+	}
+
+	// Render terrain
+	for (auto chunk : m_terrainChunk)
+	{
+
+		scaleMatrix = chunk->GetScaleMatrix();
+		rotateMatrix = chunk->GetRotateMatrix();
+		translateMatrix = chunk->GetTranslateMatrix();
+
+		srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
+		worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
+
+		chunk->Render(m_Direct3D->GetDeviceContext());
+
+		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), chunk->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, chunk->GetTexture(1),
+			diffuseColor, lightPosition);
+		if (!result)
+		{
+			return false;
+		}
+	}
+
 	// Setup matrices - Top display plane.
 	worldMatrix = XMMatrixTranslation(0.0f, 1.5f, 0.0f);
 
@@ -828,16 +925,6 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	if (!result)
 	{
 		return false;
-	}
-
-	// Get the light properties.
-	for (i = 0; i < m_numLights; i++)
-	{
-		// Create the diffuse color array from the four light colors.
-		diffuseColor[i] = m_Lights[i].GetDiffuseColor();
-
-		// Create the light position array from the four light positions.
-		lightPosition[i] = m_Lights[i].GetPosition();
 	}
 
 	// Construct the frustum.
@@ -1018,92 +1105,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 		lightPosition[i] = m_Lights[i].GetPosition();
 	}
 
-	scaleMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);  // Build the scaling matrix.
-	rotateMatrix = XMMatrixRotationY(rotation);  // Build the rotation matrix.
-	translateMatrix = XMMatrixTranslation(x, y, z);  // Build the translation matrix.
 
-	// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
-	srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
-	worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
-
-	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	m_Model->Render(m_Direct3D->GetDeviceContext());
-
-	// Render the model using the light shader.
-	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
-		diffuseColor, lightPosition);
-
-	for (auto cube : m_cubes)
-	{
-
-		scaleMatrix = cube->GetScaleMatrix();
-
-		if (cube->m_demoSpinning)
-			rotateMatrix = XMMatrixRotationY(rotation);
-		else
-		{
-			rotateMatrix = cube->GetRotateMatrix();
-		}
-
-
-		translateMatrix = cube->GetTranslateMatrix();
-		srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
-		worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
-
-		cube->Render(m_Direct3D->GetDeviceContext());
-
-		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
-			diffuseColor, lightPosition);
-		if (!result)
-		{
-			return false;
-		}
-	}
-
-	for (auto object : m_object)
-	{
-		scaleMatrix = object->GetScaleMatrix();
-		if (object->m_demoSpinning)
-			rotateMatrix = XMMatrixRotationY(rotation);
-		else
-		{
-			rotateMatrix = object->GetRotateMatrix();
-		}
-		translateMatrix = object->GetTranslateMatrix();
-		srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
-		worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
-
-		object->Render(m_Direct3D->GetDeviceContext());
-
-		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
-			diffuseColor, lightPosition);
-
-		if (!result)
-		{
-			return false;
-		}
-	}
-
-	// Render terrain
-	for (auto chunk : m_terrainChunk)
-	{
-
-		scaleMatrix = chunk->GetScaleMatrix();
-		rotateMatrix = chunk->GetRotateMatrix();
-		translateMatrix = chunk->GetTranslateMatrix();
-
-		srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
-		worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
-
-		chunk->Render(m_Direct3D->GetDeviceContext());
-
-		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
-			diffuseColor, lightPosition);
-		if (!result)
-		{
-			return false;
-		}
-	}
 
 	// Render the model using the multitexture shader.
 	//result = m_MultiTextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
@@ -1175,6 +1177,11 @@ void ApplicationClass::GenerateTerrain()
 	char textureFilename[128];
 	char textureFilename2[128];
 	char textureFilename3[128];
+
+	XMMATRIX scaleMatrix;
+
+	scaleMatrix = XMMatrixScaling(5.0f, 1.0f, 5.0f);
+
 	// Set the file name of the model.
 	strcpy_s(modelFilename, "plane.txt");
 	strcpy_s(textureFilename, "stone01.tga");
@@ -1182,14 +1189,16 @@ void ApplicationClass::GenerateTerrain()
 	strcpy_s(textureFilename3, "alpha01.tga");
 
 	// for loop to generate terrain chunks for a 10x10 grid
-	for (int i = -5; i < 5; i++)
+	for (int i = 0; i < 10; i++)
 	{
-		for (int j = -5; j < 5; j++)
+		for (int j = 0; j < 10; j++)
 		{
 			Object* newTerrain = new Object();
 			newTerrain->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2, textureFilename3);
 
-			newTerrain->SetTranslateMatrix(XMMatrixTranslation(i*10, -5.0f, j*10));
+			newTerrain->SetScaleMatrix(scaleMatrix);
+
+			newTerrain->SetTranslateMatrix(XMMatrixTranslation(i / 2 * 10, -5.0f, j * 10));
 
 			m_terrainChunk.push_back(newTerrain);
 
