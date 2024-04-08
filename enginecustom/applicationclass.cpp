@@ -30,6 +30,7 @@ ApplicationClass::ApplicationClass()
 	m_Frustum = 0;
 	m_DisplayPlane = 0;
 	m_ReflectionShader = 0;
+	m_Physics = 0;
 }
 
 
@@ -388,6 +389,8 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	m_Physics = new Physics;
+
 	return true;
 }
 
@@ -626,7 +629,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	static int lastMouseX = 0, lastMouseY = 0;
 
 	static float rotation = 360.0f;
-	static float x = 6.f;
+	static float x = 0.f;
 	static float y = 3.f;
 	static float z = 0.f;
 
@@ -710,13 +713,23 @@ bool ApplicationClass::Frame(InputClass* Input)
 		rotation += 360.0f;
 	}
 
-	// Update the x position variable each frame.
-	x -= 0.0174532925f * 0.6f;
+	//// Update the x position variable each frame.
+	//x -= 0.0174532925f * 0.6f;
 
-	y -= 0.0174532925f * 0.2f;
+	//y -= 0.0174532925f * 0.2f;
 
-	// Update the z position variable each frame.
-	z -= 0.0174532925f * 0.2f;
+	//// Update the z position variable each frame.
+	//z -= 0.0174532925f * 0.2f;
+
+	for (auto object : m_object)
+	{
+		m_Physics->ApplyGravity(object, frameTime);
+		if (XMVectorGetY(object->GetPosition()) < -10.0f)
+		{
+			object->SetPosition(XMVectorSet(0.0f, 20.0f, 0.0f, 0.0f));
+		}
+	}
+	
 
 	// Render the scene to a render texture.
 	result = RenderSceneToTexture(rotation);
@@ -838,7 +851,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 
 		cube->Render(m_Direct3D->GetDeviceContext());
 
-		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
+		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), cube->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, cube->GetTexture(0),
 			diffuseColor, lightPosition);
 		if (!result)
 		{
@@ -861,7 +874,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 
 		object->Render(m_Direct3D->GetDeviceContext());
 
-		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
+		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), object->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, object->GetTexture(0),
 			diffuseColor, lightPosition);
 
 		if (!result)

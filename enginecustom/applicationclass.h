@@ -34,6 +34,7 @@
 #include "displayplaneclass.h"
 #include "translateshaderclass.h"
 #include "reflectionshaderclass.h"
+#include "physics.h"
 
 
 /////////////
@@ -157,6 +158,8 @@ private :
 	TextClass* m_FpsString;
 	int m_previousFps;
 
+	Physics* m_Physics;
+	float m_gravity;
 };
 
 #endif

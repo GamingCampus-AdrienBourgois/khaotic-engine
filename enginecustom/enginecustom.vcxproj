@@ -48,6 +48,7 @@
     <ClCompile Include="modellistclass.cpp" />
     <ClCompile Include="Multitextureshaderclass.cpp" />
     <ClCompile Include="normalmapshaderclass.cpp" />
+    <ClCompile Include="physics.cpp" />
     <ClCompile Include="positionclass.cpp" />
     <ClCompile Include="reflectionshaderclass.cpp" />
     <ClCompile Include="rendertextureclass.cpp" />
@@ -90,6 +91,7 @@
     <ClInclude Include="modellistclass.h" />
     <ClInclude Include="Multitextureshaderclass.h" />
     <ClInclude Include="normalmapshaderclass.h" />
+    <ClInclude Include="physics.h" />
     <ClInclude Include="positionclass.h" />
     <ClInclude Include="reflectionshaderclass.h" />
     <ClInclude Include="rendertextureclass.h" />
