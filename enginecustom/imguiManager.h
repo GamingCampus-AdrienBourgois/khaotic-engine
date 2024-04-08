@@ -32,6 +32,11 @@ public:
 
 	void ImGuiWidgetRenderer(ApplicationClass* app);
 
+private :
+	bool showObjectWindow = false;
+	bool showTerrainWindow = false;
+	bool showLightWindow = false;
+
 private:
 	ImGuiIO* io;
 };

@@ -73,8 +73,6 @@ void imguiManager::WidgetAddObject(ApplicationClass* app)
 			app->AddCube();
 		}
 		ImGui::SameLine();
-		ImGui::Text("Number of cubes: %d", app->GetCubeCount());
-
 		if (ImGui::Button("Import Object"))
 		{
 			// Open file dialog
@@ -99,12 +97,14 @@ void imguiManager::WidgetAddObject(ApplicationClass* app)
 			}
 
 		}
+		ImGui::SameLine();
+		ImGui::Text("Number of cubes: %d", app->GetCubeCount());
 	}
 }
 
 void imguiManager::WidgetObjectWindow(ApplicationClass* app)
 {
-	ImGui::Begin("Objects");
+	ImGui::Begin("Objects", &showObjectWindow);
 	int index = 0;
 	for (auto& object : app->GetKobjects())
 	{
@@ -160,7 +160,7 @@ void imguiManager::WidgetObjectWindow(ApplicationClass* app)
 
 void imguiManager::WidgetTerrainWindow(ApplicationClass* app)
 {
-	ImGui::Begin("Terrain");
+	ImGui::Begin("Terrain", &showTerrainWindow);
 
 	ImGui::Text("Number of terrain cubes: %d", app->GetTerrainCubeCount());
 
@@ -195,11 +195,41 @@ void imguiManager::ImGuiWidgetRenderer(ApplicationClass* app)
 	WidgetButton();
 	WidgetFPS();
 	WidgetAddObject(app);
-	WidgetObjectWindow(app);
-	WidgetTerrainWindow(app);
-	WidgetLightWindow(app);
+	ImGui::Separator();
+
+	// Add buttons for opening windows
+	if (ImGui::Button("Open Object Window"))
+	{
+		showObjectWindow = true;
+	}
+
+	if (ImGui::Button("Open Terrain Window"))
+	{
+		showTerrainWindow = true;
+	}
+
+	if (ImGui::Button("Open Light Window"))
+	{
+		showLightWindow = true;
+	}
 
 	ImGui::End();
+
+	// Show windows if their corresponding variables are true
+	if (showObjectWindow)
+	{
+		WidgetObjectWindow(app);
+	}
+
+	if (showTerrainWindow)
+	{
+		WidgetTerrainWindow(app);
+	}
+
+	if (showLightWindow)
+	{
+		WidgetLightWindow(app);
+	}
 
 	//render imgui
 	Render();
@@ -209,7 +239,7 @@ void imguiManager::ImGuiWidgetRenderer(ApplicationClass* app)
 
 void imguiManager::WidgetLightWindow(ApplicationClass* app)
 {
-	ImGui::Begin("Light");
+	ImGui::Begin("Light", &showLightWindow);
 	int index = 0;
 	for(auto& light : app->GetLights())
 	{
