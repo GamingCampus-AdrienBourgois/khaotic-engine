@@ -634,7 +634,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	}
 
 	// Check if the mouse has been pressed.
-	mouseDown = Input->IsMousePressed();
+	leftMouseDown = Input->IsLeftMousePressed();
 
 	// Update the mouse strings each frame.
 	result = UpdateMouseStrings(mouseX, mouseY, leftMouseDown);
@@ -1188,9 +1188,12 @@ int ApplicationClass::GetScreenHeight() const
 void ApplicationClass::GenerateTerrain()
 {
 	char modelFilename[128];
-	char textureFilename[128];
+	char textureFilename1[128];
 	char textureFilename2[128];
 	char textureFilename3[128];
+	char textureFilename4[128];
+	char textureFilename5[128];
+	char textureFilename6[128];
 
 	XMMATRIX scaleMatrix;
 	int scaleX, scaleY, scaleZ;
@@ -1203,9 +1206,12 @@ void ApplicationClass::GenerateTerrain()
 
 	// Set the file name of the model.
 	strcpy_s(modelFilename, "plane.txt");
-	strcpy_s(textureFilename, "stone01.tga");
-	strcpy_s(textureFilename2, "moss01.tga");
-	strcpy_s(textureFilename3, "alpha01.tga");
+	strcpy_s(textureFilename1, "stone01.tga");
+	strcpy_s(textureFilename2, "normal01.tga");
+	strcpy_s(textureFilename3, "spec02.tga");
+	strcpy_s(textureFilename4, "alpha01.tga");
+	strcpy_s(textureFilename5, "light01.tga");
+	strcpy_s(textureFilename6, "moss01.tga");
 
 	// for loop to generate terrain chunks for a 10x10 grid
 	for (int i = 0; i < 10; i++)
@@ -1213,7 +1219,7 @@ void ApplicationClass::GenerateTerrain()
 		for (int j = 0; j < 10; j++)
 		{
 			Object* newTerrain = new Object();
-			newTerrain->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2, textureFilename3);
+			newTerrain->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2, textureFilename3, textureFilename4, textureFilename5, textureFilename6);
 
 			newTerrain->SetScaleMatrix(scaleMatrix);
 
@@ -1229,9 +1235,12 @@ void ApplicationClass::GenerateTerrain()
 void ApplicationClass::AddKobject(WCHAR* filepath)
 {
 	char modelFilename[128];
-	char textureFilename[128];
+	char textureFilename1[128];
 	char textureFilename2[128];
 	char textureFilename3[128];
+	char textureFilename4[128];
+	char textureFilename5[128];
+	char textureFilename6[128];
 
 	filesystem::path p(filepath);
 	string filename = p.stem().string();
@@ -1241,12 +1250,17 @@ void ApplicationClass::AddKobject(WCHAR* filepath)
 
 
 	// Set the name of the texture file that we will be loading.
-	strcpy_s(textureFilename, "stone01.tga");
-	strcpy_s(textureFilename2, "moss01.tga");
-	strcpy_s(textureFilename3, "alpha01.tga");
+	strcpy_s(textureFilename1, "stone01.tga");
+	strcpy_s(textureFilename2, "normal01.tga");
+	strcpy_s(textureFilename3, "spec02.tga");
+	strcpy_s(textureFilename4, "alpha01.tga");
+	strcpy_s(textureFilename5, "light01.tga");
+	strcpy_s(textureFilename6, "moss01.tga");
+
 
 	Object* newObject = new Object();
-	newObject->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2, textureFilename3);
+	newObject->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2, textureFilename3, textureFilename4,
+		textureFilename5, textureFilename6);
 
 	newObject->SetTranslateMatrix(XMMatrixTranslation(0.0f, 0.0f, 0.0f));
 	newObject->SetName(filename);
@@ -1257,21 +1271,28 @@ void ApplicationClass::AddKobject(WCHAR* filepath)
 void ApplicationClass::AddCube()
 {
 	char modelFilename[128];
-	char textureFilename[128];
+	char textureFilename1[128];
 	char textureFilename2[128];
 	char textureFilename3[128];
+	char textureFilename4[128];
+	char textureFilename5[128];
+	char textureFilename6[128];
 
 	// Set the file name of the model.
 	strcpy_s(modelFilename, "cube.txt");
 
 	// Set the name of the texture file that we will be loading.
-	strcpy_s(textureFilename, "stone01.tga");
-	strcpy_s(textureFilename2, "moss01.tga");
-	strcpy_s(textureFilename3, "alpha01.tga");
+	strcpy_s(textureFilename1, "stone01.tga");
+	strcpy_s(textureFilename2, "normal01.tga");
+	strcpy_s(textureFilename3, "spec02.tga");
+	strcpy_s(textureFilename4, "alpha01.tga");
+	strcpy_s(textureFilename5, "light01.tga");
+	strcpy_s(textureFilename6, "moss01.tga");
 	static int cubeCount = 0;
 	float position = cubeCount * 2.0f;
 	Object* newCube = new Object();
-	newCube->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2, textureFilename3);
+	newCube->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2, textureFilename3, textureFilename4,
+		textureFilename5, textureFilename6);
 
 	newCube->SetTranslateMatrix(XMMatrixTranslation(position, 0.0f, 0.0f));
 
