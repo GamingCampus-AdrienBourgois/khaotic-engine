@@ -3,20 +3,19 @@
 
 #include "object.h"
 
-class Physics
+class Physics : public Object
 {
 public:
-    public:
     Physics();
-    Physics(const Physics&);
+    explicit Physics(const Physics&); // Use explicit to avoid implicit conversion
     ~Physics();
 
-    float GetGravity();
-    void ApplyGravity(Object*, float);
+    float GetGravity(); // Get the gravity value
+    void SetGravity(float gravity); // Define the gravity value
+    void ApplyGravity(Object*, float); // Apply gravity to an object
 
 private:
     float m_gravity;
 };
 
 #endif
-

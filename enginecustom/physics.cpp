@@ -1,32 +1,42 @@
 #include "physics.h"
 
+
 Physics::Physics()
 {
-	m_gravity = -9.81f;
+	m_gravity = -9.81f; // Initilize the gravity value
 }
-
 
 Physics::Physics(const Physics& other)
 {
-	m_gravity = other.m_gravity; // Copy gravity value from the other object
+	m_gravity = other.m_gravity; // Copy the gravity value
 }
-
 
 Physics::~Physics()
 {
 }
 
-float Physics::GetGravity() // Changed the method to return the gravity value
+// Get the gravity value
+float Physics::GetGravity()
 {
 	return m_gravity;
 }
 
+// Define the gravity value
+void Physics::SetGravity(float gravity)
+{
+	m_gravity = gravity;
+}
+
+// Apply gravity to an object
 void Physics::ApplyGravity(Object* object, float frameTime)
 {
-	// Update the position of the object by adding the change in position due to gravity.
-	XMVECTOR position = object->GetPosition(); // Get the current position
-	position = XMVectorSetY(position, XMVectorGetY(position) + m_gravity * frameTime); // Update the y value
-	object->SetPosition(position); // Set the updated position
+	if (object == nullptr) // Verify if the object is not null
+	{
+		return;
+	}
 
-	return;
+	// Update the object position
+	XMVECTOR position = object->GetPosition();
+	position = XMVectorSetY(position, XMVectorGetY(position) + m_gravity * frameTime); // Update the Y position
+	object->SetPosition(position);
 }

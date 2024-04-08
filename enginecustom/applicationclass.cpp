@@ -397,6 +397,13 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void ApplicationClass::Shutdown()
 {
+	// Release the physics object.
+	if (m_Physics)
+	{
+		delete m_Physics;
+		m_Physics = 0;
+	}
+
 	// Release the frustum class object.
 	if (m_Frustum)
 	{
@@ -723,10 +730,16 @@ bool ApplicationClass::Frame(InputClass* Input)
 
 	for (auto object : m_object)
 	{
-		m_Physics->ApplyGravity(object, frameTime);
-		if (XMVectorGetY(object->GetPosition()) < -10.0f)
+		if (object != nullptr) // Vérifie que l'objet n'est pas nullptr
 		{
-			object->SetPosition(XMVectorSet(0.0f, 20.0f, 0.0f, 0.0f));
+			m_Physics->ApplyGravity(object, frameTime);
+			if (XMVectorGetY(object->GetPosition()) < -10.0f)
+			{
+				// Obtenez la position actuelle de l'objet
+				XMVECTOR currentPosition = object->GetPosition();
+				// Définissez la nouvelle position y tout en conservant les positions x et z actuelles
+				object->SetPosition(XMVectorSetY(currentPosition, 20.0f));
+			}
 		}
 	}
 	
