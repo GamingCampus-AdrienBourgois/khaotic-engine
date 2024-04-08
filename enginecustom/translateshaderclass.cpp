@@ -8,7 +8,6 @@ TranslateShaderClass::TranslateShaderClass()
     m_layout = 0;
     m_matrixBuffer = 0;
     m_sampleState = 0;
-
     m_translateBuffer = 0;
 }
 
@@ -31,14 +30,14 @@ bool TranslateShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
     int error;
 
     // Set the filename of the vertex shader.
-    error = wcscpy_s(vsFilename, 128, L"../Engine/translate.vs");
+    error = wcscpy_s(vsFilename, 128, L"translate.vs");
     if (error != 0)
     {
         return false;
     }
 
     // Set the filename of the pixel shader.
-    error = wcscpy_s(psFilename, 128, L"../Engine/translate.ps");
+    error = wcscpy_s(psFilename, 128, L"translate.ps");
     if (error != 0)
     {
         return false;

@@ -14,26 +14,22 @@
 #include <filesystem>
 
 #include "lightmapshaderclass.h"
-#include "multitextureshaderclass.h"
-#include "alphamapshaderclass.h"
 #include "bitmapclass.h"
-#include "textureshaderclass.h"
 #include "spriteclass.h"
+#include "textureshaderclass.h"
 #include "timerclass.h"
 #include "fontshaderclass.h"
 #include "fontclass.h"
 #include "textclass.h"
 #include "fpsclass.h"
 #include "inputclass.h"
-#include "normalmapshaderclass.h"
-#include "specmapshaderclass.h"
+#include "shadermanagerclass.h"
 #include "modellistclass.h"
 #include "positionclass.h"
 #include "frustumclass.h"
 #include "rendertextureclass.h"
 #include "displayplaneclass.h"
-#include "translateshaderclass.h"
-#include "reflectionshaderclass.h"
+
 
 
 /////////////
@@ -79,7 +75,7 @@ public:
 	void DeleteTerrain();
 
 private:
-	bool Render(float, float, float, float);
+	bool Render(float, float, float, float, float);
 	bool UpdateMouseStrings(int, int, bool);
 	bool UpdateFps();
 	bool UpdateRenderCountString(int);
@@ -94,6 +90,8 @@ private :
 	D3DClass* m_Direct3D;
 	IDXGISwapChain* m_swapChain;
 	ModelClass* m_Model;
+	TextureShaderClass* m_TextureShader;
+	ShaderManagerClass* m_ShaderManager;
 	ModelListClass* m_ModelList;
 
 	// ------------------------------------- //
@@ -132,13 +130,7 @@ private :
 
 	LightShaderClass* m_LightShader;
 	LightMapShaderClass* m_LightMapShader;
-	MultiTextureShaderClass* m_MultiTextureShader;
-	AlphaMapShaderClass* m_AlphaMapShader;
-	TextureShaderClass* m_TextureShader;
 	FontShaderClass* m_FontShader;
-	NormalMapShaderClass* m_NormalMapShader;
-	SpecMapShaderClass* m_SpecMapShader;
-	TranslateShaderClass* m_TranslateShader;
 	ReflectionShaderClass* m_ReflectionShader;
 
 	BitmapClass* m_Bitmap;
@@ -157,6 +149,7 @@ private :
 	TextClass* m_FpsString;
 	int m_previousFps;
 
+r-Manager
 };
 
 #endif

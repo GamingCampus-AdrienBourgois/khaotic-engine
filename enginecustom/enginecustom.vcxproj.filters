@@ -398,5 +398,8 @@
     <Text Include="square.txt">
       <Filter>assets</Filter>
     </Text>
+    <ClCompile Include="shadermanagerclass.cpp" />
+    <ClInclude Include="shadermanagerclass.h" />
+    <Image Include="spec02.tga" />
   </ItemGroup>
 </Project>

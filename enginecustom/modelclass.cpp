@@ -19,7 +19,8 @@ ModelClass::~ModelClass()
 {
 }
 
-bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* modelFilename, char* textureFilename1, char* textureFilename2, char* textureFilename3)
+bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* modelFilename, char* textureFilename1, char* textureFilename2, char* textureFilename3, 
+	char* textureFilename4, char* textureFilename5, char* textureFilename6)
 {
 	bool result;
 
@@ -40,7 +41,7 @@ bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 		return false;
 	}
 	// Load the textures for this model.
-	result = LoadTextures(device, deviceContext, textureFilename1, textureFilename2, textureFilename3);
+	result = LoadTextures(device, deviceContext, textureFilename1, textureFilename2, textureFilename3, textureFilename4, textureFilename5, textureFilename6);
 	if (!result)
 	{
 		return false;
@@ -206,13 +207,14 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 }
 
 
-bool ModelClass::LoadTextures(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* filename1, char* filename2, char* filename3)
+bool ModelClass::LoadTextures(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* filename1, char* filename2, char* filename3, char* filename4, char* filename5, 
+	char* filename6)
 {
 	bool result;
 
 
 	// Create and initialize the texture object array.
-	m_Textures = new TextureClass[3];
+	m_Textures = new TextureClass[6];
 
 	result = m_Textures[0].Initialize(device, deviceContext, filename1);
 	if (!result)
@@ -232,6 +234,24 @@ bool ModelClass::LoadTextures(ID3D11Device* device, ID3D11DeviceContext* deviceC
 		return false;
 	}
 
+	result = m_Textures[3].Initialize(device, deviceContext, filename4);
+	if (!result)
+	{
+		return false;
+	}
+
+	result = m_Textures[4].Initialize(device, deviceContext, filename5);
+	if (!result)
+	{
+		return false;
+	}
+
+	result = m_Textures[5].Initialize(device, deviceContext, filename6);
+	if (!result)
+	{
+		return false;
+	}
+
 
 	return true;
 }
@@ -244,6 +264,9 @@ void ModelClass::ReleaseTextures()
 		m_Textures[0].Shutdown();
 		m_Textures[1].Shutdown();
 		m_Textures[2].Shutdown();
+		m_Textures[3].Shutdown();
+		m_Textures[4].Shutdown();
+		m_Textures[5].Shutdown();
 
 		delete[] m_Textures;
 		m_Textures = 0;
