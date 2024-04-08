@@ -70,6 +70,11 @@
   <ItemGroup>
     <Image Include="diamond.tga" />
     <Image Include="stone01.tga" />
+<<<<<<< Updated upstream
+=======
+    <Image Include="wall.tga" />
+    <Image Include="wall_512_5_05.tga" />
+>>>>>>> Stashed changes
   </ItemGroup>
   <ItemGroup>
     <None Include="sphere.obj">

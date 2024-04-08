@@ -1,4 +1,6 @@
 #include "textureclass.h"
+#include <exception>
+#include <iostream>
 
 TextureClass::TextureClass()
 {
@@ -54,7 +56,15 @@ bool TextureClass::Initialize(ID3D11Device * device, ID3D11DeviceContext * devic
 	// Set the row pitch of the targa image data.
 	rowPitch = (m_width * 4) * sizeof(unsigned char);
 	// Copy the targa image data into the texture.
+	try
+	{
+
 	deviceContext->UpdateSubresource(m_texture, 0, NULL, m_targaData, rowPitch, 0);
+	}
+	catch (const std::exception& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
 	// Setup the shader resource view description.
 	srvDesc.Format = textureDesc.Format;
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;

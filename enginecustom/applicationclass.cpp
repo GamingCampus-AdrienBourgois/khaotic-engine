@@ -57,10 +57,18 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Set the file name of the model.
 	strcpy_s(modelFilename, "sphere.obj");
 
+<<<<<<< Updated upstream
 	strcpy_s(outputModelFilename, "output.txt");
 
 	// Set the name of the texture file that we will be loading.
 	strcpy_s(textureFilename, "stone01.tga");
+=======
+	// Set the file name of the textures.
+	strcpy_s(textureFilename1, "wall_512_5_05.tga");
+	strcpy_s(textureFilename2, "normal01.tga");
+	strcpy_s(textureFilename3, "alpha01.tga");
+	// A FAIRE: Ajouter une nouvelle texture pour le multitexturing
+>>>>>>> Stashed changes
 
 	// Create and initialize the model object.
 	m_Model = new ModelClass;
