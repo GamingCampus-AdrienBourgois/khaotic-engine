@@ -260,22 +260,26 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Lights[0].SetDirection(0.0f, 0.0f, -1.0f);
 	m_Lights[0].SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Lights[0].SetSpecularPower(16.0f);
+	m_Lights[0].SetPosition(0.0f, 0.0f, 6.0f);
 
 	// Manually set the color and position of each light.
 	m_Lights[1].SetDiffuseColor(1.0f, 0.0f, 0.0f, 1.0f);  // Red
-	m_Lights[1].SetDirection(0.0f, 0.0f, -1.0f);
+	m_Lights[1].SetDirection(0.0f, 0.0f, 1.0f);
 	m_Lights[1].SetSpecularColor(1.0f, 0.0f, 0.0f, 1.0f);
 	m_Lights[1].SetSpecularPower(16.0f);
+	m_Lights[1].SetPosition(0.0f, 0.0f, 6.0f);
 
 	m_Lights[2].SetDiffuseColor(0.0f, 1.0f, 0.0f, 1.0f);  // Green
-	m_Lights[2].SetDirection(0.0f, 0.0f, -1.0f);
+	m_Lights[2].SetDirection(0.0f, 0.0f, 1.0f);
 	m_Lights[2].SetSpecularColor(0.0f, 1.0f, 0.0f, 1.0f);
 	m_Lights[2].SetSpecularPower(16.0f);
+	m_Lights[2].SetPosition(0.0f, 0.0f, 6.0f);
 	
 	m_Lights[3].SetDiffuseColor(0.0f, 0.0f, 1.0f, 1.0f);  // Blue
 	m_Lights[3].SetDirection(0.0f, 0.0f, 1.0f);
 	m_Lights[3].SetSpecularColor(0.0f, 0.0f, 1.0f, 1.0f);
 	m_Lights[3].SetSpecularPower(16.0f);
+	m_Lights[3].SetPosition(0.0f, 0.0f, 6.0f);
 
 	
 	// Create and initialize the normal map shader object.
