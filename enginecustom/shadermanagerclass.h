@@ -5,7 +5,6 @@
 // MY CLASS INCLUDES //
 ///////////////////////
 #include "textureshaderclass.h"
-#include "lightshaderclass.h"
 #include "normalmapshaderclass.h"
 #include "Multitextureshaderclass.h"
 #include "translateshaderclass.h"

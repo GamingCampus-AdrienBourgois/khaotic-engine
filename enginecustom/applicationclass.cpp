@@ -26,7 +26,6 @@ ApplicationClass::ApplicationClass()
 	m_Frustum = 0;
 	m_DisplayPlane = 0;
 	m_ReflectionShader = 0;
-	/*m_TransparentShader = 0;*/
 }
 
 
@@ -141,8 +140,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	
-
 
 	// Create and initialize the render to texture object.
 	m_RenderTexture = new RenderTextureClass;
@@ -213,7 +210,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-
 	// Set the file name of the model.
 	strcpy_s(modelFilename, "cube.txt");
 
@@ -224,7 +220,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	strcpy_s(textureFilename4, "alpha01.tga");
 	strcpy_s(textureFilename5, "light01.tga");
 	strcpy_s(textureFilename6, "moss01.tga");
-	// A FAIRE: Ajouter une nouvelle texture pour le multitexturing
 
 	// Create and initialize the model object.
 	m_Model = new ModelClass;
@@ -236,18 +231,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}
-
-	
-
-	//// Create and initialize the transparent shader object.
-	//m_TransparentShader = new TransparentShaderClass;
-
-	//result = m_TransparentShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	//if (!result)
-	//{
-	//	MessageBox(hwnd, L"Could not initialize the transparent shader object.", L"Error", MB_OK);
-	//	return false;
-	//}
 
 	// Create and initialize the light shader object.
 	m_LightShader = new LightShaderClass;
@@ -263,7 +246,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Light = new LightClass;
 
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
+	m_Light->SetDirection(0.0f, 0.0f, -1.0f);
 	m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetSpecularPower(16.0f);
 
@@ -274,24 +257,24 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Lights = new LightClass[m_numLights];
 
 	m_Lights[0].SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);  // White
-	m_Lights[0].SetPosition(10.0f, -5.0f, -15.0f);
+	m_Lights[0].SetDirection(0.0f, 0.0f, -1.0f);
 	m_Lights[0].SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Lights[0].SetSpecularPower(16.0f);
 
 	// Manually set the color and position of each light.
 	m_Lights[1].SetDiffuseColor(1.0f, 0.0f, 0.0f, 1.0f);  // Red
-	m_Lights[1].SetPosition(-3.0f, 1.0f, 3.0f);
-	m_Lights[1].SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
+	m_Lights[1].SetDirection(0.0f, 0.0f, -1.0f);
+	m_Lights[1].SetSpecularColor(1.0f, 0.0f, 0.0f, 1.0f);
 	m_Lights[1].SetSpecularPower(16.0f);
 
 	m_Lights[2].SetDiffuseColor(0.0f, 1.0f, 0.0f, 1.0f);  // Green
-	m_Lights[2].SetPosition(3.0f, 1.0f, 3.0f);
-	m_Lights[2].SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
+	m_Lights[2].SetDirection(0.0f, 0.0f, -1.0f);
+	m_Lights[2].SetSpecularColor(0.0f, 1.0f, 0.0f, 1.0f);
 	m_Lights[2].SetSpecularPower(16.0f);
 	
 	m_Lights[3].SetDiffuseColor(0.0f, 0.0f, 1.0f, 1.0f);  // Blue
-	m_Lights[3].SetPosition(-3.0f, 1.0f, -3.0f);
-	m_Lights[3].SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
+	m_Lights[3].SetDirection(0.0f, 0.0f, 1.0f);
+	m_Lights[3].SetSpecularColor(0.0f, 0.0f, 1.0f, 1.0f);
 	m_Lights[3].SetSpecularPower(16.0f);
 
 	
@@ -380,16 +363,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void ApplicationClass::Shutdown()
 {
-	//// Release the transparent shader object.
-	//if (m_TransparentShader)
-	//{
-	//	m_TransparentShader->Shutdown();
-	//	delete m_TransparentShader;
-	//	m_TransparentShader = 0;
-	//}
-
-	
-
 	// Release the shader manager object.
 	if (m_ShaderManager)
 	{
@@ -1171,10 +1144,10 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 
 	// Setup matrices.
 	rotateMatrix = XMMatrixRotationY(rotation);
-	translateMatrix = XMMatrixTranslation(-9.0f, -5.0f, -20.0f);
+	translateMatrix = XMMatrixTranslation(-10.0f, -5.0f, -20.0f);
 	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
 
-	// Render the model using the specular map shader.
+	// Render the model using the transparent shader.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
 	result = m_ShaderManager->RenderTransparentShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0), blendAmount);
@@ -1182,30 +1155,6 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	{
 		return false;
 	}
-
-	//// Render the first model that is using the dirt texture using the regular texture shader.
-	//m_Model1->Render(m_Direct3D->GetDeviceContext());
-
-	//result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model1->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model1->GetTexture(0));
-	//if (!result)
-	//{
-	//	return false;
-	//}
-
-	//// Translate to the right by one unit and towards the camera by one unit.
-	//worldMatrix = XMMatrixTranslation(1.0f, 0.0f, -1.0f);
-
-	//// Turn on alpha blending for the transparency to work.
-	//m_Direct3D->EnableAlphaBlending();
-
-	//// Render the second square model with the stone texture and use the 50% blending amount for transparency.
-	//m_Model2->Render(m_Direct3D->GetDeviceContext());
-
-	//result = m_TransparentShader->Render(m_Direct3D->GetDeviceContext(), m_Model2->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model2->GetTexture(5), blendAmount);
-	//if (!result)
-	//{
-	//	return false;
-	//}
 
 	// Turn off alpha blending.
 	m_Direct3D->DisableAlphaBlending();
