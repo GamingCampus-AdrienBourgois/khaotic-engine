@@ -7,6 +7,8 @@ Object::Object() : ModelClass()
 	m_translateMatrix = XMMatrixIdentity();
 	m_srMatrix = XMMatrixIdentity();
 	m_worldMatrix = XMMatrixIdentity();
+	m_previousPosition = XMVectorZero();
+	m_velocity = XMVectorZero();
 }
 
 Object::~Object()
@@ -161,4 +163,14 @@ std::string Object::GetName()
 void Object::SetName(std::string name)
 {
 	m_name = name;
+}
+
+void Object::SetVelocity(XMVECTOR velocity)
+{
+	m_velocity = velocity;
+}
+
+XMVECTOR Object::GetVelocity()
+{
+	return m_velocity;
 }

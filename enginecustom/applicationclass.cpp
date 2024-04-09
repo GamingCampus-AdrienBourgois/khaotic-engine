@@ -728,18 +728,25 @@ bool ApplicationClass::Frame(InputClass* Input)
 	//// Update the z position variable each frame.
 	//z -= 0.0174532925f * 0.2f;
 
+	
+
 	for (auto object : m_object)
 	{
-		if (object != nullptr) // Vérifie que l'objet n'est pas nullptr
+		if (object != nullptr) // Check if the object is not null
 		{
-			m_Physics->ApplyGravity(object, frameTime);
 			if (XMVectorGetY(object->GetPosition()) < -10.0f)
 			{
-				// Obtenez la position actuelle de l'objet
-				XMVECTOR currentPosition = object->GetPosition();
-				// Définissez la nouvelle position y tout en conservant les positions x et z actuelles
-				object->SetPosition(XMVectorSetY(currentPosition, 20.0f));
+				XMVECTOR currentPosition = object->GetPosition(); // Obtain the current position of the object
+				object->SetPosition(XMVectorSetY(currentPosition, 20.0f)); // Define the new position of the object
 			}
+			m_Physics->ApplyGravity(object, frameTime);
+			m_Physics->ApplyDrag(object, 0.1f, frameTime);
+			// Update object position based on its velocity
+			XMVECTOR position = object->GetPosition();
+			XMVECTOR velocity = object->GetVelocity();
+			position = position + velocity * frameTime;
+			object->SetPosition(position);
+			object->m_previousPosition = object->GetPosition();
 		}
 	}
 	

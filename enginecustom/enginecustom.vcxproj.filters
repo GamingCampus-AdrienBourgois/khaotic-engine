@@ -382,8 +382,12 @@
     <None Include="translate.ps">
       <Filter>shader</Filter>
     </None>
-    <None Include="reflection.vs" />
-    <None Include="reflection.ps" />
+    <None Include="reflection.ps">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="reflection.vs">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="font01.txt">

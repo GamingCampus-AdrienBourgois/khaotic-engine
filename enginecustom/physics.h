@@ -13,6 +13,8 @@ public:
     float GetGravity(); // Get the gravity value
     void SetGravity(float gravity); // Define the gravity value
     void ApplyGravity(Object*, float); // Apply gravity to an object
+    void ApplyDrag(Object*, float, float);
+
 
 private:
     float m_gravity;

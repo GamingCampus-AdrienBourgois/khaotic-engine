@@ -35,8 +35,29 @@ void Physics::ApplyGravity(Object* object, float frameTime)
 		return;
 	}
 
-	// Update the object position
-	XMVECTOR position = object->GetPosition();
-	position = XMVectorSetY(position, XMVectorGetY(position) + m_gravity * frameTime); // Update the Y position
-	object->SetPosition(position);
+	// Get the object velocity
+	XMVECTOR velocity = object->GetVelocity();
+
+	// Update the Y component of the velocity
+	velocity = XMVectorSetY(velocity, XMVectorGetY(velocity) + m_gravity * frameTime);
+
+	// Set the new velocity
+	object->SetVelocity(velocity);
+}
+
+void Physics::ApplyDrag(Object* object, float dragValue, float frameTime)
+{
+	if (object == nullptr) // Verify if the object is not null
+	{
+		return;
+	}
+
+	// Get the velocity of the object
+	XMVECTOR velocity = object->GetVelocity();
+
+	// Calculate the new velocity
+	XMVECTOR newVelocity = velocity - (velocity * dragValue * frameTime);
+
+	// Update the velocity of the object
+	object->SetVelocity(newVelocity);
 }

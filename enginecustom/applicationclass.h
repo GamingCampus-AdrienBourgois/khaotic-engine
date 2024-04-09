@@ -160,6 +160,7 @@ private :
 
 	Physics* m_Physics;
 	float m_gravity;
+	XMVECTOR m_previousPosition;
 };
 
 #endif

@@ -27,6 +27,9 @@ public:
 	XMVECTOR GetRotation();
 	XMVECTOR GetScale();
 
+	void SetVelocity(XMVECTOR);
+	XMVECTOR GetVelocity();
+
 	void UpdateWorldMatrix();
 	void UpdateSRMatrix();
 	void UpdateScaleMatrix();
@@ -40,6 +43,8 @@ public:
 
 public :
 	bool m_demoSpinning = false;
+	XMVECTOR m_previousPosition;
+	XMVECTOR m_velocity;
 
 private:
 	XMMATRIX m_scaleMatrix;
