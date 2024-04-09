@@ -176,82 +176,85 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 	switch (umsg)
 	{
 		// Check if a key has been pressed on the keyboard.
-	case WM_KEYDOWN:
-	{
-		// If a key is pressed send it to the input object so it can record that state.
-		m_Input->KeyDown((unsigned int)wparam);
-		return 0;
-	}
-
-	// Check if a key has been released on the keyboard.
-	case WM_KEYUP:
-	{
-		// If a key is released then send it to the input object so it can unset the state for that key.
-		m_Input->KeyUp((unsigned int)wparam);
-		return 0;
-	}
-	case WM_SIZE:
-	{
-		int newWidth = LOWORD(lparam);
-		int newHeight = HIWORD(lparam);
-
-		// If Direct3D is initialized, update the swap chain. Otherwise, store the window dimensions
-		if (m_isDirect3DInitialized && m_Application && m_Application->GetDirect3D())
+		case WM_KEYDOWN:
 		{
-			m_Application->GetDirect3D()->ResizeSwapChain(newWidth, newHeight);
+			// If a key is pressed send it to the input object so it can record that state.
+			m_Input->KeyDown((unsigned int)wparam);
+			return 0;
 		}
-		else
+
+		// Check if a key has been released on the keyboard.
+		case WM_KEYUP:
 		{
-			m_initialWindowWidth = newWidth;
-			m_initialWindowHeight = newHeight;
+			// If a key is released then send it to the input object so it can unset the state for that key.
+			m_Input->KeyUp((unsigned int)wparam);
+			return 0;
 		}
-	}
-	case WM_ENTERSIZEMOVE:
-	{
-		m_isResizing = true;
-		break;
-	}
-	case WM_EXITSIZEMOVE:
-	{
-		m_isResizing = false;
-		break;
-	}
-	case WM_DROPFILES:
-	{
-		HDROP hDrop = reinterpret_cast<HDROP>(wparam);
-		UINT numFiles = DragQueryFile(hDrop, 0xFFFFFFFF, nullptr, 0);
+		case WM_SIZE:
+		{
+			int newWidth = LOWORD(lparam);
+			int newHeight = HIWORD(lparam);
 
-		if (numFiles > 0) {
-			for (UINT i = 0; i < numFiles; ++i) {
-				WCHAR filePath[MAX_PATH];
-				DragQueryFile(hDrop, i, filePath, MAX_PATH);
-
-				// Get the file extension
-				std::wstring fileName = filePath;
-				std::wstring extension = fileName.substr(fileName.find_last_of(L".") + 1);
-
-				// Check if the file has a valid extension
-				if (extension == L"txt" || extension == L"kobj") {
-					// Handle dropped files with valid extensions
-					std::wcout << L"File dropped: " << filePath << std::endl;
-					m_Application->AddKobject(filePath);
-				}
-				else {
-					// Handle files with invalid extensions (optional)
-					std::wcout << L"Ignored file: " << filePath << std::endl;
-				}
+			//  If Direct3D is initialized, update the swap chain. Otherwise, store the window dimensions
+			if (m_isDirect3DInitialized && m_Application && m_Application->GetDirect3D())
+			{
+				m_Application->GetDirect3D()->ResizeSwapChain(newWidth, newHeight);
+			}
+			else
+			{
+				m_initialWindowWidth = newWidth;
+				m_initialWindowHeight = newHeight;
 			}
 		}
+		case WM_ENTERSIZEMOVE:
+		{
+			m_isResizing = true;
+			break;
+		}
+		case WM_EXITSIZEMOVE:
+		{
+			m_isResizing = false;
+			break;
+		}
+		case WM_DROPFILES:
+		{
+			HDROP hDrop = reinterpret_cast<HDROP>(wparam);
+			UINT numFiles = DragQueryFile(hDrop, 0xFFFFFFFF, nullptr, 0);
 
-		DragFinish(hDrop);
-		return 0;
+			if (numFiles > 0) {
+				for (UINT i = 0; i < numFiles; ++i) {
+					WCHAR filePath[MAX_PATH];
+					DragQueryFile(hDrop, i, filePath, MAX_PATH);
+
+					// Get the file extension
+					std::wstring fileName = filePath;
+					std::wstring extension = fileName.substr(fileName.find_last_of(L".") + 1);
+
+					// Check if the file has a valid extension
+					if (extension == L"txt" || extension == L"kobj") {
+						// Handle dropped files with valid extensions
+						std::wcout << L"File dropped: " << filePath << std::endl;
+						m_Application->AddKobject(filePath);
+					}
+					else {
+						// Handle files with invalid extensions (optional)
+						std::wcout << L"Ignored file: " << filePath << std::endl;
+					}
+				}
+			}
+
+			DragFinish(hDrop);
+			return 0;
+		}
+		// Any other messages send to the default message handler as our application won't make use of them.
+		default:
+		{
+			return DefWindowProc(hwnd, umsg, wparam, lparam);
+		}
+
 	}
-	// Any other messages send to the default message handler as our application won't make use of them.
-	default:
-	{
-		return DefWindowProc(hwnd, umsg, wparam, lparam);
-	}
-	}
+
+	return 0;
 }
 
 void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)

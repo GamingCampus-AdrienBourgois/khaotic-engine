@@ -106,6 +106,7 @@ void imguiManager::WidgetObjectWindow(ApplicationClass* app)
 {
 	ImGui::Begin("Objects", &showObjectWindow);
 	int index = 0;
+	int count = 0;
 	for (auto& object : app->GetKobjects())
 	{
 		std::string headerName = object->GetName() + " " + std::to_string(index);
@@ -136,6 +137,21 @@ void imguiManager::WidgetObjectWindow(ApplicationClass* app)
 			{
 				object->SetScale(XMVectorSet(scl[0], scl[1], scl[2], 0.0f));
 			}
+
+			ImGui::Separator();
+
+			// Texture
+			std::string textureLabel = "Texture##" + std::to_string(index);
+			ID3D11ShaderResourceView* texture = object->GetTexture(0);
+			if (texture != nullptr)
+			{
+				if (ImGui::ImageButton((ImTextureID)texture, ImVec2(64, 64)))
+				{
+					count++;
+					
+				}
+			}
+			ImGui::Text("Texture count: %d", count);
 
 			ImGui::Separator();
 

@@ -68,8 +68,8 @@ public:
 
 	void AddCube();
 	void DeleteKobject(int index);
-	int GetCubeCount() const { return m_cubes.size(); };
-	int GetTerrainCubeCount() const { return m_terrainChunk.size(); };
+	size_t GetCubeCount() const { return m_cubes.size(); };
+	size_t GetTerrainCubeCount() const { return m_terrainChunk.size(); };
 	std::vector<Object*> GetCubes() const { return m_cubes; };
 	std::vector<Object*> GetTerrainCubes() const { return m_terrainChunk; };
 	std::vector<Object*> GetKobjects() const { return m_object; };
@@ -113,7 +113,7 @@ private :
 	XMMATRIX m_baseViewMatrix;
 	RenderTextureClass* m_RenderTexture;
 	DisplayPlaneClass* m_DisplayPlane;
-	float m_screenWidth, m_screenHeight;
+	int m_screenWidth, m_screenHeight;
 	CameraClass* m_Camera;
 	PositionClass* m_Position;
 	FrustumClass* m_Frustum;

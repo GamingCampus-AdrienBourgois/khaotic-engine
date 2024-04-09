@@ -108,7 +108,7 @@ void PositionClass::TurnRight(bool keydown)
     return;
 }
 
-void PositionClass::TurnMouse(float deltaX, float deltaY, bool rightMouseDown)
+void PositionClass::TurnMouse(int deltaX, int deltaY, bool rightMouseDown)
 {
     float speed = 0.1f;
     // The turning speed is proportional to the horizontal mouse movement

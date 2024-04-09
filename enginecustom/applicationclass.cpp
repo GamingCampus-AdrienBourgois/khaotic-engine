@@ -43,7 +43,6 @@ ApplicationClass::~ApplicationClass()
 bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 	char mouseString1[32], mouseString2[32], mouseString3[32];
-	char testString1[32], testString2[32], testString3[32];
 	char modelFilename[128], textureFilename1[128], textureFilename2[128], textureFilename3[128], renderString[32];
 	char bitmapFilename[128];
 	char spriteFilename[128];
@@ -598,12 +597,12 @@ bool ApplicationClass::Frame(InputClass* Input)
 
 	currentMouseX = mouseX;
 
-	float deltaX = currentMouseX - lastMouseX;  // Calculez le d�placement de la souris
+	int deltaX = currentMouseX - lastMouseX;  // Calculez le d�placement de la souris
 	lastMouseX = currentMouseX;  // Mettez � jour la derni�re position de la souris pour la prochaine image
 
 	currentMouseY = mouseY;
 
-	float deltaY = currentMouseY - lastMouseY;  // Calculez le d�placement de la souris
+	int deltaY = currentMouseY - lastMouseY;  // Calculez le d�placement de la souris
 	lastMouseY = currentMouseY;  // Mettez � jour la derni�re position de la souris pour la prochaine image
 
 	// Set the frame time for calculating the updated position.
@@ -1080,7 +1079,7 @@ void ApplicationClass::GenerateTerrain()
 	char textureFilename3[128];
 
 	XMMATRIX scaleMatrix;
-	int scaleX, scaleY, scaleZ;
+	float scaleX, scaleY, scaleZ;
 
 	scaleX = 10.0f;
 	scaleY = 1.0f;
@@ -1231,6 +1230,13 @@ bool ApplicationClass::UpdateMouseStrings(int mouseX, int mouseY, bool mouseDown
 
 	// Update the sentence vertex buffer with the new string information.
 	result = m_MouseStrings[2].UpdateText(m_Direct3D->GetDeviceContext(), m_Font, finalString, 10, 100, 1.0f, 1.0f, 1.0f);
+
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 bool ApplicationClass::UpdateFps()
