@@ -29,6 +29,7 @@
 #include "frustumclass.h"
 #include "rendertextureclass.h"
 #include "displayplaneclass.h"
+#include "reflectionshaderclass.h"
 
 
 
@@ -148,8 +149,6 @@ private :
 	FpsClass* m_Fps;
 	TextClass* m_FpsString;
 	int m_previousFps;
-
-r-Manager
 };
 
 #endif
