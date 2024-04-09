@@ -27,3 +27,4 @@ This DirectX11-based engine uses ImGui with an abstraction layer to enable its u
 - [@Harpie94](https://github.com/Harpie94)
 - [@axelpicou](https://github.com/axelpicou)
 - [@GolfOcean334](https://github.com/GolfOcean334)
+- [@sutabasuto](https://github.com/sutabasuto)
