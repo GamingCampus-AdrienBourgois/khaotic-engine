@@ -700,6 +700,8 @@ bool ApplicationClass::Frame(InputClass* Input)
 	m_Position->MoveCamera(buttonZ, buttonS, buttonQ, buttonD, buttonE, buttonA);
 	m_Position->GetPosition(positionX, positionY, positionZ);
 
+
+
 	// Set the postion and rotation of the camera.
 	m_Camera->SetPosition(positionX, positionY, positionZ);
 	m_Camera->SetRotation(rotationX, rotationY, 0.0f);
