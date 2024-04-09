@@ -156,6 +156,12 @@
     <ClCompile Include="reflectionshaderclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="shadermanagerclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="transparentshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="systemclass.h">
@@ -281,6 +287,12 @@
     <ClInclude Include="reflectionshaderclass.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="shadermanagerclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="transparentshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="font01.tga">
@@ -311,6 +323,9 @@
       <Filter>assets</Filter>
     </Image>
     <Image Include="..\..\..\..\Downloads\grass.tga">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="spec02.tga">
       <Filter>Assets</Filter>
     </Image>
   </ItemGroup>
@@ -376,8 +391,18 @@
     <None Include="translate.ps">
       <Filter>shader</Filter>
     </None>
-    <None Include="reflection.vs" />
-    <None Include="reflection.ps" />
+    <None Include="reflection.ps">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="reflection.vs">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="transparent.ps">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="transparent.vs">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="font01.txt">
@@ -398,8 +423,5 @@
     <Text Include="square.txt">
       <Filter>assets</Filter>
     </Text>
-    <ClCompile Include="shadermanagerclass.cpp" />
-    <ClInclude Include="shadermanagerclass.h" />
-    <Image Include="spec02.tga" />
   </ItemGroup>
 </Project>

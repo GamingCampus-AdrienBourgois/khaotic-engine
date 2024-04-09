@@ -30,6 +30,7 @@
 #include "rendertextureclass.h"
 #include "displayplaneclass.h"
 #include "reflectionshaderclass.h"
+#include "transparentshaderclass.h"
 
 
 
@@ -91,7 +92,9 @@ private :
 	D3DClass* m_Direct3D;
 	IDXGISwapChain* m_swapChain;
 	ModelClass* m_Model;
+	ModelClass* m_Model1, * m_Model2;
 	TextureShaderClass* m_TextureShader;
+	TransparentShaderClass* m_TransparentShader;
 	ShaderManagerClass* m_ShaderManager;
 	ModelListClass* m_ModelList;
 

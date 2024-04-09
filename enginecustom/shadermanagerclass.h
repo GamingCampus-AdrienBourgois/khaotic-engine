@@ -11,6 +11,7 @@
 #include "translateshaderclass.h"
 #include "alphamapshaderclass.h"
 #include "specmapshaderclass.h"
+#include "transparentshaderclass.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -32,6 +33,7 @@ public:
     bool RenderAlphaMapShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, ID3D11ShaderResourceView*, ID3D11ShaderResourceView*);
     bool RenderSpecMapShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, ID3D11ShaderResourceView*, ID3D11ShaderResourceView*,
         XMFLOAT3, XMFLOAT4, XMFLOAT3, XMFLOAT4, float);
+    bool RenderTransparentShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, ID3D11ShaderResourceView*);
 
 private:
     TextureShaderClass* m_TextureShader;
@@ -40,6 +42,7 @@ private:
     TranslateShaderClass* m_TranslateShader;
     AlphaMapShaderClass* m_AlphaMapShader;
     SpecMapShaderClass* m_SpecMapShader;
+    TransparentShaderClass* m_TransparentShader;
 };
 
 #endif

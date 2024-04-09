@@ -8,6 +8,7 @@ ShaderManagerClass::ShaderManagerClass()
     m_TranslateShader = 0;
     m_AlphaMapShader = 0;
     m_SpecMapShader = 0;
+    m_TransparentShader = 0;
 }
 
 
@@ -79,6 +80,15 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
         return false;
     }
 
+    // Create and initialize the specular map shader object.
+    m_TransparentShader = new TransparentShaderClass;
+
+    result = m_TransparentShader->Initialize(device, hwnd);
+    if (!result)
+    {
+        return false;
+    }
+
     return true;
 }
 
@@ -130,6 +140,14 @@ void ShaderManagerClass::Shutdown()
         m_SpecMapShader->Shutdown();
         delete m_SpecMapShader;
         m_SpecMapShader = 0;
+    }
+
+    // Release the transparent shader object.
+    if (m_TransparentShader)
+    {
+        m_TransparentShader->Shutdown();
+        delete m_TransparentShader;
+        m_TransparentShader = 0;
     }
 
     return;
