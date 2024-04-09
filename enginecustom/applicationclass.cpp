@@ -740,7 +740,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 				object->SetPosition(XMVectorSetY(currentPosition, 20.0f)); // Define the new position of the object
 			}
 			m_Physics->ApplyGravity(object, frameTime);
-			m_Physics->ApplyDrag(object, 0.1f, frameTime);
+			m_Physics->ApplyDrag(object, 1.0f, frameTime);
 			// Update object position based on its velocity
 			XMVECTOR position = object->GetPosition();
 			XMVECTOR velocity = object->GetVelocity();

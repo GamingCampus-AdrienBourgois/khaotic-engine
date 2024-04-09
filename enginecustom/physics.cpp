@@ -1,9 +1,8 @@
 #include "physics.h"
 
 
-Physics::Physics()
+Physics::Physics() : m_gravity(XMVectorSet(0.0f, -9.81f, 0.0f, 0.0f)) // Initialize the gravity vector
 {
-	m_gravity = -9.81f; // Initilize the gravity value
 }
 
 Physics::Physics(const Physics& other)
@@ -16,13 +15,13 @@ Physics::~Physics()
 }
 
 // Get the gravity value
-float Physics::GetGravity()
+XMVECTOR Physics::GetGravity()
 {
 	return m_gravity;
 }
 
 // Define the gravity value
-void Physics::SetGravity(float gravity)
+void Physics::SetGravity(XMVECTOR gravity)
 {
 	m_gravity = gravity;
 }
@@ -38,8 +37,8 @@ void Physics::ApplyGravity(Object* object, float frameTime)
 	// Get the object velocity
 	XMVECTOR velocity = object->GetVelocity();
 
-	// Update the Y component of the velocity
-	velocity = XMVectorSetY(velocity, XMVectorGetY(velocity) + m_gravity * frameTime);
+	// Update the velocity with gravity
+	velocity += m_gravity * frameTime;
 
 	// Set the new velocity
 	object->SetVelocity(velocity);
