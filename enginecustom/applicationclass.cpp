@@ -5,8 +5,6 @@ ApplicationClass::ApplicationClass()
 	m_Direct3D = 0;
 	m_Camera = 0;
 	m_Model = 0;
-	m_Model1 = 0;
-	m_Model2 = 0;
 	m_LightShader = 0;
 	m_Light = 0;
 	m_TextureShader = 0;
@@ -28,7 +26,7 @@ ApplicationClass::ApplicationClass()
 	m_Frustum = 0;
 	m_DisplayPlane = 0;
 	m_ReflectionShader = 0;
-	m_TransparentShader = 0;
+	/*m_TransparentShader = 0;*/
 }
 
 
@@ -239,36 +237,17 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	// Create and initialize the first model object that will use the dirt texture.
-	m_Model1 = new ModelClass;
+	
 
-	result = m_Model1->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2, textureFilename3, textureFilename4,
-		textureFilename5, textureFilename6);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-		return false;
-	}
+	//// Create and initialize the transparent shader object.
+	//m_TransparentShader = new TransparentShaderClass;
 
-	// Create and initialize the second model object that will use the stone texture.
-	m_Model2 = new ModelClass;
-
-	result = m_Model2->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2, textureFilename3, textureFilename4,
-		textureFilename5, textureFilename6);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Create and initialize the transparent shader object.
-	m_TransparentShader = new TransparentShaderClass;
-
-	result = m_TransparentShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the transparent shader object.", L"Error", MB_OK);
-		return false;
-	}
+	//result = m_TransparentShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	//if (!result)
+	//{
+	//	MessageBox(hwnd, L"Could not initialize the transparent shader object.", L"Error", MB_OK);
+	//	return false;
+	//}
 
 	// Create and initialize the light shader object.
 	m_LightShader = new LightShaderClass;
@@ -401,29 +380,15 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void ApplicationClass::Shutdown()
 {
-	// Release the transparent shader object.
-	if (m_TransparentShader)
-	{
-		m_TransparentShader->Shutdown();
-		delete m_TransparentShader;
-		m_TransparentShader = 0;
-	}
+	//// Release the transparent shader object.
+	//if (m_TransparentShader)
+	//{
+	//	m_TransparentShader->Shutdown();
+	//	delete m_TransparentShader;
+	//	m_TransparentShader = 0;
+	//}
 
-	// Release the model object.
-	if (m_Model2)
-	{
-		m_Model2->Shutdown();
-		delete m_Model2;
-		m_Model2 = 0;
-	}
-
-	// Release the model object.
-	if (m_Model1)
-	{
-		m_Model1->Shutdown();
-		delete m_Model1;
-		m_Model1 = 0;
-	}
+	
 
 	// Release the shader manager object.
 	if (m_ShaderManager)
@@ -765,46 +730,15 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	bool result, renderModel;
 	float blendAmount;
 
-	// Set the blending amount to 50%.
-	blendAmount = 0.5f;
+	// Set the blending amount to 10%.
+	blendAmount = 0.1f;
 
 	// Clear the buffers to begin the scene.
 	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
 	// Generate the view matrix based on the camera's position.
 	m_Camera->Render();
-
-	// Get the world, view, and projection matrices from the camera and d3d objects.
-	m_Direct3D->GetWorldMatrix(worldMatrix);
-	m_Camera->GetViewMatrix(viewMatrix);
-	m_Direct3D->GetProjectionMatrix(projectionMatrix);
-
-	// Render the first model that is using the dirt texture using the regular texture shader.
-	m_Model1->Render(m_Direct3D->GetDeviceContext());
-
-	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model1->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model1->GetTexture(0));
-	if (!result)
-	{
-		return false;
-	}
-
-	// Translate to the right by one unit and towards the camera by one unit.
-	worldMatrix = XMMatrixTranslation(1.0f, 0.0f, -1.0f);
-
-	// Turn on alpha blending for the transparency to work.
-	m_Direct3D->EnableAlphaBlending();
-
-	// Render the second square model with the stone texture and use the 50% blending amount for transparency.
-	m_Model2->Render(m_Direct3D->GetDeviceContext());
-
-	result = m_TransparentShader->Render(m_Direct3D->GetDeviceContext(), m_Model2->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model2->GetTexture(5), blendAmount);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Turn off alpha blending.
-	m_Direct3D->DisableAlphaBlending();
+	
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
 	m_Direct3D->GetWorldMatrix(worldMatrix);
@@ -1234,6 +1168,47 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	{
 		return false;
 	}
+
+	// Setup matrices.
+	rotateMatrix = XMMatrixRotationY(rotation);
+	translateMatrix = XMMatrixTranslation(-9.0f, -5.0f, -20.0f);
+	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
+
+	// Render the model using the specular map shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_ShaderManager->RenderTransparentShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0), blendAmount);
+	if (!result)
+	{
+		return false;
+	}
+
+	//// Render the first model that is using the dirt texture using the regular texture shader.
+	//m_Model1->Render(m_Direct3D->GetDeviceContext());
+
+	//result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model1->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model1->GetTexture(0));
+	//if (!result)
+	//{
+	//	return false;
+	//}
+
+	//// Translate to the right by one unit and towards the camera by one unit.
+	//worldMatrix = XMMatrixTranslation(1.0f, 0.0f, -1.0f);
+
+	//// Turn on alpha blending for the transparency to work.
+	//m_Direct3D->EnableAlphaBlending();
+
+	//// Render the second square model with the stone texture and use the 50% blending amount for transparency.
+	//m_Model2->Render(m_Direct3D->GetDeviceContext());
+
+	//result = m_TransparentShader->Render(m_Direct3D->GetDeviceContext(), m_Model2->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model2->GetTexture(5), blendAmount);
+	//if (!result)
+	//{
+	//	return false;
+	//}
+
+	// Turn off alpha blending.
+	m_Direct3D->DisableAlphaBlending();
 	
 
 	// Lighting, utilise plusieurs lights donc Multiple Points Lighting

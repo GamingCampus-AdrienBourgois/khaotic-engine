@@ -245,3 +245,18 @@ bool ShaderManagerClass::RenderSpecMapShader(ID3D11DeviceContext* deviceContext,
 
     return true;
 }
+
+bool ShaderManagerClass::RenderTransparentShader(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
+    ID3D11ShaderResourceView* texture1, float blendAmount)
+{
+    bool result;
+
+
+    result = m_TransparentShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture1, blendAmount);
+    if (!result)
+    {
+        return false;
+    }
+
+    return true;
+}
