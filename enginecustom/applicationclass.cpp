@@ -5,9 +5,6 @@ ApplicationClass::ApplicationClass()
 	m_Direct3D = 0;
 	m_Camera = 0;
 	m_Model = 0;
-	m_LightShader = 0;
-	m_Light = 0;
-	m_TextureShader = 0;
 	m_Bitmap = 0;
 	m_Sprite = 0;
 	m_Timer = 0;
@@ -93,17 +90,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
-
-	// Create and initialize the texture shader object.
-	m_TextureShader = new TextureShaderClass;
-
-	result = m_TextureShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
-		return false;
-	}
-
 
 	// Create and initialize the render to texture object.
 	m_RenderTexture = new RenderTextureClass;
@@ -196,16 +182,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	// Create and initialize the light shader object.
-	m_LightShader = new LightShaderClass;
-
-	result = m_LightShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the light shader object.", L"Error", MB_OK);
-		return false;
-	}
-
 	// Create and initialize the light object.
 	m_Light = new LightClass;
 
@@ -258,8 +234,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
-
-	
 
 	// Create and initialize the font shader object.
 	m_FontShader = new FontShaderClass;
@@ -454,14 +428,6 @@ void ApplicationClass::Shutdown()
 		m_Light = 0;
 	}
 
-	// Release the light shader object.
-	if (m_LightShader)
-	{
-		m_LightShader->Shutdown();
-		delete m_LightShader;
-		m_LightShader = 0;
-	}
-
 	// Release the model object.
 	if (m_Model)
 	{
@@ -637,7 +603,8 @@ bool ApplicationClass::RenderSceneToTexture(float rotation)
 	// Render the model using the texture shader.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
-	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(1));
+	result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(1));
 	if (!result)
 	{
 		return false;
@@ -697,7 +664,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
 	// Render the model using the light shader.
-	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
+	result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
 		diffuseColor, lightPosition);
 
 	for (auto cube : m_cubes)
@@ -719,7 +686,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 
 		cube->Render(m_Direct3D->GetDeviceContext());
 
-		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
+		result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
 			diffuseColor, lightPosition);
 		if (!result)
 		{
@@ -742,7 +709,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 
 		object->Render(m_Direct3D->GetDeviceContext());
 
-		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
+		result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
 			diffuseColor, lightPosition);
 
 		if (!result)
@@ -764,7 +731,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 
 		chunk->Render(m_Direct3D->GetDeviceContext());
 
-		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), chunk->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, chunk->GetTexture(1),
+		result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
 			diffuseColor, lightPosition);
 		if (!result)
 		{
@@ -778,7 +745,8 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	// Render the display plane using the texture shader and the render texture resource.
 	m_DisplayPlane->Render(m_Direct3D->GetDeviceContext());
 
-	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_DisplayPlane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_RenderTexture->GetShaderResourceView());
+	result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), m_DisplayPlane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_RenderTexture->GetShaderResourceView()); 
 	if (!result)
 	{
 		return false;
@@ -790,7 +758,8 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	// Render the display plane using the texture shader and the render texture resource.
 	m_DisplayPlane->Render(m_Direct3D->GetDeviceContext());
 
-	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_DisplayPlane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_RenderTexture->GetShaderResourceView());
+	result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), m_DisplayPlane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_RenderTexture->GetShaderResourceView());
 	if (!result)
 	{
 		return false;
@@ -802,7 +771,8 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	// Render the display plane using the texture shader and the render texture resource.
 	m_DisplayPlane->Render(m_Direct3D->GetDeviceContext());
 
-	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_DisplayPlane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_RenderTexture->GetShaderResourceView());
+	result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), m_DisplayPlane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_RenderTexture->GetShaderResourceView());
 	if (!result)
 	{
 		return false;
@@ -838,8 +808,8 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 			// Render the model using the light shader.
 			m_Model->Render(m_Direct3D->GetDeviceContext());
 
-			result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-				m_Model->GetTexture(0), diffuseColor, lightPosition);
+			result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
+				diffuseColor, lightPosition);
 			if (!result)
 			{
 				return false;
@@ -905,7 +875,8 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	}
 
 	// Render the sprite with the texture shader.
-	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Sprite->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix, m_Sprite->GetTexture());
+	result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix,
+		m_Sprite->GetTexture());
 	if (!result)
 	{
 		return false;
@@ -1055,6 +1026,20 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	{
 		return false;
 	}
+
+	//// Setup matrices.
+	//rotateMatrix = XMMatrixRotationY(rotation);
+	//translateMatrix = XMMatrixTranslation(-10.0f, -2.0f, -20.0f);
+	//worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
+
+	// Render the model using the transparent shader.
+	//m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	//result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0), m_Lights[0]->GetDiffuseColor(), m_Lights[0]->GetPosition());
+	//if (!result)
+	//{
+	//	return false;
+	//}
 
 	// Turn off alpha blending.
 	m_Direct3D->DisableAlphaBlending();

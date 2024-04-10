@@ -16,7 +16,6 @@
 #include "lightmapshaderclass.h"
 #include "bitmapclass.h"
 #include "spriteclass.h"
-#include "textureshaderclass.h"
 #include "timerclass.h"
 #include "fontshaderclass.h"
 #include "fontclass.h"
@@ -30,8 +29,6 @@
 #include "rendertextureclass.h"
 #include "displayplaneclass.h"
 #include "reflectionshaderclass.h"
-#include "transparentshaderclass.h"
-
 
 
 /////////////

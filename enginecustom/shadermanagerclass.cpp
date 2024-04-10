@@ -9,6 +9,7 @@ ShaderManagerClass::ShaderManagerClass()
     m_AlphaMapShader = 0;
     m_SpecMapShader = 0;
     m_TransparentShader = 0;
+    m_LightShader = 0;
 }
 
 
@@ -89,6 +90,15 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
         return false;
     }
 
+    // Create and initialize the light map shader object.
+    m_LightShader = new LightShaderClass;
+
+    result = m_LightShader->Initialize(device, hwnd);
+    if (!result)
+    {
+        return false;
+    }
+
     return true;
 }
 
@@ -148,6 +158,14 @@ void ShaderManagerClass::Shutdown()
         m_TransparentShader->Shutdown();
         delete m_TransparentShader;
         m_TransparentShader = 0;
+    }
+
+    // Release the transparent shader object.
+    if (m_LightShader)
+    {
+        m_LightShader->Shutdown();
+        delete m_LightShader;
+        m_LightShader = 0;
     }
 
     return;
@@ -253,6 +271,21 @@ bool ShaderManagerClass::RenderTransparentShader(ID3D11DeviceContext* deviceCont
 
 
     result = m_TransparentShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture1, blendAmount);
+    if (!result)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ShaderManagerClass::RenderlightShader(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
+    ID3D11ShaderResourceView* texture, XMFLOAT4 diffuseColor[], XMFLOAT4 lightPosition[])
+{
+    bool result;
+
+
+    result = m_LightShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture, diffuseColor, lightPosition);
     if (!result)
     {
         return false;

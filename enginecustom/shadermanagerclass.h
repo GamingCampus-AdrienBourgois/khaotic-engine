@@ -11,6 +11,7 @@
 #include "alphamapshaderclass.h"
 #include "specmapshaderclass.h"
 #include "transparentshaderclass.h"
+#include "lightshaderclass.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -33,6 +34,7 @@ public:
     bool RenderSpecMapShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, ID3D11ShaderResourceView*, ID3D11ShaderResourceView*,
         XMFLOAT3, XMFLOAT4, XMFLOAT3, XMFLOAT4, float);
     bool RenderTransparentShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, float);
+    bool RenderlightShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, XMFLOAT4[], XMFLOAT4[]);
 
 private:
     TextureShaderClass* m_TextureShader;
@@ -42,6 +44,7 @@ private:
     AlphaMapShaderClass* m_AlphaMapShader;
     SpecMapShaderClass* m_SpecMapShader;
     TransparentShaderClass* m_TransparentShader;
+    LightShaderClass* m_LightShader;
 };
 
 #endif
