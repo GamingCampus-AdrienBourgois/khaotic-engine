@@ -90,6 +90,18 @@
     <ClCompile Include="NetworkManager.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Server.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Errors.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sockets.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="systemclass.h">
@@ -161,6 +173,126 @@
     <ClInclude Include="Message.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+<<<<<<< Updated upstream
+=======
+    <ClInclude Include="lightclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Multitextureshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Spriteclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="textclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="textureshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Timerclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="fpsclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="lightmapshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="alphamapshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="normalmapshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="specmapshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="frustumclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="modellistclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="positionclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="displayplaneclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="rendertextureclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="translateshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="reflectionshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="resources.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="shadermanagerclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="transparentshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Server.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Errors.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Messages.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Sockets.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="font01.tga">
+      <Filter>fonts</Filter>
+    </Image>
+    <Image Include="wall.tga">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="papier.tga">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="moss01.tga">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="stone01.tga">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="light01.tga">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="dirt01.tga">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="alpha01.tga">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="normal01.tga">
+      <Filter>assets</Filter>
+    </Image>
+    <Image Include="..\..\..\..\Downloads\grass.tga">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="KhaoticIcon.ico">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="spec02.tga" />
+>>>>>>> Stashed changes
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -170,8 +302,65 @@
     <None Include="Color.vs">
       <Filter>shader</Filter>
     </None>
+<<<<<<< Updated upstream
     <None Include="light.ps" />
     <None Include="light.vs" />
+=======
+    <None Include="font.ps">
+      <Filter>Fonts</Filter>
+    </None>
+    <None Include="font.vs">
+      <Filter>Fonts</Filter>
+    </None>
+    <None Include="light.ps">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="light.vs">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="lightmap.vs">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="lightmap.ps">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="alphamap.vs">
+      <Filter>texture</Filter>
+    </None>
+    <None Include="alphamap.ps">
+      <Filter>texture</Filter>
+    </None>
+    <None Include="normalmap.vs">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="normalmap.ps">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="texture.ps">
+      <Filter>Texture</Filter>
+    </None>
+    <None Include="texture.vs">
+      <Filter>Texture</Filter>
+    </None>
+    <None Include="Multitexture.ps">
+      <Filter>Texture</Filter>
+    </None>
+    <None Include="Multitexture.vs">
+      <Filter>Texture</Filter>
+    </None>
+    <None Include="translate.vs">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="translate.ps">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="reflection.vs" />
+    <None Include="reflection.ps" />
+    <None Include="specmap.ps" />
+    <None Include="specmap.vs" />
+    <None Include="transparent.ps" />
+    <None Include="transparent.vs" />
+>>>>>>> Stashed changes
   </ItemGroup>
   <ItemGroup>
     <Image Include="stone01.tga" />

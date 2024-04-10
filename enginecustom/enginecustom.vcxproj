@@ -26,6 +26,10 @@
     <ClCompile Include="Colorshaderclass.cpp" />
     <ClCompile Include="d3dclass.cpp" />
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+    <ClCompile Include="Errors.cpp" />
+>>>>>>> Stashed changes
     <ClCompile Include="imguiManager.cpp" />
     <ClCompile Include="include\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="include\backends\imgui_impl_win32.cpp" />
@@ -53,8 +57,14 @@
     <ClCompile Include="modellistclass.cpp" />
     <ClCompile Include="Multitextureshaderclass.cpp" />
     <ClCompile Include="normalmapshaderclass.cpp" />
+<<<<<<< Updated upstream
+=======
+    <ClCompile Include="Server.cpp" />
+    <ClCompile Include="shadermanagerclass.cpp" />
+>>>>>>> Stashed changes
     <ClCompile Include="positionclass.cpp" />
     <ClCompile Include="rendertextureclass.cpp" />
+    <ClCompile Include="Sockets.cpp" />
     <ClCompile Include="specmapshaderclass.cpp" />
     <ClCompile Include="Spriteclass.cpp" />
 >>>>>>> Stashed changes
@@ -69,6 +79,10 @@
     <ClInclude Include="Colorshaderclass.h" />
     <ClInclude Include="d3dclass.h" />
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+    <ClInclude Include="Errors.h" />
+>>>>>>> Stashed changes
     <ClInclude Include="imguiManager.h" />
     <ClInclude Include="include\backends\imgui_impl_dx11.h" />
     <ClInclude Include="include\backends\imgui_impl_win32.h" />
@@ -87,7 +101,11 @@
 >>>>>>> Stashed changes
     <ClInclude Include="inputclass.h" />
     <ClInclude Include="lightshaderclass.h" />
+<<<<<<< Updated upstream
     <ClInclude Include="Message.h" />
+=======
+    <ClInclude Include="Messages.h" />
+>>>>>>> Stashed changes
     <ClInclude Include="modelclass.h" />
 <<<<<<< Updated upstream
     <ClInclude Include="NetworkManager.h" />
@@ -96,13 +114,31 @@
     <ClInclude Include="modellistclass.h" />
     <ClInclude Include="Multitextureshaderclass.h" />
     <ClInclude Include="normalmapshaderclass.h" />
+<<<<<<< Updated upstream
+=======
+    <ClInclude Include="Server.h" />
+    <ClInclude Include="shadermanagerclass.h" />
+>>>>>>> Stashed changes
     <ClInclude Include="positionclass.h" />
     <ClInclude Include="rendertextureclass.h" />
+<<<<<<< Updated upstream
+=======
+    <ClInclude Include="resources.h" />
+    <ClInclude Include="Sockets.h" />
+>>>>>>> Stashed changes
     <ClInclude Include="specmapshaderclass.h" />
     <ClInclude Include="Spriteclass.h" />
 >>>>>>> Stashed changes
     <ClInclude Include="systemclass.h" />
     <ClInclude Include="textureclass.h" />
+<<<<<<< Updated upstream
+=======
+    <ClInclude Include="textureshaderclass.h" />
+    <ClInclude Include="Timerclass.h" />
+    <ClInclude Include="translateshaderclass.h" />
+    <ClInclude Include="transparentshaderclass.h" />
+    <ClInclude Include="Utils.h" />
+>>>>>>> Stashed changes
   </ItemGroup>
   <ItemGroup>
     <None Include="light.ps" />
