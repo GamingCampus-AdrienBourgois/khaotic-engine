@@ -5,6 +5,8 @@
 //////////////
 // INCLUDES //
 //////////////
+#include "Logger.h"
+
 #include <d3d11.h>
 #include <directxmath.h>
 #include <fstream>
@@ -105,6 +107,8 @@ private:
 	int m_vertexCount, m_indexCount;
 	TextureClass* m_Textures;
 	ModelType* m_model;
+
+	Logger logger;
 };
 
 #endif

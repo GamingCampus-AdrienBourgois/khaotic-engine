@@ -290,11 +290,17 @@
     <ClInclude Include="resources.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="shadermanagerclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="transparentshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="font01.tga">
-      <Filter>fonts</Filter>
-    </Image>
     <Image Include="wall.tga">
       <Filter>assets</Filter>
     </Image>
@@ -302,9 +308,6 @@
       <Filter>assets</Filter>
     </Image>
     <Image Include="moss01.tga">
-      <Filter>assets</Filter>
-    </Image>
-    <Image Include="stone01.tga">
       <Filter>assets</Filter>
     </Image>
     <Image Include="light01.tga">
@@ -325,22 +328,13 @@
     <Image Include="KhaoticIcon.ico">
       <Filter>Assets</Filter>
     </Image>
+    <Image Include="sprite02.tga" />
+    <Image Include="sprite03.tga" />
+    <Image Include="sprite04.tga" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Color.ps">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="Color.vs">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="font.ps">
-      <Filter>Fonts</Filter>
-    </None>
-    <None Include="font.vs">
-      <Filter>Fonts</Filter>
-    </None>
-    <None Include="light.ps">
       <Filter>shader</Filter>
     </None>
     <None Include="light.vs">
@@ -386,21 +380,11 @@
     <None Include="reflection.ps" />
     <None Include="specmap.ps" />
     <None Include="specmap.vs" />
+    <None Include="transparent.ps" />
+    <None Include="transparent.vs" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="font01.txt">
-      <Filter>Fonts</Filter>
-    </Text>
-    <Text Include="..\..\..\..\Downloads\chunk.txt">
-      <Filter>Assets</Filter>
-    </Text>
-    <Text Include="cube.txt">
-      <Filter>Assets</Filter>
-    </Text>
     <Text Include="sphere.txt">
-      <Filter>Assets</Filter>
-    </Text>
-    <Text Include="plane.txt">
       <Filter>Assets</Filter>
     </Text>
     <Text Include="square.txt">
@@ -411,5 +395,40 @@
     <ResourceCompile Include="resources.rc">
       <Filter>Fichiers de ressources</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="font.vs">
+      <Filter>Fonts</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="font.ps">
+      <Filter>Fonts</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Color.vs">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="light.ps">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="font01.txt">
+      <Filter>Fonts</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="font01.tga">
+      <Filter>fonts</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="sprite_data_01.txt" />
+    <CopyFileToFolders Include="sprite01.tga" />
+    <CopyFileToFolders Include="stone01.tga">
+      <Filter>assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="cube.txt">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="spec02.tga" />
+    <CopyFileToFolders Include="..\..\..\..\Downloads\chunk.txt">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="plane.txt">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

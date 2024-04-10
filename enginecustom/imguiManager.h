@@ -2,6 +2,8 @@
 #ifndef _IMGUI_MANAGER_H_
 #define _IMGUI_MANAGER_H_
 
+#include "Logger.h"	
+
 #include <imgui.h>
 #include <imgui_impl_dx11.h>
 #include <imgui_impl_win32.h>
@@ -39,6 +41,8 @@ private :
 
 private:
 	ImGuiIO* io;
+
+	Logger logger;
 };
 
 #endif

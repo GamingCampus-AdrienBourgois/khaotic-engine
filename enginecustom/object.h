@@ -49,4 +49,5 @@ private:
 	XMMATRIX m_worldMatrix;
 
 	std::string m_name;
+
 };

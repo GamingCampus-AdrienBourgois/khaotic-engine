@@ -38,296 +38,292 @@ ApplicationClass::~ApplicationClass()
 
 bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
-	char mouseString1[32], mouseString2[32], mouseString3[32];
-	char modelFilename[128], textureFilename1[128], textureFilename2[128], textureFilename3[128], textureFilename4[128], textureFilename5[128], textureFilename6[128], renderString[32];
-	char bitmapFilename[128];
-	char spriteFilename[128];
-	char fpsString[32];
-	bool result;
 
-	m_screenWidth = screenWidth;
-	m_screenHeight = screenHeight;
+	logger.Log("Initializing application class", __FILE__, __LINE__);
 
-	// Create the Direct3D object.
-	m_Direct3D = new D3DClass;
-	if (!m_Direct3D)
+	try 
 	{
+		char mouseString1[32], mouseString2[32], mouseString3[32];
+		char modelFilename[128], textureFilename1[128], textureFilename2[128], textureFilename3[128], textureFilename4[128], textureFilename5[128], textureFilename6[128], renderString[32];
+		char bitmapFilename[128];
+		char spriteFilename[128];
+		char fpsString[32];
+		bool result;
+
+		m_screenWidth = screenWidth;
+		m_screenHeight = screenHeight;
+
+		// Create the Direct3D object.
+		m_Direct3D = new D3DClass;
+		if (!m_Direct3D)
+		{
+			logger.Log("Could not create the Direct3D object", __FILE__, __LINE__, Logger::LogLevel::Error);
+			return false;
+		}
+
+		result = m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
+		if (!result)
+		{
+			logger.Log("Could not initialize Direct3D", __FILE__, __LINE__, Logger::LogLevel::Error);
+			return false;
+		}
+
+		// Create the camera object.
+		m_Camera = new CameraClass;
+		if (!m_Camera)
+		{
+			logger.Log("Could not create the camera object", __FILE__, __LINE__, Logger::LogLevel::Error);
+			return false;
+		}
+
+		// Set the initial position of the camera.
+		m_Camera->SetPosition(0.0f, 0.0f, -12.0f);
+		m_Camera->SetRotation(0.0f, 0.0f, 0.0f);
+		m_Camera->Render();
+		m_Camera->GetViewMatrix(m_baseViewMatrix);
+
+		// Create and initialize the font shader object.
+		m_FontShader = new FontShaderClass;
+
+		result = m_FontShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+		if (!result)
+		{
+			logger.Log("Could not initialize the font shader object", __FILE__, __LINE__, Logger::LogLevel::Error);
+			return false;
+		}
+
+		// Create and initialize the font object.
+		m_Font = new FontClass;
+
+		result = m_Font->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), 0);
+		if (!result)
+		{
+			logger.Log("Could not initialize the font object", __FILE__, __LINE__, Logger::LogLevel::Error);
+			return false;
+		}
+
+		// Create and initialize the texture shader object.
+		m_TextureShader = new TextureShaderClass;
+
+		result = m_TextureShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+		if (!result)
+		{
+			logger.Log("Could not initialize the texture shader object", __FILE__, __LINE__, Logger::LogLevel::Error);
+			return false;
+		}
+
+
+		// Create and initialize the render to texture object.
+		m_RenderTexture = new RenderTextureClass;
+
+		result = m_RenderTexture->Initialize(m_Direct3D->GetDevice(), 256, 256, SCREEN_DEPTH, SCREEN_NEAR, 1);
+		if (!result)
+		{
+			logger.Log("Could not initialize the render texture object", __FILE__, __LINE__, Logger::LogLevel::Error);
+			return false;
+		}
+
+		// Create and initialize the display plane object.
+		m_DisplayPlane = new DisplayPlaneClass;
+
+		result = m_DisplayPlane->Initialize(m_Direct3D->GetDevice(), 1.0f, 1.0f);
+		if (!result)
+		{	
+			logger.Log("Could not initialize the display plane object", __FILE__, __LINE__, Logger::LogLevel::Error);
+			return false;
+		}
+
+
+		// Set the sprite info file we will be using.
+		strcpy_s(spriteFilename, "sprite_data_01.txt");
+
+		// Create and initialize the sprite object.
+		m_Sprite = new SpriteClass;
+
+		result = m_Sprite->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, spriteFilename, 50, 50);
+		if (!result)
+		{
+			logger.Log("Could not initialize the sprite object", __FILE__, __LINE__, Logger::LogLevel::Error);
+			return false;
+		}
+
+		// Set the initial mouse strings.
+		strcpy_s(mouseString1, "Mouse X: 0");
+		strcpy_s(mouseString2, "Mouse Y: 0");
+		strcpy_s(mouseString3, "Mouse Button: No");
+
+		// Create and initialize the text objects for the mouse strings.
+		m_MouseStrings = new TextClass[3];
+
+		for (int i = 0; i < 3; i++)
+		{
+			int y = 10 + (i * 25);
+			result = m_MouseStrings[i].Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, 32, m_Font, mouseString1, 10, y, 1.0f, 1.0f, 1.0f);
+			if (!result)
+			{
+				logger.Log("Could not initialize the mouse strings", __FILE__, __LINE__, Logger::LogLevel::Error);
+				return false;
+			}
+		}
+
+		// Set the file name of the bitmap file.
+		strcpy_s(bitmapFilename, "stone01.tga");
+
+		// Create and initialize the bitmap object.
+		m_Bitmap = new BitmapClass;
+
+		result = m_Bitmap->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, bitmapFilename, 50, 50);
+		if (!result)
+		{
+			logger.Log("Could not initialize the bitmap object", __FILE__, __LINE__, Logger::LogLevel::Error);
+			return false;
+		}
+
+		// Set the file name of the model.
+		strcpy_s(modelFilename, "cube.txt");
+
+		// Set the file name of the textures.
+		strcpy_s(textureFilename1, "stone01.tga");
+		strcpy_s(textureFilename2, "normal01.tga");
+		strcpy_s(textureFilename3, "spec02.tga");
+		strcpy_s(textureFilename4, "alpha01.tga");
+		strcpy_s(textureFilename5, "light01.tga");
+		strcpy_s(textureFilename6, "moss01.tga");
+
+		// Create and initialize the model object.
+		m_Model = new ModelClass;
+
+		result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2, textureFilename3, textureFilename4,
+			textureFilename5, textureFilename6);
+		if (!result)
+		{
+			logger.Log("Could not initialize the model object", __FILE__, __LINE__, Logger::LogLevel::Error);
+			return false;
+		}
+
+		// Create and initialize the light shader object.
+		m_LightShader = new LightShaderClass;
+
+		result = m_LightShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+		if (!result)
+		{
+			logger.Log("Could not initialize the light shader object", __FILE__, __LINE__, Logger::LogLevel::Error);
+			return false;
+		}
+
+		// Create and initialize the light object.
+		m_Light = new LightClass;
+
+		m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
+		m_Light->SetDirection(0.0f, 0.0f, -1.0f);
+		m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
+		m_Light->SetSpecularPower(16.0f);
+
+		// Set the number of lights we will use.
+		m_numLights = 4;
+
+		// Create and initialize the light objects array.
+		m_Lights.resize(m_numLights);
+
+		m_Lights[0] = new LightClass;
+		m_Lights[0]->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);  // White
+		m_Lights[0]->SetDirection(0.0f, 0.0f, -1.0f);
+		m_Lights[0]->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
+		m_Lights[0]->SetSpecularPower(16.0f);
+		m_Lights[0]->SetPosition(10.0f, 7.0f, -5.0f);
+
+		// Manually set the color and position of each light.
+		m_Lights[1] = new LightClass;
+		m_Lights[1]->SetDiffuseColor(1.0f, 0.0f, 0.0f, 1.0f);  // Red
+		m_Lights[1]->SetDirection(0.0f, 0.0f, 1.0f);
+		m_Lights[1]->SetSpecularColor(1.0f, 0.0f, 0.0f, 1.0f);
+		m_Lights[1]->SetSpecularPower(16.0f);
+		m_Lights[1]->SetPosition(10.0f, 7.0f, -5.0f);
+
+		m_Lights[2] = new LightClass;
+		m_Lights[2]->SetDiffuseColor(0.0f, 1.0f, 0.0f, 1.0f);  // Green
+		m_Lights[2]->SetDirection(0.0f, 0.0f, 1.0f);
+		m_Lights[2]->SetSpecularColor(0.0f, 1.0f, 0.0f, 1.0f);
+		m_Lights[2]->SetSpecularPower(16.0f);
+		m_Lights[2]->SetPosition(10.0f, 7.0f, -5.0f);
+
+		m_Lights[3] = new LightClass;
+		m_Lights[3]->SetDiffuseColor(0.0f, 0.0f, 1.0f, 1.0f);  // Blue
+		m_Lights[3]->SetDirection(0.0f, 0.0f, 1.0f);
+		m_Lights[3]->SetSpecularColor(0.0f, 0.0f, 1.0f, 1.0f);
+		m_Lights[3]->SetSpecularPower(16.0f);
+		m_Lights[3]->SetPosition(10.0f, 7.0f, -5.0f);
+
+
+		// Create and initialize the normal map shader object.
+		m_ShaderManager = new ShaderManagerClass;
+
+		result = m_ShaderManager->Initialize(m_Direct3D->GetDevice(), hwnd);
+		if (!result)
+		{
+			logger.Log("Could not initialize the shader manager object", __FILE__, __LINE__, Logger::LogLevel::Error);
+			return false;
+		}
+
+		// Set the initial render count string.
+		strcpy_s(renderString, "Render Count: 0");
+
+		// Create and initialize the text object for the render count string.
+		m_RenderCountString = new TextClass;
+
+		result = m_RenderCountString->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, 32, m_Font, renderString, 10, 10, 1.0f, 1.0f, 1.0f);
+		if (!result)
+		{
+			logger.Log("Could not initialize the render count string", __FILE__, __LINE__, Logger::LogLevel::Error);
+			return false;
+		}
+
+		// Create and initialize the model list object.
+		m_ModelList = new ModelListClass;
+		m_ModelList->Initialize(25);
+
+		// Create and initialize the timer object.
+		m_Timer = new TimerClass;
+
+		result = m_Timer->Initialize();
+		if (!result)
+		{
+			logger.Log("Could not initialize the timer object", __FILE__, __LINE__, Logger::LogLevel::Error);
+			return false;
+		}
+
+		// Create the position class object.
+		m_Position = new PositionClass;
+
+		// Create the frustum class object.
+		m_Frustum = new FrustumClass;
+
+		// Create and initialize the fps object.
+		m_Fps = new FpsClass();
+
+		m_Fps->Initialize();
+
+		// Set the initial fps and fps string.
+		m_previousFps = -1;
+		strcpy_s(fpsString, "Fps: 0");
+
+		// Create and initialize the text object for the fps string.
+		m_FpsString = new TextClass;
+
+		result = m_FpsString->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, 32, m_Font, fpsString, 10, 10, 0.0f, 1.0f, 0.0f);
+		if (!result)
+		{
+			logger.Log("Could not initialize the fps string", __FILE__, __LINE__, Logger::LogLevel::Error);
+			return false;
+		}
+	}
+	catch (const std::exception& e)
+	{
+		logger.Log(std::string("Exception caught during initialization: ") + e.what(), __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
-	result = m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize Direct3D.", L"Error", MB_OK);
-		return false;
-	}
-
-	// Create the camera object.
-	m_Camera = new CameraClass;
-	if (!m_Camera)
-	{
-		return false;
-	}
-
-	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -12.0f);
-	m_Camera->SetRotation(0.0f, 0.0f, 0.0f);
-	m_Camera->Render();
-	m_Camera->GetViewMatrix(m_baseViewMatrix);
-
-	// Create and initialize the font shader object.
-	m_FontShader = new FontShaderClass;
-
-	result = m_FontShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the font shader object.", L"Error", MB_OK);
-		return false;
-	}
-
-	// Create and initialize the font object.
-	m_Font = new FontClass;
-
-	result = m_Font->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), 0);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Create and initialize the texture shader object.
-	m_TextureShader = new TextureShaderClass;
-
-	result = m_TextureShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
-		return false;
-	}
-
-
-	// Create and initialize the render to texture object.
-	m_RenderTexture = new RenderTextureClass;
-
-	result = m_RenderTexture->Initialize(m_Direct3D->GetDevice(), 256, 256, SCREEN_DEPTH, SCREEN_NEAR, 1);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Create and initialize the display plane object.
-	m_DisplayPlane = new DisplayPlaneClass;
-
-	result = m_DisplayPlane->Initialize(m_Direct3D->GetDevice(), 1.0f, 1.0f);
-	if (!result)
-	{
-		return false;
-	}
-
-
-	// Set the sprite info file we will be using.
-	strcpy_s(spriteFilename, "sprite_data_01.txt");
-
-	// Create and initialize the sprite object.
-	m_Sprite = new SpriteClass;
-
-	result = m_Sprite->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, spriteFilename, 50, 50);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Set the initial mouse strings.
-	strcpy_s(mouseString1, "Mouse X: 0");
-	strcpy_s(mouseString2, "Mouse Y: 0");
-	strcpy_s(mouseString3, "Mouse Button: No");
-
-	// Create and initialize the text objects for the mouse strings.
-	m_MouseStrings = new TextClass[3];
-
-	result = m_MouseStrings[0].Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, 32, m_Font, mouseString1, 10, 10, 1.0f, 1.0f, 1.0f);
-	if (!result)
-	{
-		return false;
-	}
-
-	result = m_MouseStrings[1].Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, 32, m_Font, mouseString1, 10, 35, 1.0f, 1.0f, 1.0f);
-	if (!result)
-	{
-		return false;
-	}
-
-	result = m_MouseStrings[2].Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, 32, m_Font, mouseString1, 10, 60, 1.0f, 1.0f, 1.0f);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Set the file name of the bitmap file.
-	strcpy_s(bitmapFilename, "stone01.tga");
-
-	// Create and initialize the bitmap object.
-	m_Bitmap = new BitmapClass;
-
-	result = m_Bitmap->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, bitmapFilename, 50, 50);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Set the file name of the model.
-	strcpy_s(modelFilename, "cube.txt");
-
-	// Set the file name of the textures.
-	strcpy_s(textureFilename1, "stone01.tga");
-	strcpy_s(textureFilename2, "normal01.tga");
-	strcpy_s(textureFilename3, "spec02.tga");
-	strcpy_s(textureFilename4, "alpha01.tga");
-	strcpy_s(textureFilename5, "light01.tga");
-	strcpy_s(textureFilename6, "moss01.tga");
-
-	// Create and initialize the model object.
-	m_Model = new ModelClass;
-
-	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2, textureFilename3, textureFilename4,
-		textureFilename5, textureFilename6);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-		return false;
-	}
-
-	// Create and initialize the light shader object.
-	m_LightShader = new LightShaderClass;
-
-	result = m_LightShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the light shader object.", L"Error", MB_OK);
-		return false;
-	}
-
-	// Create and initialize the light object.
-	m_Light = new LightClass;
-
-	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetDirection(0.0f, 0.0f, -1.0f);
-	m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetSpecularPower(16.0f);
-
-	// Set the number of lights we will use.
-	m_numLights = 4;
-
-	// Create and initialize the light objects array.
-	m_Lights.resize(m_numLights);
-
-	m_Lights[0] = new LightClass;
-	m_Lights[0]->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);  // White
-	m_Lights[0]->SetDirection(0.0f, 0.0f, -1.0f);
-	m_Lights[0]->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Lights[0]->SetSpecularPower(16.0f);
-	m_Lights[0]->SetPosition(10.0f, 7.0f, -5.0f);
-
-	// Manually set the color and position of each light.
-	m_Lights[1] = new LightClass;
-	m_Lights[1]->SetDiffuseColor(1.0f, 0.0f, 0.0f, 1.0f);  // Red
-	m_Lights[1]->SetDirection(0.0f, 0.0f, 1.0f);
-	m_Lights[1]->SetSpecularColor(1.0f, 0.0f, 0.0f, 1.0f);
-	m_Lights[1]->SetSpecularPower(16.0f);
-	m_Lights[1]->SetPosition(10.0f, 7.0f, -5.0f);
-
-	m_Lights[2] = new LightClass;
-	m_Lights[2]->SetDiffuseColor(0.0f, 1.0f, 0.0f, 1.0f);  // Green
-	m_Lights[2]->SetDirection(0.0f, 0.0f, 1.0f);
-	m_Lights[2]->SetSpecularColor(0.0f, 1.0f, 0.0f, 1.0f);
-	m_Lights[2]->SetSpecularPower(16.0f);
-	m_Lights[2]->SetPosition(10.0f, 7.0f, -5.0f);
-	
-	m_Lights[3] = new LightClass;
-	m_Lights[3]->SetDiffuseColor(0.0f, 0.0f, 1.0f, 1.0f);  // Blue
-	m_Lights[3]->SetDirection(0.0f, 0.0f, 1.0f);
-	m_Lights[3]->SetSpecularColor(0.0f, 0.0f, 1.0f, 1.0f);
-	m_Lights[3]->SetSpecularPower(16.0f);
-	m_Lights[3]->SetPosition(10.0f, 7.0f, -5.0f);
-
-	
-	// Create and initialize the normal map shader object.
-	m_ShaderManager = new ShaderManagerClass;
-
-	result = m_ShaderManager->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		return false;
-	}
-
-	
-
-	// Create and initialize the font shader object.
-	m_FontShader = new FontShaderClass;
-
-	result = m_FontShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the font shader object.", L"Error", MB_OK);
-		return false;
-	}
-
-	// Create and initialize the font object.
-	m_Font = new FontClass;
-
-	result = m_Font->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), 0);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Set the initial render count string.
-	strcpy_s(renderString, "Render Count: 0");
-
-	// Create and initialize the text object for the render count string.
-	m_RenderCountString = new TextClass;
-
-	result = m_RenderCountString->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, 32, m_Font, renderString, 10, 10, 1.0f, 1.0f, 1.0f);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Create and initialize the model list object.
-	m_ModelList = new ModelListClass;
-	m_ModelList->Initialize(25);
-
-	// Create and initialize the timer object.
-	m_Timer = new TimerClass;
-
-	result = m_Timer->Initialize();
-	if (!result)
-	{
-		return false;
-	}
-
-	// Create the position class object.
-	m_Position = new PositionClass;
-
-	// Create the frustum class object.
-	m_Frustum = new FrustumClass;
-
-	// Create and initialize the fps object.
-	m_Fps = new FpsClass();
-
-	m_Fps->Initialize();
-
-	// Set the initial fps and fps string.
-	m_previousFps = -1;
-	strcpy_s(fpsString, "Fps: 0");
-
-	// Create and initialize the text object for the fps string.
-	m_FpsString = new TextClass;
-
-	result = m_FpsString->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, 32, m_Font, fpsString, 10, 10, 0.0f, 1.0f, 0.0f);
-	if (!result)
-	{
-		return false;
-	}
+	logger.Log("Application class initialized", __FILE__, __LINE__);
 
 	return true;
 }
@@ -551,6 +547,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	result = Render(rotation, x, y, z, textureTranslation);
 	if (!result)
 	{
+		logger.Log("Could not render the graphics scene", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -558,6 +555,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	result = UpdateFps();
 	if (!result)
 	{
+		logger.Log("Could not update the frames per second", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -580,6 +578,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	result = RenderSceneToTexture(rotation);
 	if (!result)
 	{
+		logger.Log("Could not render the scene to the render texture", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -587,6 +586,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	result = UpdateMouseStrings(mouseX, mouseY, leftMouseDown);
 	if (!result)
 	{
+		logger.Log("Could not update the mouse strings", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -723,6 +723,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 			diffuseColor, lightPosition);
 		if (!result)
 		{
+			logger.Log("Could not render the cube model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 	}
@@ -747,6 +748,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 
 		if (!result)
 		{
+			logger.Log("Could not render the object model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 	}
@@ -764,10 +766,11 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 
 		chunk->Render(m_Direct3D->GetDeviceContext());
 
-		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), chunk->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, chunk->GetTexture(1),
+		result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), chunk->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, chunk->GetTexture(5),
 			diffuseColor, lightPosition);
 		if (!result)
 		{
+			logger.Log("Could not render the terrain model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 	}
@@ -781,6 +784,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_DisplayPlane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_RenderTexture->GetShaderResourceView());
 	if (!result)
 	{
+		logger.Log("Could not render the display plane using the texture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -793,6 +797,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_DisplayPlane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_RenderTexture->GetShaderResourceView());
 	if (!result)
 	{
+		logger.Log("Could not render the display plane using the texture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -805,6 +810,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_DisplayPlane->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_RenderTexture->GetShaderResourceView());
 	if (!result)
 	{
+		logger.Log("Could not render the display plane using the texture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -842,6 +848,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 				m_Model->GetTexture(0), diffuseColor, lightPosition);
 			if (!result)
 			{
+				logger.Log("Could not render the model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 				return false;
 			}
 
@@ -854,6 +861,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	result = UpdateRenderCountString(renderCount);
 	if (!result)
 	{
+		logger.Log("Could not update the render count string", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -871,6 +879,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		m_Font->GetTexture(), m_RenderCountString->GetPixelColor());
 	if (!result)
 	{
+		logger.Log("Could not render the render count text string using the font shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -881,6 +890,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		m_Font->GetTexture(), m_FpsString->GetPixelColor());
 	if (!result)
 	{
+		logger.Log("Could not render the fps text string using the font shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -893,6 +903,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 			m_Font->GetTexture(), m_MouseStrings[i].GetPixelColor());
 		if (!result)
 		{
+			logger.Log("Could not render the mouse text strings using the font shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 	}
@@ -908,6 +919,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	result = m_TextureShader->Render(m_Direct3D->GetDeviceContext(), m_Sprite->GetIndexCount(), worldMatrix, viewMatrix, orthoMatrix, m_Sprite->GetTexture());
 	if (!result)
 	{
+		logger.Log("Could not render the sprite using the texture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -961,6 +973,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		m_Model->GetTexture(0), m_Model->GetTexture(5), m_Model->GetTexture(3));
 	if (!result)
 	{
+		logger.Log("Could not render the model using the alpha map shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -976,6 +989,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		m_Model->GetTexture(0));
 	if (!result)
 	{
+		logger.Log("Could not render the model using the texture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -991,6 +1005,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		m_Model->GetTexture(0), m_Model->GetTexture(1), m_Lights[0]->GetDirection(), m_Lights[0]->GetDiffuseColor());
 	if (!result)
 	{
+		logger.Log("Could not render the model using the normal map shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 	
@@ -1007,6 +1022,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		m_Model->GetTexture(0), m_Model->GetTexture(5));
 	if (!result)
 	{
+		logger.Log("Could not render the model using the multitexture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 	
@@ -1023,6 +1039,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		m_Model->GetTexture(0), textureTranslation);
 	if (!result)
 	{
+		logger.Log("Could not render the model using the translate shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -1039,6 +1056,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		m_Camera->GetPosition(), m_Lights[0]->GetSpecularColor(), m_Lights[0]->GetSpecularPower());
 	if (!result)
 	{
+		logger.Log("Could not render the model using the specular map shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -1053,6 +1071,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	result = m_ShaderManager->RenderTransparentShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0), blendAmount);
 	if (!result)
 	{
+		logger.Log("Could not render the model using the transparent shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -1104,6 +1123,9 @@ int ApplicationClass::GetScreenHeight() const
 
 void ApplicationClass::GenerateTerrain()
 {
+
+	logger.Log("Generating terrain", __FILE__, __LINE__);
+
 	char modelFilename[128];
 	char textureFilename1[128];
 	char textureFilename2[128];
@@ -1151,6 +1173,9 @@ void ApplicationClass::GenerateTerrain()
 
 void ApplicationClass::AddKobject(WCHAR* filepath)
 {
+
+	logger.Log("Adding object", __FILE__, __LINE__);
+
 	char modelFilename[128];
 	char textureFilename1[128];
 	char textureFilename2[128];
@@ -1185,6 +1210,9 @@ void ApplicationClass::AddKobject(WCHAR* filepath)
 
 void ApplicationClass::AddCube()
 {
+
+	logger.Log("Adding cube", __FILE__, __LINE__);
+
 	char modelFilename[128];
 	char textureFilename1[128];
 	char textureFilename2[128];
@@ -1215,6 +1243,8 @@ void ApplicationClass::AddCube()
 
 void ApplicationClass::DeleteKobject(int index)
 {
+	logger.Log("Deleting object", __FILE__, __LINE__);
+
 	if (index < m_object.size())
 	{
 		m_object[index]->Shutdown();
@@ -1225,6 +1255,8 @@ void ApplicationClass::DeleteKobject(int index)
 
 void ApplicationClass::DeleteTerrain()
 {
+	logger.Log("Deleting terrain", __FILE__, __LINE__);
+
 	for (auto cube : m_terrainChunk)
 	{
 		cube->Shutdown();
@@ -1250,6 +1282,7 @@ bool ApplicationClass::UpdateMouseStrings(int mouseX, int mouseY, bool mouseDown
 	result = m_MouseStrings[0].UpdateText(m_Direct3D->GetDeviceContext(), m_Font, finalString, 10, 50, 1.0f, 1.0f, 1.0f);
 	if (!result)
 	{
+		logger.Log("Could not update the mouse X string", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -1264,6 +1297,7 @@ bool ApplicationClass::UpdateMouseStrings(int mouseX, int mouseY, bool mouseDown
 	result = m_MouseStrings[1].UpdateText(m_Direct3D->GetDeviceContext(), m_Font, finalString, 10, 75, 1.0f, 1.0f, 1.0f);
 	if (!result)
 	{
+		logger.Log("Could not update the mouse Y string", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -1282,6 +1316,7 @@ bool ApplicationClass::UpdateMouseStrings(int mouseX, int mouseY, bool mouseDown
 
 	if (!result)
 	{
+		logger.Log("Could not update the mouse button string", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -1352,6 +1387,7 @@ bool ApplicationClass::UpdateFps()
 	result = m_FpsString->UpdateText(m_Direct3D->GetDeviceContext(), m_Font, finalString, 10, 10, red, green, blue);
 	if (!result)
 	{
+		logger.Log("Could not update the fps string", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -1375,6 +1411,7 @@ bool ApplicationClass::UpdateRenderCountString(int renderCount)
 	result = m_RenderCountString->UpdateText(m_Direct3D->GetDeviceContext(), m_Font, finalString, 10, 30, 1.0f, 1.0f, 1.0f);
 	if (!result)
 	{
+		logger.Log("Could not update the render count string", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -1419,6 +1456,8 @@ void ApplicationClass::SetLightPosition(int index, XMVECTOR position)
 
 void ApplicationClass::DeleteLight(int index)
 {
+	logger.Log("Deleting light", __FILE__, __LINE__);
+
 	if (index < 0 || index >= m_Lights.size())
 	{
 		// Index out of bounds

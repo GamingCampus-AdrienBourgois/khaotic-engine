@@ -4,17 +4,17 @@
 #include <windows.h>
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-SystemClass::SystemClass()
+SystemClass::SystemClass() : logger()
 {
 	m_Input = 0;
 	m_Application = 0;
 	m_imguiManager = 0;
+	
 }
 
 SystemClass::SystemClass(const SystemClass& other)
 {
 }
-
 
 SystemClass::~SystemClass()
 {
@@ -25,48 +25,63 @@ bool SystemClass::Initialize()
 	int screenWidth, screenHeight;
 	bool result;
 
+	logger.Log("Initializing system class", __FILE__, __LINE__);
 
-	// Initialize the width and height of the screen to zero before sending the variables into the function.
-	screenWidth = 0;
-	screenHeight = 0;
-	
-	m_initialWindowWidth = 0;
-	m_initialWindowHeight = 0;
-	m_isDirect3DInitialized = false;
-
-	// Initialize the windows api.
-	InitializeWindows(screenWidth, screenHeight);
-
-	// Create and initialize the input object.  This object will be used to handle reading the keyboard input from the user.
-	m_Input = new InputClass;
-
-	result = m_Input->Initialize(m_hinstance, m_hwnd, screenWidth, screenHeight);
-	if (!result)
+	try
 	{
+		// Initialize the width and height of the screen to zero before sending the variables into the function.
+		screenWidth = 0;
+		screenHeight = 0;
+
+		m_initialWindowWidth = 0;
+		m_initialWindowHeight = 0;
+		m_isDirect3DInitialized = false;
+
+		// Initialize the windows api.
+		InitializeWindows(screenWidth, screenHeight);
+
+		// Create and initialize the input object.  This object will be used to handle reading the keyboard input from the user.
+		m_Input = new InputClass;
+
+		result = m_Input->Initialize(m_hinstance, m_hwnd, screenWidth, screenHeight);
+		if (!result)
+		{
+			logger.Log("Failed to initialize input class", __FILE__, __LINE__, Logger::LogLevel::Error);
+			return false;
+		}
+
+		// Create and initialize the application class object.  This object will handle rendering all the graphics for this application.
+		m_Application = new ApplicationClass;
+
+		result = m_Application->Initialize(screenWidth, screenHeight, m_hwnd);
+		if (!result)
+		{
+			return false;
+		}
+
+		m_isDirect3DInitialized = true;
+
+		// If we received a WM_SIZE message before Direct3D was initialized, resize the swap chain now
+		if (m_initialWindowWidth > 0 && m_initialWindowHeight > 0)
+		{
+			m_Application->GetDirect3D()->ResizeSwapChain(m_initialWindowWidth, m_initialWindowHeight);
+		}
+
+		// Initialize imgui
+		m_imguiManager = new imguiManager;
+		result = m_imguiManager->Initialize(m_hwnd, m_Application->GetDirect3D()->GetDevice(), m_Application->GetDirect3D()->GetDeviceContext());
+		if (!result)
+		{
+			return false;
+		}
+	}
+	catch (const std::exception& e)
+	{
+		logger.Log(std::string("Exception caught during initialization: ") + e.what(), __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
-	// Create and initialize the application class object.  This object will handle rendering all the graphics for this application.
-	m_Application = new ApplicationClass;
-
-	result = m_Application->Initialize(screenWidth, screenHeight, m_hwnd);
-	if (!result)
-	{
-		return false;
-	}
-
-	m_isDirect3DInitialized = true;
-
-	// If we received a WM_SIZE message before Direct3D was initialized, resize the swap chain now
-	if (m_initialWindowWidth > 0 && m_initialWindowHeight > 0)
-	{
-		m_Application->GetDirect3D()->ResizeSwapChain(m_initialWindowWidth, m_initialWindowHeight);
-	}
-
-	// Initialize imgui
-	m_imguiManager = new imguiManager;
-	m_imguiManager->Initialize(m_hwnd, m_Application->GetDirect3D()->GetDevice(), m_Application->GetDirect3D()->GetDeviceContext());
-
+	logger.Log("System class initialized", __FILE__, __LINE__);
 
 	return true;
 }
@@ -107,6 +122,8 @@ void SystemClass::Run()
 	MSG msg;
 	bool done, result;
 
+	logger.Log("Running the system", __FILE__, __LINE__);
+
 	// Initialize the message structure.
 	ZeroMemory(&msg, sizeof(MSG));
 
@@ -124,6 +141,7 @@ void SystemClass::Run()
 		// If windows signals to end the application then exit out.
 		if (msg.message == WM_QUIT)
 		{
+			logger.Log("WM_QUIT message received", __FILE__, __LINE__);
 			done = true;
 		}
 		else
@@ -132,6 +150,7 @@ void SystemClass::Run()
 			result = Frame();
 			if (!result)
 			{
+				logger.Log("Failed to process frame", __FILE__, __LINE__, Logger::LogLevel::Error);
 				done = true;
 			}
 		}
@@ -149,6 +168,7 @@ bool SystemClass::Frame()
 	result = m_Input->Frame();
 	if (!result)
 	{
+		logger.Log("Failed to process input frame", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -156,6 +176,7 @@ bool SystemClass::Frame()
 	result = m_Application->Frame(m_Input);
 	if (!result)
 	{
+		logger.Log("Failed to process application frame", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -263,7 +284,7 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	DEVMODE dmScreenSettings;
 	int posX, posY;
 
-
+	logger.Log("Initializing windows", __FILE__, __LINE__);
 	// Get an external pointer to this object.	
 	ApplicationHandle = this;
 
@@ -343,6 +364,8 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 
 void SystemClass::ShutdownWindows()
 {
+
+	logger.Log("Shutting down the windows", __FILE__, __LINE__);
 	// Show the mouse cursor.
 	ShowCursor(true);
 

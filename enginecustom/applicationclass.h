@@ -5,6 +5,8 @@
 ///////////////////////
 // MY CLASS INCLUDES //
 ///////////////////////
+#include "Logger.h"
+
 #include "d3dclass.h"
 #include "cameraclass.h"
 #include "object.h"
@@ -160,6 +162,12 @@ private :
 	FpsClass* m_Fps;
 	TextClass* m_FpsString;
 	int m_previousFps;
+
+	// ------------------------------------------------- //
+	// ------------------- LOGGER ---------------------- //
+	// ------------------------------------------------- //
+
+	Logger logger;
 };
 
 #endif

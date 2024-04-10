@@ -87,6 +87,7 @@
     <ClInclude Include="lightclass.h" />
     <ClInclude Include="lightmapshaderclass.h" />
     <ClInclude Include="lightshaderclass.h" />
+    <ClInclude Include="Logger.h" />
     <ClInclude Include="modelclass.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="modellistclass.h" />
@@ -108,79 +109,120 @@
     <ClInclude Include="transparentshaderclass.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="alphamap.ps" />
-    <None Include="alphamap.vs" />
-    <None Include="font.ps" />
-    <None Include="font.vs" />
-    <None Include="light.ps" />
-    <None Include="light.vs" />
-    <None Include="lightmap.ps" />
-    <None Include="lightmap.vs" />
-    <None Include="Multitexture.ps" />
-    <None Include="Multitexture.vs" />
-    <None Include="normalmap.ps" />
-    <None Include="normalmap.vs" />
+    <CopyFileToFolders Include="alphamap.ps">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="alphamap.vs">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="font.ps">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="font.vs">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="light.ps">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="light.vs">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="lightmap.ps">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="lightmap.vs">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Multitexture.ps">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Multitexture.vs">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="normalmap.ps">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="normalmap.vs">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
     <None Include="packages.config" />
-    <None Include="reflection.ps" />
-    <None Include="reflection.vs" />
-    <None Include="specmap.ps">
+    <CopyFileToFolders Include="reflection.ps">
       <FileType>Document</FileType>
-    </None>
-    <None Include="specmap.vs">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="reflection.vs">
       <FileType>Document</FileType>
-    </None>
-    <None Include="texture.ps" />
-    <None Include="texture.vs" />
-    <None Include="transparent.ps" />
-    <None Include="transparent.vs" />
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="specmap.ps">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="specmap.vs">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="texture.ps">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="texture.vs">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="transparent.ps">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="transparent.vs">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Color.ps">
+    <CopyFileToFolders Include="Color.ps">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <FileType>Document</FileType>
-    </None>
-    <None Include="Color.vs">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Color.vs">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <FileType>Document</FileType>
-    </None>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\..\..\..\Downloads\grass.tga" />
-    <Image Include="alpha01.tga" />
+    <CopyFileToFolders Include="..\..\..\..\Downloads\grass.tga" />
+    <CopyFileToFolders Include="alpha01.tga" />
     <Image Include="dirt01.tga" />
-    <Image Include="font01.tga" />
+    <CopyFileToFolders Include="font01.tga" />
     <Image Include="KhaoticIcon.ico" />
-    <Image Include="light01.tga" />
-    <Image Include="moss01.tga" />
-    <Image Include="normal01.tga" />
+    <CopyFileToFolders Include="light01.tga" />
+    <CopyFileToFolders Include="moss01.tga" />
+    <CopyFileToFolders Include="normal01.tga" />
     <Image Include="papier.tga" />
-    <Image Include="spec02.tga" />
-    <Image Include="stone01.tga" />
+    <CopyFileToFolders Include="spec02.tga" />
+    <CopyFileToFolders Include="sprite01.tga" />
+    <CopyFileToFolders Include="sprite02.tga" />
+    <CopyFileToFolders Include="sprite03.tga" />
+    <CopyFileToFolders Include="sprite04.tga" />
+    <CopyFileToFolders Include="stone01.tga" />
     <Image Include="wall.tga" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\..\..\Downloads\chunk.txt" />
-    <Text Include="cube.txt" />
-    <Text Include="font01.txt" />
-    <Text Include="plane.txt" />
+    <CopyFileToFolders Include="..\..\..\..\Downloads\chunk.txt" />
+    <CopyFileToFolders Include="cube.txt" />
+    <CopyFileToFolders Include="font01.txt" />
+    <CopyFileToFolders Include="plane.txt" />
     <Text Include="sphere.txt" />
+    <CopyFileToFolders Include="sprite_data_01.txt" />
     <Text Include="square.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="translate.ps">
+    <CopyFileToFolders Include="translate.ps">
       <SubType>Designer</SubType>
       <FileType>Document</FileType>
-    </None>
-    <None Include="translate.vs">
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="translate.vs">
       <SubType>Designer</SubType>
       <FileType>Document</FileType>
-    </None>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resources.rc" />
