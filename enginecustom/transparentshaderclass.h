@@ -1,5 +1,5 @@
-#ifndef _TRANSLATESHADERCLASS_H_
-#define _TRANSLATESHADERCLASS_H_
+#ifndef _TRANSPARENTSHADERCLASS_H_
+#define _TRANSPARENTSHADERCLASS_H_
 
 
 //////////////
@@ -14,9 +14,9 @@ using namespace std;
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Class name: TranslateShaderClass
+// Class name: TransparentShaderClass
 ////////////////////////////////////////////////////////////////////////////////
-class TranslateShaderClass
+class TransparentShaderClass
 {
 private:
     struct MatrixBufferType
@@ -26,16 +26,16 @@ private:
         XMMATRIX projection;
     };
 
-        struct TranslateBufferType
+    struct TransparentBufferType
     {
-        float translation;
+        float blendAmount;
         XMFLOAT3 padding;
     };
 
 public:
-    TranslateShaderClass();
-    TranslateShaderClass(const TranslateShaderClass&);
-    ~TranslateShaderClass();
+    TransparentShaderClass();
+    TransparentShaderClass(const TransparentShaderClass&);
+    ~TransparentShaderClass();
 
     bool Initialize(ID3D11Device*, HWND);
     void Shutdown();
@@ -55,7 +55,7 @@ private:
     ID3D11InputLayout* m_layout;
     ID3D11Buffer* m_matrixBuffer;
     ID3D11SamplerState* m_sampleState;
-    ID3D11Buffer* m_translateBuffer;
+    ID3D11Buffer* m_transparentBuffer;
 };
 
 #endif

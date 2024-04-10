@@ -1,28 +1,28 @@
-#include "translateshaderclass.h"
+#include "transparentshaderclass.h"
 
 
-TranslateShaderClass::TranslateShaderClass()
+TransparentShaderClass::TransparentShaderClass()
 {
     m_vertexShader = 0;
     m_pixelShader = 0;
     m_layout = 0;
     m_matrixBuffer = 0;
     m_sampleState = 0;
-    m_translateBuffer = 0;
+    m_transparentBuffer = 0;
 }
 
 
-TranslateShaderClass::TranslateShaderClass(const TranslateShaderClass& other)
+TransparentShaderClass::TransparentShaderClass(const TransparentShaderClass& other)
 {
 }
 
 
-TranslateShaderClass::~TranslateShaderClass()
+TransparentShaderClass::~TransparentShaderClass()
 {
 }
 
 
-bool TranslateShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
+bool TransparentShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
     bool result;
     wchar_t vsFilename[128];
@@ -30,14 +30,14 @@ bool TranslateShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
     int error;
 
     // Set the filename of the vertex shader.
-    error = wcscpy_s(vsFilename, 128, L"translate.vs");
+    error = wcscpy_s(vsFilename, 128, L"transparent.vs");
     if (error != 0)
     {
         return false;
     }
 
     // Set the filename of the pixel shader.
-    error = wcscpy_s(psFilename, 128, L"translate.ps");
+    error = wcscpy_s(psFilename, 128, L"transparent.ps");
     if (error != 0)
     {
         return false;
@@ -54,7 +54,7 @@ bool TranslateShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 }
 
 
-void TranslateShaderClass::Shutdown()
+void TransparentShaderClass::Shutdown()
 {
     // Shutdown the vertex and pixel shaders as well as the related objects.
     ShutdownShader();
@@ -62,14 +62,14 @@ void TranslateShaderClass::Shutdown()
     return;
 }
 
-bool TranslateShaderClass::Render(ID3D11DeviceContext * deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
-    XMMATRIX projectionMatrix, ID3D11ShaderResourceView * texture, float translation)
+bool TransparentShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
+    XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, float blend)
 {
     bool result;
 
 
     // Set the shader parameters that it will use for rendering.
-    result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, translation);
+    result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, blend);
     if (!result)
     {
         return false;
@@ -82,7 +82,7 @@ bool TranslateShaderClass::Render(ID3D11DeviceContext * deviceContext, int index
 }
 
 
-bool TranslateShaderClass::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR * vsFilename, WCHAR * psFilename)
+bool TransparentShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
     HRESULT result;
     ID3D10Blob* errorMessage;
@@ -92,7 +92,7 @@ bool TranslateShaderClass::InitializeShader(ID3D11Device * device, HWND hwnd, WC
     unsigned int numElements;
     D3D11_BUFFER_DESC matrixBufferDesc;
     D3D11_SAMPLER_DESC samplerDesc;
-    D3D11_BUFFER_DESC translateBufferDesc;
+    D3D11_BUFFER_DESC transparentBufferDesc;
 
 
     // Initialize the pointers this function will use to null.
@@ -101,8 +101,8 @@ bool TranslateShaderClass::InitializeShader(ID3D11Device * device, HWND hwnd, WC
     pixelShaderBuffer = 0;
 
     // Compile the vertex shader code.
-    result = D3DCompileFromFile(vsFilename, NULL, NULL, "TranslateVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
-    &vertexShaderBuffer, &errorMessage);
+    result = D3DCompileFromFile(vsFilename, NULL, NULL, "TransparentVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
+        &vertexShaderBuffer, &errorMessage);
     if (FAILED(result))
     {
         // If the shader failed to compile it should have writen something to the error message.
@@ -119,9 +119,9 @@ bool TranslateShaderClass::InitializeShader(ID3D11Device * device, HWND hwnd, WC
         return false;
     }
 
-     // Compile the pixel shader code.
-    result = D3DCompileFromFile(psFilename, NULL, NULL, "TranslatePixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
-    &pixelShaderBuffer, &errorMessage);
+    // Compile the pixel shader code.
+    result = D3DCompileFromFile(psFilename, NULL, NULL, "TransparentPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
+        &pixelShaderBuffer, &errorMessage);
     if (FAILED(result))
     {
         // If the shader failed to compile it should have writen something to the error message.
@@ -224,16 +224,16 @@ bool TranslateShaderClass::InitializeShader(ID3D11Device * device, HWND hwnd, WC
         return false;
     }
 
-    // Setup the description of the texture translation dynamic constant buffer that is in the pixel shader.
-    translateBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-    translateBufferDesc.ByteWidth = sizeof(TranslateBufferType);
-    translateBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    translateBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    translateBufferDesc.MiscFlags = 0;
-    translateBufferDesc.StructureByteStride = 0;
+    // Setup the description of the transparent dynamic constant buffer that is in the pixel shader.
+    transparentBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    transparentBufferDesc.ByteWidth = sizeof(TransparentBufferType);
+    transparentBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    transparentBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    transparentBufferDesc.MiscFlags = 0;
+    transparentBufferDesc.StructureByteStride = 0;
 
     // Create the constant buffer pointer so we can access the pixel shader constant buffer from within this class.
-    result = device->CreateBuffer(&translateBufferDesc, NULL, &m_translateBuffer);
+    result = device->CreateBuffer(&transparentBufferDesc, NULL, &m_transparentBuffer);
     if (FAILED(result))
     {
         return false;
@@ -243,14 +243,13 @@ bool TranslateShaderClass::InitializeShader(ID3D11Device * device, HWND hwnd, WC
 }
 
 
-void TranslateShaderClass::ShutdownShader()
+void TransparentShaderClass::ShutdownShader()
 {
-
-    // Release the texture translation constant buffer.
-    if (m_translateBuffer)
+    // Release the transparent constant buffer.
+    if (m_transparentBuffer)
     {
-            m_translateBuffer->Release();
-            m_translateBuffer = 0;
+        m_transparentBuffer->Release();
+        m_transparentBuffer = 0;
     }
 
     // Release the sampler state.
@@ -292,7 +291,7 @@ void TranslateShaderClass::ShutdownShader()
 }
 
 
-void TranslateShaderClass::OutputShaderErrorMessage(ID3D10Blob * errorMessage, HWND hwnd, WCHAR * shaderFilename)
+void TransparentShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR* shaderFilename)
 {
     char* compileErrors;
     unsigned long long bufferSize, i;
@@ -327,15 +326,14 @@ void TranslateShaderClass::OutputShaderErrorMessage(ID3D10Blob * errorMessage, H
     return;
 }
 
-
-bool TranslateShaderClass::SetShaderParameters(ID3D11DeviceContext * deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
-    XMMATRIX projectionMatrix, ID3D11ShaderResourceView * texture, float translation)
+bool TransparentShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
+    XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, float blend)
 {
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     MatrixBufferType* dataPtr;
     unsigned int bufferNumber;
-    TranslateBufferType* dataPtr2;
+    TransparentBufferType* dataPtr2;
 
 
     // Transpose the matrices to prepare them for the shader.
@@ -370,38 +368,38 @@ bool TranslateShaderClass::SetShaderParameters(ID3D11DeviceContext * deviceConte
     // Set shader texture resource in the pixel shader.
     deviceContext->PSSetShaderResources(0, 1, &texture);
 
-    // Lock the texture translation constant buffer so it can be written to.
-    result = deviceContext->Map(m_translateBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    // Lock the transparent constant buffer so it can be written to.
+    result = deviceContext->Map(m_transparentBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
         return false;
     }
 
-    // Get a pointer to the data in the texture translation constant buffer.
-    dataPtr2 = (TranslateBufferType*)mappedResource.pData;
+    // Get a pointer to the data in the transparent constant buffer.
+    dataPtr2 = (TransparentBufferType*)mappedResource.pData;
 
-    // Copy the translation value into the texture translation constant buffer.
-    dataPtr2->translation = translation;
+    // Copy the alpha blending value into the transparent constant buffer.
+    dataPtr2->blendAmount = blend;
 
     // Unlock the buffer.
-    deviceContext->Unmap(m_translateBuffer, 0);
+    deviceContext->Unmap(m_transparentBuffer, 0);
 
-    // Set the position of the texture translation constant buffer in the pixel shader.
+    // Set the position of the transparent constant buffer in the pixel shader.
     bufferNumber = 0;
 
-    // Now set the texture translation constant buffer in the pixel shader with the updated values.
-    deviceContext->PSSetConstantBuffers(bufferNumber, 1, &m_translateBuffer);
+    // Now set the transparent constant buffer in the pixel shader with the updated values.
+    deviceContext->PSSetConstantBuffers(bufferNumber, 1, &m_transparentBuffer);
 
     return true;
 }
 
 
-void TranslateShaderClass::RenderShader(ID3D11DeviceContext * deviceContext, int indexCount)
+void TransparentShaderClass::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
 {
     // Set the vertex input layout.
     deviceContext->IASetInputLayout(m_layout);
 
-    // Set the vertex and pixel shaders that will be used to render this triangle.
+    // Set the vertex and pixel shaders that will be used to render the geometry.
     deviceContext->VSSetShader(m_vertexShader, NULL, 0);
     deviceContext->PSSetShader(m_pixelShader, NULL, 0);
 

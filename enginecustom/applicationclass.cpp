@@ -3,12 +3,9 @@
 ApplicationClass::ApplicationClass()
 {
 	m_Direct3D = 0;
-	m_Camera = 0; 
-	m_MultiTextureShader = 0;
-	m_AlphaMapShader = 0;
+	m_Camera = 0;
 	m_Model = 0;
 	m_LightShader = 0;
-	m_LightMapShader = 0;
 	m_Light = 0;
 	m_TextureShader = 0;
 	m_Bitmap = 0;
@@ -19,8 +16,7 @@ ApplicationClass::ApplicationClass()
 	m_Font = 0;
 	m_Fps = 0;
 	m_FpsString = 0;
-	m_NormalMapShader = 0;
-	m_SpecMapShader = 0;
+	m_ShaderManager = 0;
 	m_RenderCountString = 0;
 	m_ModelList = 0;
 	m_Position = 0;
@@ -43,7 +39,7 @@ ApplicationClass::~ApplicationClass()
 bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 	char mouseString1[32], mouseString2[32], mouseString3[32];
-	char modelFilename[128], textureFilename1[128], textureFilename2[128], textureFilename3[128], renderString[32];
+	char modelFilename[128], textureFilename1[128], textureFilename2[128], textureFilename3[128], textureFilename4[128], textureFilename5[128], textureFilename6[128], renderString[32];
 	char bitmapFilename[128];
 	char spriteFilename[128];
 	char fpsString[32];
@@ -79,26 +75,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Camera->Render();
 	m_Camera->GetViewMatrix(m_baseViewMatrix);
 
-	// Create and initialize the specular map shader object.
-	m_SpecMapShader = new SpecMapShaderClass;
-
-	result = m_SpecMapShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the specular map shader object.", L"Error", MB_OK);
-		return false;
-	}
-
-	// Create and initialize the normal map shader object.
-	m_NormalMapShader = new NormalMapShaderClass;
-
-	result = m_NormalMapShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the normal map shader object.", L"Error", MB_OK);
-		return false;
-	}
-
 	// Create and initialize the font shader object.
 	m_FontShader = new FontShaderClass;
 
@@ -127,6 +103,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		MessageBox(hwnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
 		return false;
 	}
+
 
 	// Create and initialize the render to texture object.
 	m_RenderTexture = new RenderTextureClass;
@@ -197,35 +174,27 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	// Create and initialize the multitexture shader object.
-	m_MultiTextureShader = new MultiTextureShaderClass;
-
-	result = m_MultiTextureShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the multitexture shader object.", L"Error", MB_OK);
-		return false;
-	}
-
 	// Set the file name of the model.
 	strcpy_s(modelFilename, "cube.txt");
 
 	// Set the file name of the textures.
 	strcpy_s(textureFilename1, "stone01.tga");
 	strcpy_s(textureFilename2, "normal01.tga");
-	strcpy_s(textureFilename3, "alpha01.tga");
-	// A FAIRE: Ajouter une nouvelle texture pour le multitexturing
+	strcpy_s(textureFilename3, "spec02.tga");
+	strcpy_s(textureFilename4, "alpha01.tga");
+	strcpy_s(textureFilename5, "light01.tga");
+	strcpy_s(textureFilename6, "moss01.tga");
 
 	// Create and initialize the model object.
 	m_Model = new ModelClass;
 
-	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2, textureFilename3);
+	result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2, textureFilename3, textureFilename4,
+		textureFilename5, textureFilename6);
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}
-
 
 	// Create and initialize the light shader object.
 	m_LightShader = new LightShaderClass;
@@ -241,7 +210,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	m_Light = new LightClass;
 
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-	m_Light->SetDirection(0.0f, 0.0f, 1.0f);
+	m_Light->SetDirection(0.0f, 0.0f, -1.0f);
 	m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetSpecularPower(16.0f);
 
@@ -251,42 +220,46 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	// Create and initialize the light objects array.
 	m_Lights.resize(m_numLights);
 
-	// Définissez manuellement la couleur et la position de chaque lumière.
 	m_Lights[0] = new LightClass;
-	m_Lights[0]->SetDiffuseColor(1.0f, 0.0f, 0.0f, 1.0f);  // Rouge
-	m_Lights[0]->SetPosition(-3.0f, 1.0f, 3.0f);
+	m_Lights[0]->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);  // White
+	m_Lights[0]->SetDirection(0.0f, 0.0f, -1.0f);
+	m_Lights[0]->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
+	m_Lights[0]->SetSpecularPower(16.0f);
+	m_Lights[0]->SetPosition(0.0f, 0.0f, 6.0f);
 
+	// Manually set the color and position of each light.
 	m_Lights[1] = new LightClass;
-	m_Lights[1]->SetDiffuseColor(0.0f, 1.0f, 0.0f, 1.0f);  // Vert
-	m_Lights[1]->SetPosition(3.0f, 1.0f, 3.0f);
+	m_Lights[1]->SetDiffuseColor(1.0f, 0.0f, 0.0f, 1.0f);  // Red
+	m_Lights[1]->SetDirection(0.0f, 0.0f, 1.0f);
+	m_Lights[1]->SetSpecularColor(1.0f, 0.0f, 0.0f, 1.0f);
+	m_Lights[1]->SetSpecularPower(16.0f);
+	m_Lights[1]->SetPosition(0.0f, 0.0f, 6.0f);
 
 	m_Lights[2] = new LightClass;
-	m_Lights[2]->SetDiffuseColor(0.0f, 0.0f, 1.0f, 1.0f);  // Bleu
-	m_Lights[2]->SetPosition(-3.0f, 1.0f, -3.0f);
-
+	m_Lights[2]->SetDiffuseColor(0.0f, 1.0f, 0.0f, 1.0f);  // Green
+	m_Lights[2]->SetDirection(0.0f, 0.0f, 1.0f);
+	m_Lights[2]->SetSpecularColor(0.0f, 1.0f, 0.0f, 1.0f);
+	m_Lights[2]->SetSpecularPower(16.0f);
+	m_Lights[2]->SetPosition(0.0f, 0.0f, 6.0f);
+	
 	m_Lights[3] = new LightClass;
-	m_Lights[3]->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);  // Blanc
-	m_Lights[3]->SetPosition(3.0f, 1.0f, -3.0f);
+	m_Lights[3]->SetDiffuseColor(0.0f, 0.0f, 1.0f, 1.0f);  // Blue
+	m_Lights[3]->SetDirection(0.0f, 0.0f, 1.0f);
+	m_Lights[3]->SetSpecularColor(0.0f, 0.0f, 1.0f, 1.0f);
+	m_Lights[3]->SetSpecularPower(16.0f);
+	m_Lights[3]->SetPosition(0.0f, 0.0f, 6.0f);
 
-	// Create and initialize the light map shader object.
-	m_LightMapShader = new LightMapShaderClass;
+	
+	// Create and initialize the normal map shader object.
+	m_ShaderManager = new ShaderManagerClass;
 
-	result = m_LightMapShader->Initialize(m_Direct3D->GetDevice(), hwnd);
+	result = m_ShaderManager->Initialize(m_Direct3D->GetDevice(), hwnd);
 	if (!result)
 	{
-		MessageBox(hwnd, L"Could not initialize the light map shader object.", L"Error", MB_OK);
 		return false;
 	}
 
-	// Create and initialize the alpha map shader object.
-	m_AlphaMapShader = new AlphaMapShaderClass;
-
-	result = m_AlphaMapShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the alpha map shader object.", L"Error", MB_OK);
-		return false;
-	}
+	
 
 	// Create and initialize the font shader object.
 	m_FontShader = new FontShaderClass;
@@ -362,6 +335,14 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void ApplicationClass::Shutdown()
 {
+	// Release the shader manager object.
+	if (m_ShaderManager)
+	{
+		m_ShaderManager->Shutdown();
+		delete m_ShaderManager;
+		m_ShaderManager = 0;
+	}
+
 	// Release the frustum class object.
 	if (m_Frustum)
 	{
@@ -457,11 +438,20 @@ void ApplicationClass::Shutdown()
 		m_Sprite = 0;
 	}
 
-	// Supprimez tous les objets de lumière.
-	for (int i = 0; i < m_Lights.size(); i++)
+	for (auto light : m_Lights)
 	{
-		delete m_Lights[i];
-		m_Lights[i] = 0;
+		if (light)
+		{
+			delete light;
+			light = 0;
+		}
+	}
+
+	// Release the light object.
+	if (m_Light)
+	{
+		delete m_Light;
+		m_Light = 0;
 	}
 
 	// Release the light shader object.
@@ -472,91 +462,12 @@ void ApplicationClass::Shutdown()
 		m_LightShader = 0;
 	}
 
-	// Release the specular map shader object.
-	if (m_SpecMapShader)
+	// Release the model object.
+	if (m_Model)
 	{
-		m_SpecMapShader->Shutdown();
-		delete m_SpecMapShader;
-		m_SpecMapShader = 0;
-	}
-
-	// Release the normal map shader object.
-	if (m_NormalMapShader)
-	{
-		m_NormalMapShader->Shutdown();
-		delete m_NormalMapShader;
-		m_NormalMapShader = 0;
-	}
-
-	// Liberez la memoire pour chaque cube
-	for (auto cube : m_cubes)
-	{
-		cube->Shutdown();
-		delete cube;
-	}
-	m_cubes.clear();
-
-	// Liberez la memoire pour chaque cube du terrain
-	for (auto cube : m_terrainChunk)
-	{
-		cube->Shutdown();
-		delete cube;
-	}
-	m_terrainChunk.clear();
-
-	for (auto object : m_object)
-	{
-		object->Shutdown();
-		delete object;
-	}
-	m_object.clear();
-
-	// Release the multitexture shader object.
-	if (m_MultiTextureShader)
-	{
-		m_MultiTextureShader->Shutdown();
-		delete m_MultiTextureShader;
-		m_MultiTextureShader = 0;
-		// Release the bitmap object.
-		if (m_Bitmap)
-		{
-			m_Bitmap->Shutdown();
-			delete m_Bitmap;
-			m_Bitmap = 0;
-		}
-
-		// Release the texture shader object.
-		if (m_TextureShader)
-		{
-			m_TextureShader->Shutdown();
-			delete m_TextureShader;
-			m_TextureShader = 0;
-		}
-	
-		// Release the camera object.
-		if (m_Camera)
-		{
-			delete m_Camera;
-			m_Camera = 0;
-		}
-
-		// Release the D3D object.
-		if (m_Direct3D)
-		{
-			m_Direct3D->Shutdown();
-			delete m_Direct3D;
-			m_Direct3D = 0;
-		}
-
-		return;
-	}
-
-	// Release the alpha map shader object.
-	if (m_AlphaMapShader)
-	{
-		m_AlphaMapShader->Shutdown();
-		delete m_AlphaMapShader;
-		m_AlphaMapShader = 0;
+		m_Model->Shutdown();
+		delete m_Model;
+		m_Model = 0;
 	}
 }
 
@@ -566,15 +477,16 @@ bool ApplicationClass::Frame(InputClass* Input)
 	int mouseX, mouseY, currentMouseX, currentMouseY;
 	bool result, leftMouseDown, rightMouseDown, keyDown, buttonQ, buttonD, buttonZ, buttonS, buttonA, buttonE;
 	float rotationY, rotationX, positionX, positionY, positionZ;
+	static float textureTranslation = 0.0f;
 
 	float frameTime;
 
 	static int lastMouseX = 0, lastMouseY = 0;
 
 	static float rotation = 360.0f;
-	static float x = 6.f;
-	static float y = 3.f;
-	static float z = 0.f;
+	static float x = 0.f;
+	static float y = 0.f;
+	static float z = -8.f;
 
 	// Update the system stats.
 	m_Timer->Frame();
@@ -636,7 +548,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	m_Camera->Render();
 
 	// Render the graphics scene.
-	result = Render(rotation, x, y, z);
+	result = Render(rotation, x, y, z, textureTranslation);
 	if (!result)
 	{
 		return false;
@@ -656,13 +568,13 @@ bool ApplicationClass::Frame(InputClass* Input)
 		rotation += 360.0f;
 	}
 
-	// Update the x position variable each frame.
-	x -= 0.0174532925f * 0.6f;
+	//// Update the x position variable each frame.
+	//x -= 0.0174532925f * 0.6f;
 
-	y -= 0.0174532925f * 0.2f;
+	//y -= 0.0174532925f * 0.2f;
 
-	// Update the z position variable each frame.
-	z -= 0.0174532925f * 0.2f;
+	//// Update the z position variable each frame.
+	//z -= 0.0174532925f * 0.2f;
 
 	// Render the scene to a render texture.
 	result = RenderSceneToTexture(rotation);
@@ -680,6 +592,24 @@ bool ApplicationClass::Frame(InputClass* Input)
 
 	// Update the sprite object using the frame time.
 	m_Sprite->Update(frameTime);
+
+	// Increment the texture translation.
+	textureTranslation += 0.01f;
+	if (textureTranslation > 1.0f)
+	{
+		textureTranslation -= 1.0f;
+	}
+
+	/////////////////////////////
+	// C en commentaire pcl kc //
+	/////////////////////////////
+
+	//// Render the graphics scene.
+	//result = Render(rotation, x, y, z, textureTranslation);
+	//if (!result)
+	//{
+	//	return false;
+	//}
 
 	return true;
 }
@@ -720,19 +650,24 @@ bool ApplicationClass::RenderSceneToTexture(float rotation)
 	return true;
 }
 
-bool ApplicationClass::Render(float rotation, float x, float y, float z)
+bool ApplicationClass::Render(float rotation, float x, float y, float z, float textureTranslation)
 {
 	XMMATRIX worldMatrix, viewMatrix, orthoMatrix, projectionMatrix, rotateMatrix, translateMatrix, scaleMatrix, srMatrix;
 	float positionX, positionY, positionZ, radius;
 	XMFLOAT4 diffuseColor[4], lightPosition[4];
 	int  modelCount, renderCount, i;
 	bool result, renderModel;
+	float blendAmount;
+
+	// Set the blending amount to 10%.
+	blendAmount = 0.1f;
 
 	// Clear the buffers to begin the scene.
 	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
 	// Generate the view matrix based on the camera's position.
 	m_Camera->Render();
+	
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
 	m_Direct3D->GetWorldMatrix(worldMatrix);
@@ -1014,6 +949,117 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	//// Render the model using the multitexture shader.
 	//m_Model->Render(m_Direct3D->GetDeviceContext());
 
+	// Setup matrices.
+	rotateMatrix = XMMatrixRotationY(rotation);
+	translateMatrix = XMMatrixTranslation(-5.0f, 1.0f, -20.0f);
+	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
+
+	// Render the model using the alpha map shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_ShaderManager->RenderAlphaMapShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0), m_Model->GetTexture(5), m_Model->GetTexture(3));
+	if (!result)
+	{
+		return false;
+	}
+
+	// Setup matrices.
+	rotateMatrix = XMMatrixRotationY(rotation);
+	translateMatrix = XMMatrixTranslation(-5.0f, -5.0f, -20.0f);
+	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
+
+	// Render the model using the texture shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0));
+	if (!result)
+	{
+		return false;
+	}
+
+	// Setup matrices.
+	rotateMatrix = XMMatrixRotationY(rotation);
+	translateMatrix = XMMatrixTranslation(0.0f, 1.0f, -20.0f);
+	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
+
+	// Render the model using the render map shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_ShaderManager->RenderNormalMapShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0), m_Model->GetTexture(1), m_Lights[0]->GetDirection(), m_Lights[0]->GetDiffuseColor());
+	if (!result)
+	{
+		return false;
+	}
+	
+
+	// Setup matrices.
+	rotateMatrix = XMMatrixRotationY(rotation);
+	translateMatrix = XMMatrixTranslation(0.0f, -2.0f, -20.0f);
+	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
+
+	// Render the model using the multitexture shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_ShaderManager->RenderMultitextureShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0), m_Model->GetTexture(5));
+	if (!result)
+	{
+		return false;
+	}
+	
+
+	// Setup matrices.
+	rotateMatrix = XMMatrixRotationY(rotation);
+	translateMatrix = XMMatrixTranslation(0.0f, -5.0f, -20.0f);
+	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
+
+	// Render the model using the translate shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_ShaderManager->RenderTranslateShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0), textureTranslation);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Setup matrices.
+	rotateMatrix = XMMatrixRotationY(rotation);
+	translateMatrix = XMMatrixTranslation(-5.0f, -2.0f, -20.0f);
+	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
+
+	// Render the model using the specular map shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_ShaderManager->RenderSpecMapShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_Model->GetTexture(0), m_Model->GetTexture(1), m_Model->GetTexture(2), m_Lights[0]->GetDirection(), m_Lights[0]->GetDiffuseColor(),
+		m_Camera->GetPosition(), m_Lights[0]->GetSpecularColor(), m_Lights[0]->GetSpecularPower());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Setup matrices.
+	rotateMatrix = XMMatrixRotationY(rotation);
+	translateMatrix = XMMatrixTranslation(-10.0f, -5.0f, -20.0f);
+	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
+
+	// Render the model using the transparent shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_ShaderManager->RenderTransparentShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0), blendAmount);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Turn off alpha blending.
+	m_Direct3D->DisableAlphaBlending();
+	
+
 	// Lighting, utilise plusieurs lights donc Multiple Points Lighting
 	//result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
 	//	diffuseColor, lightPosition);
@@ -1030,21 +1076,6 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	//	return false;
 	//}
 
-	// MultiTexturing
-	//result = m_MultiTextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-	//	m_Model->GetTexture(0), m_Model->GetTexture(1));
-	//if (!result)
-	//{
-	//	return false;
-	//}
-
-	// Alphamapping
-	/*result = m_AlphaMapShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-		m_Model->GetTexture(0), m_Model->GetTexture(1), m_Model->GetTexture(2));
-	if (!result)
-	{
-		return false;
-	}*/
 
 	// Enable the Z buffer and disable alpha blending now that 2D rendering is complete.
 	m_Direct3D->TurnZBufferOn();
@@ -1074,9 +1105,12 @@ int ApplicationClass::GetScreenHeight() const
 void ApplicationClass::GenerateTerrain()
 {
 	char modelFilename[128];
-	char textureFilename[128];
+	char textureFilename1[128];
 	char textureFilename2[128];
 	char textureFilename3[128];
+	char textureFilename4[128];
+	char textureFilename5[128];
+	char textureFilename6[128];
 
 	XMMATRIX scaleMatrix;
 	float scaleX, scaleY, scaleZ;
@@ -1089,9 +1123,12 @@ void ApplicationClass::GenerateTerrain()
 
 	// Set the file name of the model.
 	strcpy_s(modelFilename, "plane.txt");
-	strcpy_s(textureFilename, "stone01.tga");
-	strcpy_s(textureFilename2, "moss01.tga");
-	strcpy_s(textureFilename3, "alpha01.tga");
+	strcpy_s(textureFilename1, "stone01.tga");
+	strcpy_s(textureFilename2, "normal01.tga");
+	strcpy_s(textureFilename3, "spec02.tga");
+	strcpy_s(textureFilename4, "alpha01.tga");
+	strcpy_s(textureFilename5, "light01.tga");
+	strcpy_s(textureFilename6, "moss01.tga");
 
 	// for loop to generate terrain chunks for a 10x10 grid
 	for (int i = 0; i < 10; i++)
@@ -1099,7 +1136,7 @@ void ApplicationClass::GenerateTerrain()
 		for (int j = 0; j < 10; j++)
 		{
 			Object* newTerrain = new Object();
-			newTerrain->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2, textureFilename3);
+			newTerrain->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2, textureFilename3, textureFilename4, textureFilename5, textureFilename6);
 
 			newTerrain->SetScaleMatrix(scaleMatrix);
 
@@ -1115,9 +1152,12 @@ void ApplicationClass::GenerateTerrain()
 void ApplicationClass::AddKobject(WCHAR* filepath)
 {
 	char modelFilename[128];
-	char textureFilename[128];
+	char textureFilename1[128];
 	char textureFilename2[128];
 	char textureFilename3[128];
+	char textureFilename4[128];
+	char textureFilename5[128];
+	char textureFilename6[128];
 
 	filesystem::path p(filepath);
 	string filename = p.stem().string();
@@ -1127,12 +1167,15 @@ void ApplicationClass::AddKobject(WCHAR* filepath)
 
 
 	// Set the name of the texture file that we will be loading.
-	strcpy_s(textureFilename, "stone01.tga");
-	strcpy_s(textureFilename2, "moss01.tga");
-	strcpy_s(textureFilename3, "alpha01.tga");
+	strcpy_s(textureFilename1, "stone01.tga");
+	strcpy_s(textureFilename2, "normal01.tga");
+	strcpy_s(textureFilename3, "spec02.tga");
+	strcpy_s(textureFilename4, "alpha01.tga");
+	strcpy_s(textureFilename5, "light01.tga");
+	strcpy_s(textureFilename6, "moss01.tga");
 
 	Object* newObject = new Object();
-	newObject->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2, textureFilename3);
+	newObject->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2, textureFilename3, textureFilename4, textureFilename5, textureFilename6);
 
 	newObject->SetTranslateMatrix(XMMatrixTranslation(0.0f, 0.0f, 0.0f));
 	newObject->SetName(filename);
@@ -1143,21 +1186,27 @@ void ApplicationClass::AddKobject(WCHAR* filepath)
 void ApplicationClass::AddCube()
 {
 	char modelFilename[128];
-	char textureFilename[128];
+	char textureFilename1[128];
 	char textureFilename2[128];
 	char textureFilename3[128];
+	char textureFilename4[128];
+	char textureFilename5[128];
+	char textureFilename6[128];
 
 	// Set the file name of the model.
 	strcpy_s(modelFilename, "cube.txt");
 
 	// Set the name of the texture file that we will be loading.
-	strcpy_s(textureFilename, "stone01.tga");
-	strcpy_s(textureFilename2, "moss01.tga");
-	strcpy_s(textureFilename3, "alpha01.tga");
+	strcpy_s(textureFilename1, "stone01.tga");
+	strcpy_s(textureFilename2, "normal01.tga");
+	strcpy_s(textureFilename3, "spec02.tga");
+	strcpy_s(textureFilename4, "alpha01.tga");
+	strcpy_s(textureFilename5, "light01.tga");
+	strcpy_s(textureFilename6, "moss01.tga");
 	static int cubeCount = 0;
 	float position = cubeCount * 2.0f;
 	Object* newCube = new Object();
-	newCube->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2, textureFilename3);
+	newCube->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2, textureFilename3, textureFilename4, textureFilename5, textureFilename6);
 
 	newCube->SetTranslateMatrix(XMMatrixTranslation(position, 0.0f, 0.0f));
 

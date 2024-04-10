@@ -48,6 +48,7 @@
     <ClCompile Include="modellistclass.cpp" />
     <ClCompile Include="Multitextureshaderclass.cpp" />
     <ClCompile Include="normalmapshaderclass.cpp" />
+    <ClCompile Include="shadermanagerclass.cpp" />
     <ClCompile Include="positionclass.cpp" />
     <ClCompile Include="reflectionshaderclass.cpp" />
     <ClCompile Include="rendertextureclass.cpp" />
@@ -59,6 +60,7 @@
     <ClCompile Include="textureshaderclass.cpp" />
     <ClCompile Include="Timerclass.cpp" />
     <ClCompile Include="translateshaderclass.cpp" />
+    <ClCompile Include="transparentshaderclass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="alphamapshaderclass.h" />
@@ -90,6 +92,7 @@
     <ClInclude Include="modellistclass.h" />
     <ClInclude Include="Multitextureshaderclass.h" />
     <ClInclude Include="normalmapshaderclass.h" />
+    <ClInclude Include="shadermanagerclass.h" />
     <ClInclude Include="positionclass.h" />
     <ClInclude Include="reflectionshaderclass.h" />
     <ClInclude Include="rendertextureclass.h" />
@@ -102,6 +105,7 @@
     <ClInclude Include="textureshaderclass.h" />
     <ClInclude Include="Timerclass.h" />
     <ClInclude Include="translateshaderclass.h" />
+    <ClInclude Include="transparentshaderclass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="alphamap.ps" />
@@ -127,6 +131,8 @@
     </None>
     <None Include="texture.ps" />
     <None Include="texture.vs" />
+    <None Include="transparent.ps" />
+    <None Include="transparent.vs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Color.ps">
@@ -134,7 +140,6 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <FileType>Document</FileType>
     </None>
     <None Include="Color.vs">
@@ -142,7 +147,6 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <FileType>Document</FileType>
     </None>
   </ItemGroup>
@@ -156,6 +160,7 @@
     <Image Include="moss01.tga" />
     <Image Include="normal01.tga" />
     <Image Include="papier.tga" />
+    <Image Include="spec02.tga" />
     <Image Include="stone01.tga" />
     <Image Include="wall.tga" />
   </ItemGroup>
@@ -184,7 +189,6 @@
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{92cf56c4-76bb-40d4-8fe5-36c15f5f127a}</ProjectGuid>
-    <RootNamespace>enginecustom</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
