@@ -15,7 +15,7 @@ This **DirectX11** based engine uses **ImGui** with an abstraction layer to enab
 
 **Par la solution + Debogueur :**
 
- 1.  Télécharger la branche Main
+ 1.  Télécharger la Release Beta
  2.  Dezip le Zip
  3.  Ouvrir le fichier en .sln
  4.  Lancer le déboguage
@@ -24,7 +24,7 @@ This **DirectX11** based engine uses **ImGui** with an abstraction layer to enab
 
 **From solution + Debugger**
 
- 1.  Download the Main branch
+ 1.  Download the Beta Release
  2.  Unzip the Zip file
  3.  Open the .sln file
  4.  Launch the debugger
