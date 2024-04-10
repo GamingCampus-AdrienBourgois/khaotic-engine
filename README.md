@@ -26,7 +26,7 @@ This **DirectX11** based engine uses **ImGui** with an abstraction layer to enab
 
  1.  Download the Main branch
  2.  Unzip the Zip file
- 3.  Open the .sln flie
+ 3.  Open the .sln file
  4.  Launch the debugger
 
 
@@ -70,15 +70,15 @@ La librairie ImGui est utilisée afin d'interragir avec les éléments du moteur
 ----
 *This part of the engine is still in developpement, other features will be added in the future*
 
-ImGui is used here to allow interraction between the user and the objects in the scene.
+ImGui is used to allow interaction between the user and the objects in the scene.
 
 ### Features:
 - Import 3D objects with the **.obj** format
-- Can add a cube tu the scne
-- Edit an object prorpieties (Position, Rotation, Scale)
+- Can add a cube to the scene
+- Edit an object properties (Position, Rotation, Scale)
 - Edit objects in the current scene
 - Terrain generation
-- Edit lights proprieties (Position, RGB Color)
+- Edit lights properties (Position, RGB Color)
 
 
 
