@@ -652,12 +652,16 @@ bool ApplicationClass::Frame(InputClass* Input)
 		textureTranslation -= 1.0f;
 	}
 
-	// Render the graphics scene.
-	result = Render(rotation, x, y, z, textureTranslation);
-	if (!result)
-	{
-		return false;
-	}
+	/////////////////////////////
+	// C en commentaire pcl kc //
+	/////////////////////////////
+
+	//// Render the graphics scene.
+	//result = Render(rotation, x, y, z, textureTranslation);
+	//if (!result)
+	//{
+	//	return false;
+	//}
 
 	return true;
 }
