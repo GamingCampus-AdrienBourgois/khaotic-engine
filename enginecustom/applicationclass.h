@@ -101,9 +101,6 @@ private :
 	D3DClass* m_Direct3D;
 	IDXGISwapChain* m_swapChain;
 	ModelClass* m_Model;
-	TextureShaderClass* m_TextureShader;
-	/*TransparentShaderClass* m_TransparentShader;*/
-	ShaderManagerClass* m_ShaderManager;
 	ModelListClass* m_ModelList;
 
 	// ------------------------------------- //
@@ -140,8 +137,7 @@ private :
 	// ------------- SHADERS ------------- //
 	// ----------------------------------- //
 
-	LightShaderClass* m_LightShader;
-	LightMapShaderClass* m_LightMapShader;
+	ShaderManagerClass* m_ShaderManager;
 	FontShaderClass* m_FontShader;
 	ReflectionShaderClass* m_ReflectionShader;
 

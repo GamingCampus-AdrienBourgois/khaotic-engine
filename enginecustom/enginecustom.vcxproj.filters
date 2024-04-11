@@ -123,9 +123,6 @@
     <ClCompile Include="fpsclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="lightmapshaderclass.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="alphamapshaderclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
@@ -160,6 +157,9 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="transparentshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="lightmapshaderclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -352,15 +352,12 @@
     <CopyFileToFolders Include="font01.tga">
       <Filter>fonts</Filter>
     </CopyFileToFolders>
-    <CopyFileToFolders Include="sprite_data_01.txt" />
-    <CopyFileToFolders Include="sprite01.tga" />
     <CopyFileToFolders Include="stone01.tga">
       <Filter>assets</Filter>
     </CopyFileToFolders>
     <CopyFileToFolders Include="cube.txt">
       <Filter>Assets</Filter>
     </CopyFileToFolders>
-    <CopyFileToFolders Include="spec02.tga" />
     <CopyFileToFolders Include="plane.txt">
       <Filter>Assets</Filter>
     </CopyFileToFolders>
@@ -382,15 +379,37 @@
     <CopyFileToFolders Include="transparent.ps" />
     <CopyFileToFolders Include="transparent.vs" />
     <CopyFileToFolders Include="Color.ps" />
-    <CopyFileToFolders Include="..\..\..\..\Downloads\grass.tga" />
-    <CopyFileToFolders Include="alpha01.tga" />
-    <CopyFileToFolders Include="light01.tga" />
-    <CopyFileToFolders Include="moss01.tga" />
-    <CopyFileToFolders Include="normal01.tga" />
-    <CopyFileToFolders Include="sprite02.tga" />
-    <CopyFileToFolders Include="sprite03.tga" />
-    <CopyFileToFolders Include="sprite04.tga" />
     <CopyFileToFolders Include="translate.ps" />
     <CopyFileToFolders Include="translate.vs" />
+    <CopyFileToFolders Include="alpha01.tga">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="light01.tga">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="moss01.tga">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="normal01.tga">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="spec02.tga">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="sprite01.tga">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="sprite02.tga">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="sprite_data_01.txt">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="sprite03.tga">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="sprite04.tga">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

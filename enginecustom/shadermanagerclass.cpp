@@ -10,6 +10,7 @@ ShaderManagerClass::ShaderManagerClass()
     m_SpecMapShader = 0;
     m_TransparentShader = 0;
     m_LightShader = 0;
+    m_LightMapShader = 0;
 }
 
 
@@ -81,7 +82,7 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
         return false;
     }
 
-    // Create and initialize the specular map shader object.
+    // Create and initialize the transparent shader object.
     m_TransparentShader = new TransparentShaderClass;
 
     result = m_TransparentShader->Initialize(device, hwnd);
@@ -90,10 +91,19 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
         return false;
     }
 
-    // Create and initialize the light map shader object.
+    // Create and initialize the light shader object.
     m_LightShader = new LightShaderClass;
 
     result = m_LightShader->Initialize(device, hwnd);
+    if (!result)
+    {
+        return false;
+    }
+
+    // Create and initialize the light map shader object.
+    m_LightMapShader = new LightMapShaderClass;
+
+    result = m_LightMapShader->Initialize(device, hwnd);
     if (!result)
     {
         return false;
@@ -160,12 +170,20 @@ void ShaderManagerClass::Shutdown()
         m_TransparentShader = 0;
     }
 
-    // Release the transparent shader object.
+    // Release the light shader object.
     if (m_LightShader)
     {
         m_LightShader->Shutdown();
         delete m_LightShader;
         m_LightShader = 0;
+    }
+
+    // Release the light map shader object.
+    if (m_LightMapShader)
+    {
+        m_LightMapShader->Shutdown();
+        delete m_LightMapShader;
+        m_LightMapShader = 0;
     }
 
     return;
@@ -286,6 +304,21 @@ bool ShaderManagerClass::RenderlightShader(ID3D11DeviceContext* deviceContext, i
 
 
     result = m_LightShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture, diffuseColor, lightPosition);
+    if (!result)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ShaderManagerClass::RenderlightMapShader(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
+    XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture1, ID3D11ShaderResourceView* texture2)
+{
+    bool result;
+
+
+    result = m_LightMapShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture1, texture2);
     if (!result)
     {
         return false;
