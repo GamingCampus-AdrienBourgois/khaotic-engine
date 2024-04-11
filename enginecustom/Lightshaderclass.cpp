@@ -30,6 +30,8 @@ LightShaderClass::~LightShaderClass()
 
 bool LightShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
+    logger.Log("Initializing LightShaderClass", __FILE__, __LINE__);
+
     wchar_t vsFilename[128];
     wchar_t psFilename[128];
     int error;
@@ -39,6 +41,7 @@ bool LightShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 	error = wcscpy_s(vsFilename, 128, L"light.vs");
 	if (error != 0)
 	{
+        logger.Log("Failed to copy string", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -46,14 +49,18 @@ bool LightShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 	error = wcscpy_s(psFilename, 128, L"light.ps");
 	if (error != 0)
 	{
+        logger.Log("Failed to copy string", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
     // Initialize the vertex and pixel shaders.
     result = InitializeShader(device, hwnd, vsFilename, psFilename);
     if (!result)
     {
+        logger.Log("Failed to initialize shader", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
+
+    logger.Log("LightShaderClass initialized", __FILE__, __LINE__);
 
     return true;
 }
@@ -77,6 +84,7 @@ bool LightShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount
     result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, diffuseColor, lightPosition);
 	if(!result)
 	{
+        logger.Log("Failed to set shader parameters", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -119,7 +127,7 @@ bool LightShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
         // If there was nothing in the error message then it simply could not find the shader file itself.
         else
         {
-            MessageBox(hwnd, vsFilename, L"Missing Shader File", MB_OK);
+            logger.Log("Failed to compile shader", __FILE__, __LINE__, Logger::LogLevel::Error);
         }
 
         return false;
@@ -137,7 +145,7 @@ bool LightShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
         // If there was nothing in the error message then it simply could not find the file itself.
         else
         {
-            MessageBox(hwnd, psFilename, L"Missing Shader File", MB_OK);
+            logger.Log("Failed to compile shader", __FILE__, __LINE__, Logger::LogLevel::Error);
         }
 
         return false;
@@ -147,6 +155,7 @@ bool LightShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
     result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &m_vertexShader);
     if (FAILED(result))
     {
+        logger.Log("Failed to create vertex shader", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -154,6 +163,7 @@ bool LightShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
     result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &m_pixelShader);
     if (FAILED(result))
     {
+        logger.Log("Failed to create pixel shader", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -191,6 +201,7 @@ bool LightShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
         &m_layout);
     if (FAILED(result))
     {
+        logger.Log("Failed to create input layout", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -220,6 +231,7 @@ bool LightShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
     result = device->CreateSamplerState(&samplerDesc, &m_sampleState);
     if (FAILED(result))
     {
+        logger.Log("Failed to create sampler state", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -235,6 +247,7 @@ bool LightShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
     result = device->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
     if (FAILED(result))
     {
+        logger.Log("Failed to create matrix buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -252,6 +265,7 @@ bool LightShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
     result = device->CreateBuffer(&cameraBufferDesc, NULL, &m_cameraBuffer);
     if (FAILED(result))
     {
+        logger.Log("Failed to create camera buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -267,6 +281,7 @@ bool LightShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
     result = device->CreateBuffer(&lightColorBufferDesc, NULL, &m_lightColorBuffer);
     if (FAILED(result))
     {
+        logger.Log("Failed to create light color buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -282,8 +297,11 @@ bool LightShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
     result = device->CreateBuffer(&lightPositionBufferDesc, NULL, &m_lightPositionBuffer);
     if (FAILED(result))
     {
+        logger.Log("Failed to create light position buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
+
+    logger.Log("Shader initialized", __FILE__, __LINE__);
 
     return true;
 }
@@ -291,6 +309,8 @@ bool LightShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
 
 void LightShaderClass::ShutdownShader()
 {
+    logger.Log("Shutting down LightShaderClass", __FILE__, __LINE__);
+
     // Release the light constant buffers.
     if (m_lightColorBuffer)
     {
@@ -353,6 +373,8 @@ void LightShaderClass::ShutdownShader()
         m_vertexShader = 0;
     }
 
+    logger.Log("LightShaderClass shut down", __FILE__, __LINE__);
+
     return;
 }
 
@@ -412,6 +434,7 @@ bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
     result = deviceContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
+        logger.Log("Failed to map matrix buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -436,6 +459,7 @@ bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
     result = deviceContext->Map(m_cameraBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
+        logger.Log("Failed to map camera buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -443,6 +467,7 @@ bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
     result = deviceContext->Map(m_lightPositionBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
+        logger.Log("Failed to map light position buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -471,6 +496,7 @@ bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
     result = deviceContext->Map(m_lightColorBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
+        logger.Log("Failed to map light color buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 

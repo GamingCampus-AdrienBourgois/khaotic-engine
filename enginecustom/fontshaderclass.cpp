@@ -24,6 +24,8 @@ FontShaderClass::~FontShaderClass()
 
 bool FontShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
+    logger.Log("Initializing FontShaderClass", __FILE__, __LINE__);
+
     bool result;
     wchar_t vsFilename[128];
     wchar_t psFilename[128];
@@ -33,6 +35,7 @@ bool FontShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
     error = wcscpy_s(vsFilename, 128, L"font.vs");
     if (error != 0)
     {
+        logger.Log("Error copying string", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -40,6 +43,7 @@ bool FontShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
     error = wcscpy_s(psFilename, 128, L"font.ps");
     if (error != 0)
     {
+        logger.Log("Error copying string", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -47,8 +51,11 @@ bool FontShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
     result = InitializeShader(device, hwnd, vsFilename, psFilename);
     if (!result)
     {
+        logger.Log("Error initializing shader", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
+    
+    logger.Log("FontShaderClass initialized", __FILE__, __LINE__);
 
     return true;
 }
@@ -71,6 +78,7 @@ bool FontShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount,
     result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, pixelColor);
     if (!result)
     {
+        logger.Log("Error setting shader parameters", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -82,6 +90,8 @@ bool FontShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount,
 
 bool FontShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
+    logger.Log("Initializing shader", __FILE__, __LINE__);
+
     HRESULT result;
     ID3D10Blob* errorMessage;
     ID3D10Blob* vertexShaderBuffer;
@@ -111,7 +121,7 @@ bool FontShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* v
         // If there was nothing in the error message then it simply could not find the shader file itself.
         else
         {
-            MessageBox(hwnd, vsFilename, L"Missing Shader File", MB_OK);
+            logger.Log("Error compiling shader", __FILE__, __LINE__, Logger::LogLevel::Error);
         }
 
         return false;
@@ -130,7 +140,7 @@ bool FontShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* v
         // If there was nothing in the error message then it simply could not find the file itself.
         else
         {
-            MessageBox(hwnd, psFilename, L"Missing Shader File", MB_OK);
+            logger.Log("Error compiling shader", __FILE__, __LINE__, Logger::LogLevel::Error);
         }
 
         return false;
@@ -140,6 +150,7 @@ bool FontShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* v
     result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &m_vertexShader);
     if (FAILED(result))
     {
+        logger.Log("Error creating vertex shader", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -147,6 +158,7 @@ bool FontShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* v
     result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &m_pixelShader);
     if (FAILED(result))
     {
+        logger.Log("Error creating pixel shader", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -175,6 +187,7 @@ bool FontShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* v
         vertexShaderBuffer->GetBufferSize(), &m_layout);
     if (FAILED(result))
     {
+        logger.Log("Error creating input layout", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -197,6 +210,7 @@ bool FontShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* v
     result = device->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
     if (FAILED(result))
     {
+        logger.Log("Error creating constant buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -219,6 +233,7 @@ bool FontShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* v
     result = device->CreateSamplerState(&samplerDesc, &m_sampleState);
     if (FAILED(result))
     {
+        logger.Log("Error creating sampler state", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -234,14 +249,19 @@ bool FontShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* v
     result = device->CreateBuffer(&pixelBufferDesc, NULL, &m_pixelBuffer);
     if (FAILED(result))
     {
+        logger.Log("Error creating constant buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
+
+    logger.Log("Shader initialized", __FILE__, __LINE__);
 
     return true;
 }
 
 void FontShaderClass::ShutdownShader()
 {
+    logger.Log("Shutting down shader", __FILE__, __LINE__);
+
     // Release the pixel constant buffer.
     if (m_pixelBuffer)
     {
@@ -284,6 +304,8 @@ void FontShaderClass::ShutdownShader()
         m_vertexShader = 0;
     }
 
+    logger.Log("Shader shut down", __FILE__, __LINE__);
+
     return;
 }
 
@@ -325,6 +347,7 @@ void FontShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hw
 bool FontShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
     XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, XMFLOAT4 pixelColor)
 {
+
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     MatrixBufferType* dataPtr;
@@ -341,6 +364,7 @@ bool FontShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, XM
     result = deviceContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
+        logger.Log("Error mapping constant buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -368,6 +392,7 @@ bool FontShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, XM
     result = deviceContext->Map(m_pixelBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
+        logger.Log("Error mapping constant buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 

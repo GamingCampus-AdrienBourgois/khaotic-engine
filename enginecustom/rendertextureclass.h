@@ -8,6 +8,7 @@
 //////////////
 // INCLUDES //
 //////////////
+#include "Logger.h"
 #include <d3d11.h>
 #include <directxmath.h>
 using namespace DirectX;
@@ -46,6 +47,8 @@ private:
     D3D11_VIEWPORT m_viewport;
     XMMATRIX m_projectionMatrix;
     XMMATRIX m_orthoMatrix;
+
+    Logger logger;
 };
 
 #endif

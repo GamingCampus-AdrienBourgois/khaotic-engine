@@ -5,6 +5,7 @@
 //////////////
 // INCLUDES //
 //////////////
+#include "Logger.h"
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <directxmath.h>
@@ -57,6 +58,8 @@ private:
     ID3D11Buffer* m_matrixBuffer;
     ID3D11SamplerState* m_sampleState;
     ID3D11Buffer* m_lightBuffer;
+
+    Logger logger;
 };
 
 #endif

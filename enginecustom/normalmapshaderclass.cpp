@@ -24,6 +24,8 @@ NormalMapShaderClass::~NormalMapShaderClass()
 
 bool NormalMapShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
+    logger.Log("Initializing normal map shader", __FILE__, __LINE__);
+
     bool result;
     wchar_t vsFilename[128];
     wchar_t psFilename[128];
@@ -33,6 +35,7 @@ bool NormalMapShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
     error = wcscpy_s(vsFilename, 128, L"normalmap.vs");
     if (error != 0)
     {
+        logger.Log("Failed to set the filename of the vertex shader", __FILE__, __LINE__);
         return false;
     }
 
@@ -40,6 +43,7 @@ bool NormalMapShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
     error = wcscpy_s(psFilename, 128, L"normalmap.ps");
     if (error != 0)
     {
+        logger.Log("Failed to set the filename of the pixel shader", __FILE__, __LINE__);
         return false;
     }
 
@@ -47,6 +51,7 @@ bool NormalMapShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
     result = InitializeShader(device, hwnd, vsFilename, psFilename);
     if (!result)
     {
+        logger.Log("Failed to initialize the vertex and pixel shaders", __FILE__, __LINE__);
         return false;
     }
 
@@ -72,6 +77,7 @@ bool NormalMapShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexC
     result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture1, texture2, lightDirection, diffuseColor);
     if (!result)
     {
+        logger.Log("Failed to set the shader parameters that will be used for rendering", __FILE__, __LINE__);
         return false;
     }
 
@@ -84,6 +90,8 @@ bool NormalMapShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexC
 
 bool NormalMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
+    logger.Log("Initializing normal map shader", __FILE__, __LINE__);
+
     HRESULT result;
     ID3D10Blob* errorMessage;
     ID3D10Blob* vertexShaderBuffer;
@@ -113,7 +121,7 @@ bool NormalMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCH
         // If there was nothing in the error message then it simply could not find the shader file itself.
         else
         {
-            MessageBox(hwnd, vsFilename, L"Missing Shader File", MB_OK);
+            logger.Log("Failed to compile the vertex shader code", __FILE__, __LINE__, Logger::LogLevel::Error);
         }
 
         return false;
@@ -132,7 +140,7 @@ bool NormalMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCH
         // If there was nothing in the error message then it simply could not find the file itself.
         else
         {
-            MessageBox(hwnd, psFilename, L"Missing Shader File", MB_OK);
+            logger.Log("Failed to compile the pixel shader code", __FILE__, __LINE__, Logger::LogLevel::Error);
         }
 
         return false;
@@ -142,6 +150,7 @@ bool NormalMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCH
     result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &m_vertexShader);
     if (FAILED(result))
     {
+        logger.Log("Failed to create the vertex shader from the buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -149,6 +158,7 @@ bool NormalMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCH
     result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &m_pixelShader);
     if (FAILED(result))
     {
+        logger.Log("Failed to create the pixel shader from the buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -201,6 +211,7 @@ bool NormalMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCH
         vertexShaderBuffer->GetBufferSize(), &m_layout);
     if (FAILED(result))
     {
+        logger.Log("Failed to create the vertex input layout", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -223,6 +234,7 @@ bool NormalMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCH
     result = device->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
     if (FAILED(result))
     {
+        logger.Log("Failed to create the constant buffer pointer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -245,6 +257,7 @@ bool NormalMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCH
     result = device->CreateSamplerState(&samplerDesc, &m_sampleState);
     if (FAILED(result))
     {
+        logger.Log("Failed to create the texture sampler state", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -260,8 +273,11 @@ bool NormalMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCH
     result = device->CreateBuffer(&lightBufferDesc, NULL, &m_lightBuffer);
     if (FAILED(result))
     {
+        logger.Log("Failed to create the light constant buffer pointer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
+
+    logger.Log("Successfully initialized normal map shader", __FILE__, __LINE__);
 
     return true;
 }
@@ -269,6 +285,8 @@ bool NormalMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCH
 
 void NormalMapShaderClass::ShutdownShader()
 {
+    logger.Log("Shutting down normal map shader", __FILE__, __LINE__);
+
     // Release the light constant buffer.
     if (m_lightBuffer)
     {
@@ -310,6 +328,8 @@ void NormalMapShaderClass::ShutdownShader()
         m_vertexShader->Release();
         m_vertexShader = 0;
     }
+
+    logger.Log("Successfully shut down normal map shader", __FILE__, __LINE__);
 
     return;
 }
@@ -370,6 +390,7 @@ bool NormalMapShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContex
     result = deviceContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
+        logger.Log("Failed to lock the constant buffer so it can be written to", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -398,6 +419,7 @@ bool NormalMapShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContex
     result = deviceContext->Map(m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
+        logger.Log("Failed to lock the light constant buffer so it can be written to", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 

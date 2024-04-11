@@ -13,6 +13,7 @@ const int NUM_LIGHTS = 4;
 //////////////
 // INCLUDES //
 //////////////
+#include "Logger.h"
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <directxmath.h>
@@ -87,6 +88,8 @@ private:
     ID3D11Buffer* m_lightBuffer;
     ID3D11Buffer* m_lightColorBuffer;
     ID3D11Buffer* m_lightPositionBuffer;
+
+    Logger logger;
 };
 
 #endif

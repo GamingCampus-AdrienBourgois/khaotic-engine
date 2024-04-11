@@ -5,6 +5,7 @@
 //////////////
 // INCLUDES //
 //////////////
+#include "Logger.h"
 #include <d3d11.h>
 #include <stdio.h>
 
@@ -45,6 +46,8 @@ private:
     ID3D11Texture2D* m_texture;
     ID3D11ShaderResourceView* m_textureView;
     int m_width, m_height;
+
+    Logger logger;
 };
 
 #endif

@@ -19,6 +19,8 @@ TextureClass::~TextureClass()
 
 bool TextureClass::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, char* filename)
 {
+	logger.Log(("Iinitializing texture: %s", filename), __FILE__, __LINE__);
+
 	bool result;
 	D3D11_TEXTURE2D_DESC textureDesc;
 	HRESULT hResult;
@@ -28,6 +30,7 @@ bool TextureClass::Initialize(ID3D11Device * device, ID3D11DeviceContext * devic
 	result = LoadTarga(filename);
 	if (!result)
 	{
+		logger.Log("Failed to load targa data", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 	// Setup the description of the texture.
@@ -47,6 +50,7 @@ bool TextureClass::Initialize(ID3D11Device * device, ID3D11DeviceContext * devic
 	hResult = device->CreateTexture2D(&textureDesc, NULL, &m_texture);
 	if (FAILED(hResult))
 	{
+		logger.Log("Failed to create texture", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -64,6 +68,7 @@ bool TextureClass::Initialize(ID3D11Device * device, ID3D11DeviceContext * devic
 	hResult = device->CreateShaderResourceView(m_texture, &srvDesc, &m_textureView);
 	if (FAILED(hResult))
 	{
+		logger.Log("Failed to create shader resource view", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -121,6 +126,7 @@ bool TextureClass::LoadTarga(char* filename)
 	error = fopen_s(&filePtr, filename, "rb");
 	if (error != 0)
 	{
+		logger.Log("Failed to open targa file", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -128,6 +134,7 @@ bool TextureClass::LoadTarga(char* filename)
 	count = (unsigned int)fread(&targaFileHeader, sizeof(TargaHeader), 1, filePtr);
 	if (count != 1)
 	{
+		logger.Log("Failed to read targa file header", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -139,6 +146,7 @@ bool TextureClass::LoadTarga(char* filename)
 	// Check that it is 32 bit and not 24 bit.
 	if (bpp != 32 && bpp != 24)
 	{
+		logger.Log("Targa file is not 32 or 24 bit", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -152,6 +160,7 @@ bool TextureClass::LoadTarga(char* filename)
 	count = (unsigned int)fread(targaImage, 1, imageSize, filePtr);
 	if (count != imageSize)
 	{
+		logger.Log("Failed to read targa image data", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -159,6 +168,7 @@ bool TextureClass::LoadTarga(char* filename)
 	error = fclose(filePtr);
 	if (error != 0)
 	{
+		logger.Log("Failed to close targa file", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -176,12 +186,20 @@ bool TextureClass::LoadTarga(char* filename)
 	{
 		for (i = 0; i < m_width; i++)
 		{
-			m_targaData[index + 0] = targaImage[k + 2];  // Red.
-			m_targaData[index + 1] = targaImage[k + 1];  // Green.
-			m_targaData[index + 2] = targaImage[k + 0];  // Blue
-			if (bpp == 32)
+			if (index + 3 < imageSize) // Ajout de la vérification ici
 			{
-				m_targaData[index + 3] = targaImage[k + 3];  // Alpha
+				m_targaData[index + 0] = targaImage[k + 2];  // Red.
+				m_targaData[index + 1] = targaImage[k + 1];  // Green.
+				m_targaData[index + 2] = targaImage[k + 0];  // Blue
+				if (bpp == 32)
+				{
+					m_targaData[index + 3] = targaImage[k + 3];  // Alpha
+				}
+			}
+			else
+			{
+				logger.Log("Index out of bounds", __FILE__, __LINE__, Logger::LogLevel::Error);
+				return false;
 			}
 
 			// Increment the indexes into the targa data.
@@ -193,9 +211,12 @@ bool TextureClass::LoadTarga(char* filename)
 		k -= (m_width * (bpp / 8) * 2);
 	}
 
+
 	// Release the targa image data now that it was copied into the destination array.
 	delete[] targaImage;
 	targaImage = 0;
+
+	logger.Log("Targa file loaded", __FILE__, __LINE__);
 
 	return true;
 }

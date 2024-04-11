@@ -24,6 +24,8 @@ ShaderManagerClass::~ShaderManagerClass()
 
 bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
+    logger.Log("Initializing ShaderManagerClass", __FILE__, __LINE__);
+
     bool result;
 
     // Create and initialize the texture shader object.
@@ -32,6 +34,7 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
     result = m_TextureShader->Initialize(device, hwnd);
     if (!result)
     {
+        logger.Log("Error initializing TextureShaderClass", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -41,6 +44,7 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
     result = m_NormalMapShader->Initialize(device, hwnd);
     if (!result)
     {
+        logger.Log("Error initializing NormalMapShaderClass", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -50,6 +54,7 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
     result = m_MultitextureShader->Initialize(device, hwnd);
     if (!result)
     {
+        logger.Log("Error initializing MultiTextureShaderClass", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -59,6 +64,7 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
     result = m_TranslateShader->Initialize(device, hwnd);
     if (!result)
     {
+        logger.Log("Error initializing TranslateShaderClass", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -68,6 +74,7 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
     result = m_AlphaMapShader->Initialize(device, hwnd);
     if (!result)
     {
+        logger.Log("Error initializing AlphaMapShaderClass", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -77,6 +84,7 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
     result = m_SpecMapShader->Initialize(device, hwnd);
     if (!result)
     {
+        logger.Log("Error initializing SpecMapShaderClass", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -86,14 +94,19 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
     result = m_TransparentShader->Initialize(device, hwnd);
     if (!result)
     {
+        logger.Log("Error initializing TransparentShaderClass", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
+
+    logger.Log("ShaderManagerClass initialized", __FILE__, __LINE__);
 
     return true;
 }
 
 void ShaderManagerClass::Shutdown()
 {
+    logger.Log("Shutting down ShaderManagerClass", __FILE__, __LINE__);
+
     // Release the normal map shader object.
     if (m_NormalMapShader)
     {
@@ -150,6 +163,8 @@ void ShaderManagerClass::Shutdown()
         m_TransparentShader = 0;
     }
 
+    logger.Log("ShaderManagerClass shut down", __FILE__, __LINE__);
+
     return;
       
 }
@@ -163,6 +178,7 @@ bool ShaderManagerClass::RenderTextureShader(ID3D11DeviceContext* deviceContext,
     result = m_TextureShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture);
     if (!result)
     {
+        logger.Log("Error rendering TextureShaderClass", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -178,6 +194,7 @@ bool ShaderManagerClass::RenderNormalMapShader(ID3D11DeviceContext* deviceContex
     result = m_NormalMapShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, colorTexture, normalTexture, lightDirection, diffuseColor);
     if (!result)
     {
+        logger.Log("Error rendering NormalMapShaderClass", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -193,6 +210,7 @@ bool ShaderManagerClass::RenderMultitextureShader(ID3D11DeviceContext* deviceCon
     result = m_MultitextureShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture1, texture2);
     if (!result)
     {
+        logger.Log("Error rendering MultiTextureShaderClass", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -208,6 +226,7 @@ bool ShaderManagerClass::RenderTranslateShader(ID3D11DeviceContext* deviceContex
     result = m_TranslateShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture1, valeur);
     if (!result)
     {
+        logger.Log("Error rendering TranslateShaderClass", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -223,6 +242,7 @@ bool ShaderManagerClass::RenderAlphaMapShader(ID3D11DeviceContext* deviceContext
     result = m_AlphaMapShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture1, texture2, texture3);
     if (!result)
     {
+        logger.Log("Error rendering AlphaMapShaderClass", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -240,6 +260,7 @@ bool ShaderManagerClass::RenderSpecMapShader(ID3D11DeviceContext* deviceContext,
         diffuseColor, cameraPosition, specularColor, specularPower);
     if (!result)
     {
+        logger.Log("Error rendering SpecMapShaderClass", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -255,6 +276,7 @@ bool ShaderManagerClass::RenderTransparentShader(ID3D11DeviceContext* deviceCont
     result = m_TransparentShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture1, blendAmount);
     if (!result)
     {
+        logger.Log("Error rendering TransparentShaderClass", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 

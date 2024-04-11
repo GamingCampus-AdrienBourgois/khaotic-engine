@@ -23,6 +23,8 @@ AlphaMapShaderClass::~AlphaMapShaderClass()
 
 bool AlphaMapShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
+    logger.Log("Initializing AlphaMapShaderClass", __FILE__, __LINE__);
+
     bool result;
     wchar_t vsFilename[128];
     wchar_t psFilename[128];
@@ -32,6 +34,7 @@ bool AlphaMapShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
     error = wcscpy_s(vsFilename, 128, L"alphamap.vs");
     if (error != 0)
     {
+        logger.Log("Error copying string ", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -39,6 +42,7 @@ bool AlphaMapShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
     error = wcscpy_s(psFilename, 128, L"alphamap.ps");
     if (error != 0)
     {
+        logger.Log("Error copying string", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -46,6 +50,7 @@ bool AlphaMapShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
     result = InitializeShader(device, hwnd, vsFilename, psFilename);
     if (!result)
     {
+        logger.Log("Error initializing shader", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -84,6 +89,8 @@ bool AlphaMapShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCo
 
 bool AlphaMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
+    logger.Log("Initializing shader", __FILE__, __LINE__);
+
     HRESULT result;
     ID3D10Blob* errorMessage;
     ID3D10Blob* vertexShaderBuffer;
@@ -112,7 +119,7 @@ bool AlphaMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHA
         // If there was nothing in the error message then it simply could not find the shader file itself.
         else
         {
-            MessageBox(hwnd, vsFilename, L"Missing Shader File", MB_OK);
+            logger.Log("Error compiling shader", __FILE__, __LINE__, Logger::LogLevel::Error);
         }
 
         return false;
@@ -131,7 +138,7 @@ bool AlphaMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHA
         // If there was nothing in the error message then it simply could not find the file itself.
         else
         {
-            MessageBox(hwnd, psFilename, L"Missing Shader File", MB_OK);
+            logger.Log("Error compiling shader", __FILE__, __LINE__, Logger::LogLevel::Error);
         }
 
         return false;
@@ -141,6 +148,7 @@ bool AlphaMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHA
     result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &m_vertexShader);
     if (FAILED(result))
     {
+        logger.Log("Error creating vertex shader", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -148,6 +156,7 @@ bool AlphaMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHA
     result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &m_pixelShader);
     if (FAILED(result))
     {
+        logger.Log("Error creating pixel shader", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -184,6 +193,7 @@ bool AlphaMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHA
         vertexShaderBuffer->GetBufferSize(), &m_layout);
     if (FAILED(result))
     {
+        logger.Log("Error creating input layout", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -206,6 +216,7 @@ bool AlphaMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHA
     result = device->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
     if (FAILED(result))
     {
+        logger.Log("Error creating constant buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -228,8 +239,11 @@ bool AlphaMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHA
     result = device->CreateSamplerState(&samplerDesc, &m_sampleState);
     if (FAILED(result))
     {
+        logger.Log("Error creating sampler state", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
+
+    logger.Log("Shader initialized", __FILE__, __LINE__);
 
     return true;
 }
@@ -237,6 +251,9 @@ bool AlphaMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHA
 
 void AlphaMapShaderClass::ShutdownShader()
 {
+
+    logger.Log("Shutting down shader", __FILE__, __LINE__);
+
     // Release the sampler state.
     if (m_sampleState)
     {
@@ -271,6 +288,8 @@ void AlphaMapShaderClass::ShutdownShader()
         m_vertexShader->Release();
         m_vertexShader = 0;
     }
+
+    logger.Log("Shader shutdown complete", __FILE__, __LINE__);
 
     return;
 }
@@ -330,6 +349,7 @@ bool AlphaMapShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext
     result = deviceContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
+        logger.Log("Error mapping constant buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -361,6 +381,7 @@ bool AlphaMapShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext
 
 void AlphaMapShaderClass::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
 {
+
     // Set the vertex input layout.
     deviceContext->IASetInputLayout(m_layout);
 

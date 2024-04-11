@@ -53,6 +53,8 @@ private:
     ID3D11Buffer* m_vertexBuffer, * m_indexBuffer;
     int m_vertexCount, m_indexCount, m_screenWidth, m_screenHeight, m_bitmapWidth, m_bitmapHeight, m_renderX, m_renderY, m_prevPosX, m_prevPosY;
     TextureClass* m_Texture;
+
+    Logger logger;
 };
 
 #endif

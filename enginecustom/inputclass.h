@@ -15,6 +15,7 @@
 //////////////
 // INCLUDES //
 //////////////
+#include "Logger.h"
 #include <dinput.h>
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -64,6 +65,8 @@ private:
 	DIMOUSESTATE m_mouseState;
 
 	int m_screenWidth, m_screenHeight, m_mouseX, m_mouseY;
+
+	Logger logger;
 };
 
 #endif

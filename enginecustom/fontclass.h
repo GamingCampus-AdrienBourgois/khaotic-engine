@@ -59,6 +59,8 @@ private:
     TextureClass* m_Texture;
     float m_fontHeight;
     int m_spaceSize;
+
+    Logger logger;
 };
 
 #endif

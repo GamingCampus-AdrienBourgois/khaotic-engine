@@ -20,6 +20,8 @@ InputClass::~InputClass()
 
 bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeight)
 {
+	logger.Log("Initializing input class", __FILE__, __LINE__);
+
 	HRESULT result;
 	int i;
 
@@ -42,6 +44,7 @@ bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int
 	result = DirectInput8Create(hinstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_directInput, NULL);
 	if (FAILED(result))
 	{
+		logger.Log("Failed to create direct input interface", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -49,6 +52,7 @@ bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int
 	result = m_directInput->CreateDevice(GUID_SysKeyboard, &m_keyboard, NULL);
 	if (FAILED(result))
 	{
+		logger.Log("Failed to create direct input interface for the keyboard", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -56,6 +60,7 @@ bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int
 	result = m_keyboard->SetDataFormat(&c_dfDIKeyboard);
 	if (FAILED(result))
 	{
+		logger.Log("Failed to set data format for the keyboard", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -63,6 +68,7 @@ bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int
 	result = m_keyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
 	if (FAILED(result))
 	{
+		logger.Log("Failed to set cooperative level of the keyboard", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -70,6 +76,7 @@ bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int
 	result = m_keyboard->Acquire();
 	if (FAILED(result))
 	{
+		logger.Log("Failed to acquire the keyboard", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -77,6 +84,7 @@ bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int
 	result = m_directInput->CreateDevice(GUID_SysMouse, &m_mouse, NULL);
 	if (FAILED(result))
 	{
+		logger.Log("Failed to create direct input interface for the mouse", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -84,6 +92,7 @@ bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int
 	result = m_mouse->SetDataFormat(&c_dfDIMouse);
 	if (FAILED(result))
 	{
+		logger.Log("Failed to set data format for the mouse", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -91,6 +100,7 @@ bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int
 	result = m_mouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 	if (FAILED(result))
 	{
+		logger.Log("Failed to set cooperative level of the mouse", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -98,8 +108,11 @@ bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int
 	result = m_mouse->Acquire();
 	if (FAILED(result))
 	{
+		logger.Log("Failed to acquire the mouse", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
+
+	logger.Log("Input class initialized", __FILE__, __LINE__);
 
 	return true;
 }
@@ -131,6 +144,8 @@ bool InputClass::IsKeyDown(unsigned int key)
 
 void InputClass::Shutdown()
 {
+	logger.Log("Shutting down input class", __FILE__, __LINE__);
+
 	// Release the mouse.
 	if (m_mouse)
 	{
@@ -154,6 +169,8 @@ void InputClass::Shutdown()
 		m_directInput = 0;
 	}
 
+	logger.Log("Input class shut down", __FILE__, __LINE__);
+
 	return;
 }
 
@@ -166,6 +183,7 @@ bool InputClass::Frame()
 	result = ReadKeyboard();
 	if (!result)
 	{
+		logger.Log("Failed to read keyboard state", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -173,6 +191,7 @@ bool InputClass::Frame()
 	result = ReadMouse();
 	if (!result)
 	{
+		logger.Log("Failed to read mouse state", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -198,6 +217,7 @@ bool InputClass::ReadKeyboard()
 		}
 		else
 		{
+			logger.Log("Failed to get keyboard device state", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 	}
@@ -221,6 +241,7 @@ bool InputClass::ReadMouse()
 		}
 		else
 		{
+			logger.Log("Failed to get mouse device state", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 	}
