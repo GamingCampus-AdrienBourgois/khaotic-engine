@@ -29,34 +29,63 @@ void Physics::SetGravity(XMVECTOR gravity)
 // Apply gravity to an object
 void Physics::ApplyGravity(Object* object, float frameTime)
 {
-	if (object == nullptr) // Verify if the object is not null
-	{
-		return;
-	}
+    if (object == nullptr) // Verify if the object is not null
+    {
+        return;
+    }
 
-	// Get the object velocity
-	XMVECTOR velocity = object->GetVelocity();
+    // Calculate the acceleration caused by gravity
+    XMVECTOR gravityAcceleration = m_gravity / object->GetMass();
 
-	// Update the velocity with gravity
-	velocity += m_gravity * frameTime;
+    // Add the gravity acceleration to the object's current acceleration
+    object->SetAcceleration(object->GetAcceleration() + gravityAcceleration);
 
-	// Set the new velocity
-	object->SetVelocity(velocity);
+    // Get the object velocity
+    XMVECTOR velocity = object->GetVelocity();
+
+    // Update the velocity with the object's acceleration
+    velocity += object->GetAcceleration() * frameTime;
+
+    // Set the new velocity
+    object->SetVelocity(velocity);
 }
 
 void Physics::ApplyDrag(Object* object, float dragValue, float frameTime)
+{
+    if (object == nullptr) // Verify if the object is not null
+    {
+        return;
+    }
+
+    // Calculate the acceleration caused by drag
+    XMVECTOR dragAcceleration = -object->GetVelocity() * dragValue / object->GetMass();
+
+    // Add the drag acceleration to the object's current acceleration
+    object->SetAcceleration(object->GetAcceleration() + dragAcceleration);
+
+    // Get the velocity of the object
+    XMVECTOR velocity = object->GetVelocity();
+
+    // Update the velocity with the object's acceleration
+    velocity += object->GetAcceleration() * frameTime;
+
+    // Set the new velocity
+    object->SetVelocity(velocity);
+}
+
+void Physics::ApplyForce(Object* object, XMVECTOR force)
 {
 	if (object == nullptr) // Verify if the object is not null
 	{
 		return;
 	}
 
-	// Get the velocity of the object
-	XMVECTOR velocity = object->GetVelocity();
+	// Get the mass of the object
+	float mass = object->GetMass();
 
-	// Calculate the new velocity
-	XMVECTOR newVelocity = velocity - (velocity * dragValue * frameTime);
+	// Calculate the acceleration caused by the force
+	XMVECTOR acceleration = force / mass;
 
-	// Update the velocity of the object
-	object->SetVelocity(newVelocity);
+	// Add the acceleration to the object's current acceleration
+	object->SetAcceleration(object->GetAcceleration() + acceleration);
 }

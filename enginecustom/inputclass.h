@@ -39,6 +39,8 @@ public:
 	void KeyUp(unsigned int);
 	bool IsLeftArrowPressed();
 	bool IsRightArrowPressed();
+	bool IsUpArrowPressed();
+	bool IsDownArrowPressed();
 	bool IsAPressed();
 	bool IsDPressed();
 	bool IsWPressed();

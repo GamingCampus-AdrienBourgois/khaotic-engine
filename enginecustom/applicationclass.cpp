@@ -628,7 +628,7 @@ void ApplicationClass::Shutdown()
 bool ApplicationClass::Frame(InputClass* Input)
 {
 	int mouseX, mouseY, currentMouseX, currentMouseY;
-	bool result, leftMouseDown, rightMouseDown, keyDown, buttonQ, buttonD, buttonZ, buttonS, buttonA, buttonE;
+	bool result, leftMouseDown, rightMouseDown, keyLeft, keyRight, keyUp, keyDown, buttonQ, buttonD, buttonZ, buttonS, buttonA, buttonE;
 	float rotationY, rotationX, positionX, positionY, positionZ;
 
 	float frameTime;
@@ -673,11 +673,11 @@ bool ApplicationClass::Frame(InputClass* Input)
 	m_Position->SetFrameTime(m_Timer->GetTime());
 
 	// Check if the left or right arrow key has been pressed, if so rotate the camera accordingly.
-	keyDown = Input->IsLeftArrowPressed();
-	m_Position->TurnLeft(keyDown);
+	//keyDown = Input->IsLeftArrowPressed();
+	//m_Position->TurnLeft(keyDown);
 
-	keyDown = Input->IsRightArrowPressed();
-	m_Position->TurnRight(keyDown);
+	//keyDown = Input->IsRightArrowPressed();
+	//m_Position->TurnRight(keyDown);
 
 	m_Position->TurnMouse(deltaX, deltaY, rightMouseDown);
 
@@ -728,27 +728,66 @@ bool ApplicationClass::Frame(InputClass* Input)
 	//// Update the z position variable each frame.
 	//z -= 0.0174532925f * 0.2f;
 
-	
+	keyLeft = Input->IsLeftArrowPressed();
+	keyRight = Input->IsRightArrowPressed();
+	keyUp = Input->IsUpArrowPressed();
+	keyDown = Input->IsDownArrowPressed();
 
 	for (auto object : m_object)
 	{
 		if (object != nullptr) // Check if the object is not null
 		{
+			// Reset acceleration for the new frame
+			object->SetAcceleration(XMVectorZero());
+
+			// Apply forces
+			m_Physics->ApplyGravity(object, frameTime);
+			m_Physics->ApplyDrag(object, 1.0f, frameTime);
+
+			float forceX = 0, forceY = 0, forceZ = 0, forceW = 0;
+
+			if (keyLeft)
+			{
+				forceX = -10.0f;
+			}
+			if (keyRight)
+			{
+				forceX = 10.0f;
+			}
+			if (keyUp)
+			{
+				forceY = 40.0f;
+			}
+			if (keyDown)
+			{
+				forceY = -40.0f;
+			}
+
+			XMVECTOR force = XMVectorSet(forceX, forceY, forceZ, forceW);
+			m_Physics->ApplyForce(object, force);
+
+			// Update velocity based on acceleration
+			XMVECTOR velocity = object->GetVelocity();
+			velocity = velocity + object->GetAcceleration() * frameTime;
+			object->SetVelocity(velocity);
+
+			// Update position based on velocity
+			XMVECTOR position = object->GetPosition();
+			position = position + velocity * frameTime;
+			object->SetPosition(position);
+
+			// Check if the object has fallen below the ground
 			if (XMVectorGetY(object->GetPosition()) < -10.0f)
 			{
 				XMVECTOR currentPosition = object->GetPosition(); // Obtain the current position of the object
 				object->SetPosition(XMVectorSetY(currentPosition, 20.0f)); // Define the new position of the object
 			}
-			m_Physics->ApplyGravity(object, frameTime);
-			m_Physics->ApplyDrag(object, 1.0f, frameTime);
-			// Update object position based on its velocity
-			XMVECTOR position = object->GetPosition();
-			XMVECTOR velocity = object->GetVelocity();
-			position = position + velocity * frameTime;
-			object->SetPosition(position);
+
 			object->m_previousPosition = object->GetPosition();
 		}
 	}
+
+
 	
 
 	// Render the scene to a render texture.
@@ -1266,6 +1305,7 @@ void ApplicationClass::AddKobject(WCHAR* filepath)
 
 	Object* newObject = new Object();
 	newObject->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2, textureFilename3);
+	newObject->SetMass(1.0f);
 
 	newObject->SetTranslateMatrix(XMMatrixTranslation(0.0f, 0.0f, 0.0f));
 	newObject->SetName(filename);

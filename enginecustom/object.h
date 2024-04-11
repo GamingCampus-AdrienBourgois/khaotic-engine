@@ -29,6 +29,10 @@ public:
 
 	void SetVelocity(XMVECTOR);
 	XMVECTOR GetVelocity();
+	void SetAcceleration(XMVECTOR);
+	XMVECTOR GetAcceleration();
+	void SetMass(float);
+	float GetMass();
 
 	void UpdateWorldMatrix();
 	void UpdateSRMatrix();
@@ -52,6 +56,9 @@ private:
 	XMMATRIX m_translateMatrix;
 	XMMATRIX m_srMatrix;
 	XMMATRIX m_worldMatrix;
+
+	XMVECTOR m_acceleration;
+	float m_mass;
 
 	std::string m_name;
 };

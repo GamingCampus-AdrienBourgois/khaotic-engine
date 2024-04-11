@@ -9,6 +9,8 @@ Object::Object() : ModelClass()
 	m_worldMatrix = XMMatrixIdentity();
 	m_previousPosition = XMVectorZero();
 	m_velocity = XMVectorZero();
+	m_acceleration = XMVectorZero();
+	m_mass = 1.0f;
 }
 
 Object::~Object()
@@ -173,4 +175,24 @@ void Object::SetVelocity(XMVECTOR velocity)
 XMVECTOR Object::GetVelocity()
 {
 	return m_velocity;
+}
+
+void Object::SetAcceleration(XMVECTOR acceleration)
+{
+	m_acceleration = acceleration;
+}
+
+XMVECTOR Object::GetAcceleration()
+{
+	return m_acceleration;
+}
+
+void Object::SetMass(float mass)
+{
+	m_mass = mass;
+}
+
+float Object::GetMass()
+{
+	return m_mass;
 }

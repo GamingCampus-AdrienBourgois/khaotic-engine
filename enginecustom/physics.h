@@ -14,6 +14,7 @@ public:
     void SetGravity(XMVECTOR gravity); // Define the gravity value
     void ApplyGravity(Object*, float); // Apply gravity to an object
     void ApplyDrag(Object*, float, float);
+    void ApplyForce(Object*, XMVECTOR);
 
 private:
     XMVECTOR m_gravity;
