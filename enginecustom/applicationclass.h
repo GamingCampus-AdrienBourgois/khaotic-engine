@@ -16,7 +16,6 @@
 #include "lightmapshaderclass.h"
 #include "bitmapclass.h"
 #include "spriteclass.h"
-#include "textureshaderclass.h"
 #include "timerclass.h"
 #include "fontshaderclass.h"
 #include "fontclass.h"
@@ -30,8 +29,6 @@
 #include "rendertextureclass.h"
 #include "displayplaneclass.h"
 #include "reflectionshaderclass.h"
-#include "transparentshaderclass.h"
-
 
 
 /////////////
@@ -102,9 +99,6 @@ private :
 	D3DClass* m_Direct3D;
 	IDXGISwapChain* m_swapChain;
 	ModelClass* m_Model;
-	TextureShaderClass* m_TextureShader;
-	/*TransparentShaderClass* m_TransparentShader;*/
-	ShaderManagerClass* m_ShaderManager;
 	ModelListClass* m_ModelList;
 
 	// ------------------------------------- //
@@ -141,8 +135,7 @@ private :
 	// ------------- SHADERS ------------- //
 	// ----------------------------------- //
 
-	LightShaderClass* m_LightShader;
-	LightMapShaderClass* m_LightMapShader;
+	ShaderManagerClass* m_ShaderManager;
 	FontShaderClass* m_FontShader;
 	ReflectionShaderClass* m_ReflectionShader;
 

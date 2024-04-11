@@ -37,6 +37,8 @@ This **DirectX11** based engine uses **ImGui** with an abstraction layer to enab
  - **Diffuse Lighting**
  - **Ambiant Lighting**
  - **Specular Lighting**
+ - **Light Shader**
+ - **Light Map Shader**
  - **Alpha Mapping**
  - **Normal Mapping**
  - **Specular Mapping**

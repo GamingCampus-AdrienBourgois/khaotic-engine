@@ -188,7 +188,6 @@
     </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="..\..\..\..\Downloads\grass.tga" />
     <CopyFileToFolders Include="alpha01.tga" />
     <Image Include="dirt01.tga" />
     <CopyFileToFolders Include="font01.tga" />
@@ -206,10 +205,10 @@
     <Image Include="wall.tga" />
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="..\..\..\..\Downloads\chunk.txt" />
     <CopyFileToFolders Include="cube.txt" />
     <CopyFileToFolders Include="font01.txt" />
     <CopyFileToFolders Include="plane.txt" />
+    <Text Include="chunk.txt" />
     <Text Include="sphere.txt" />
     <CopyFileToFolders Include="sprite_data_01.txt" />
     <Text Include="square.txt" />
