@@ -48,6 +48,7 @@
     <ClCompile Include="modellistclass.cpp" />
     <ClCompile Include="Multitextureshaderclass.cpp" />
     <ClCompile Include="normalmapshaderclass.cpp" />
+    <ClCompile Include="refractionshaderclass.cpp" />
     <ClCompile Include="shadermanagerclass.cpp" />
     <ClCompile Include="positionclass.cpp" />
     <ClCompile Include="reflectionshaderclass.cpp" />
@@ -61,6 +62,7 @@
     <ClCompile Include="Timerclass.cpp" />
     <ClCompile Include="translateshaderclass.cpp" />
     <ClCompile Include="transparentshaderclass.cpp" />
+    <ClCompile Include="watershaderclass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="alphamapshaderclass.h" />
@@ -93,6 +95,7 @@
     <ClInclude Include="modellistclass.h" />
     <ClInclude Include="Multitextureshaderclass.h" />
     <ClInclude Include="normalmapshaderclass.h" />
+    <ClInclude Include="refractionshaderclass.h" />
     <ClInclude Include="shadermanagerclass.h" />
     <ClInclude Include="positionclass.h" />
     <ClInclude Include="reflectionshaderclass.h" />
@@ -107,6 +110,7 @@
     <ClInclude Include="Timerclass.h" />
     <ClInclude Include="translateshaderclass.h" />
     <ClInclude Include="transparentshaderclass.h" />
+    <ClInclude Include="watershaderclass.h" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="alphamap.ps">
@@ -145,6 +149,7 @@
     <CopyFileToFolders Include="normalmap.vs">
       <FileType>Document</FileType>
     </CopyFileToFolders>
+    <None Include="..\KhaoticDemo\water.ps" />
     <None Include="packages.config" />
     <CopyFileToFolders Include="reflection.ps">
       <FileType>Document</FileType>
@@ -170,6 +175,9 @@
     <CopyFileToFolders Include="transparent.vs">
       <FileType>Document</FileType>
     </CopyFileToFolders>
+    <None Include="refraction.ps" />
+    <None Include="refraction.vs" />
+    <None Include="water.vs" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="Color.ps">

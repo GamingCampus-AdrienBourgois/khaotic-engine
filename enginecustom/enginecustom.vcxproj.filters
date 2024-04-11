@@ -162,6 +162,12 @@
     <ClCompile Include="lightmapshaderclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="watershaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="refractionshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="systemclass.h">
@@ -299,6 +305,12 @@
     <ClInclude Include="Logger.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="watershaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="refractionshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="wall.tga">
@@ -316,6 +328,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="water.vs" />
+    <None Include="..\KhaoticDemo\water.ps" />
+    <None Include="refraction.vs" />
+    <None Include="refraction.ps" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="sphere.txt">
