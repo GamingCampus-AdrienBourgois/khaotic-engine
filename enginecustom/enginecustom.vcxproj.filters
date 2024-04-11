@@ -307,81 +307,15 @@
     <Image Include="papier.tga">
       <Filter>assets</Filter>
     </Image>
-    <Image Include="moss01.tga">
-      <Filter>assets</Filter>
-    </Image>
-    <Image Include="light01.tga">
-      <Filter>assets</Filter>
-    </Image>
     <Image Include="dirt01.tga">
       <Filter>assets</Filter>
-    </Image>
-    <Image Include="alpha01.tga">
-      <Filter>assets</Filter>
-    </Image>
-    <Image Include="normal01.tga">
-      <Filter>assets</Filter>
-    </Image>
-    <Image Include="..\..\..\..\Downloads\grass.tga">
-      <Filter>Assets</Filter>
     </Image>
     <Image Include="KhaoticIcon.ico">
       <Filter>Assets</Filter>
     </Image>
-    <Image Include="sprite02.tga" />
-    <Image Include="sprite03.tga" />
-    <Image Include="sprite04.tga" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Color.ps">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="light.vs">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="lightmap.vs">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="lightmap.ps">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="alphamap.vs">
-      <Filter>texture</Filter>
-    </None>
-    <None Include="alphamap.ps">
-      <Filter>texture</Filter>
-    </None>
-    <None Include="normalmap.vs">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="normalmap.ps">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="texture.ps">
-      <Filter>Texture</Filter>
-    </None>
-    <None Include="texture.vs">
-      <Filter>Texture</Filter>
-    </None>
-    <None Include="Multitexture.ps">
-      <Filter>Texture</Filter>
-    </None>
-    <None Include="Multitexture.vs">
-      <Filter>Texture</Filter>
-    </None>
-    <None Include="translate.vs">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="translate.ps">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="reflection.vs" />
-    <None Include="reflection.ps" />
-    <None Include="specmap.ps" />
-    <None Include="specmap.vs" />
-    <None Include="transparent.ps" />
-    <None Include="transparent.vs" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="sphere.txt">
@@ -389,6 +323,9 @@
     </Text>
     <Text Include="square.txt">
       <Filter>assets</Filter>
+    </Text>
+    <Text Include="chunk.txt">
+      <Filter>Assets</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>
@@ -424,11 +361,36 @@
       <Filter>Assets</Filter>
     </CopyFileToFolders>
     <CopyFileToFolders Include="spec02.tga" />
-    <CopyFileToFolders Include="..\..\..\..\Downloads\chunk.txt">
-      <Filter>Assets</Filter>
-    </CopyFileToFolders>
     <CopyFileToFolders Include="plane.txt">
       <Filter>Assets</Filter>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="alphamap.ps" />
+    <CopyFileToFolders Include="alphamap.vs" />
+    <CopyFileToFolders Include="light.vs" />
+    <CopyFileToFolders Include="lightmap.ps" />
+    <CopyFileToFolders Include="lightmap.vs" />
+    <CopyFileToFolders Include="Multitexture.ps" />
+    <CopyFileToFolders Include="Multitexture.vs" />
+    <CopyFileToFolders Include="normalmap.ps" />
+    <CopyFileToFolders Include="normalmap.vs" />
+    <CopyFileToFolders Include="reflection.ps" />
+    <CopyFileToFolders Include="reflection.vs" />
+    <CopyFileToFolders Include="specmap.ps" />
+    <CopyFileToFolders Include="specmap.vs" />
+    <CopyFileToFolders Include="texture.ps" />
+    <CopyFileToFolders Include="texture.vs" />
+    <CopyFileToFolders Include="transparent.ps" />
+    <CopyFileToFolders Include="transparent.vs" />
+    <CopyFileToFolders Include="Color.ps" />
+    <CopyFileToFolders Include="..\..\..\..\Downloads\grass.tga" />
+    <CopyFileToFolders Include="alpha01.tga" />
+    <CopyFileToFolders Include="light01.tga" />
+    <CopyFileToFolders Include="moss01.tga" />
+    <CopyFileToFolders Include="normal01.tga" />
+    <CopyFileToFolders Include="sprite02.tga" />
+    <CopyFileToFolders Include="sprite03.tga" />
+    <CopyFileToFolders Include="sprite04.tga" />
+    <CopyFileToFolders Include="translate.ps" />
+    <CopyFileToFolders Include="translate.vs" />
   </ItemGroup>
 </Project>
