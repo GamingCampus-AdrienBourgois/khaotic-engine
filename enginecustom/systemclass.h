@@ -3,6 +3,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 
+#include "Logger.h"
+
 #include "inputclass.h"
 #include "applicationclass.h"
 #include "imguiManager.h"
@@ -30,6 +32,7 @@ private:
 	LPCWSTR m_applicationName;
 	HINSTANCE m_hinstance;
 	HWND m_hwnd;
+	Logger logger;
 
 	InputClass* m_Input;
 	ApplicationClass* m_Application;

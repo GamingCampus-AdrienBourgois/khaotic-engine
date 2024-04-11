@@ -13,6 +13,8 @@ imguiManager::~imguiManager()
 
 bool imguiManager::Initialize(HWND hwnd, ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
+	logger.Log("Initializing imgui", __FILE__, __LINE__);
+
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	io = &ImGui::GetIO();
@@ -20,6 +22,8 @@ bool imguiManager::Initialize(HWND hwnd, ID3D11Device* device, ID3D11DeviceConte
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(device, deviceContext);
 	ImGui::StyleColorsDark();
+
+	logger.Log("imgui initialized", __FILE__, __LINE__);
 
 	return true;
 }
