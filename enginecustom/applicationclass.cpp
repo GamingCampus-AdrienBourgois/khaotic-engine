@@ -1027,19 +1027,19 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		return false;
 	}
 
-	//// Setup matrices.
-	//rotateMatrix = XMMatrixRotationY(rotation);
-	//translateMatrix = XMMatrixTranslation(-10.0f, -2.0f, -20.0f);
-	//worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
+	// Setup matrices.
+	rotateMatrix = XMMatrixRotationY(rotation);
+	translateMatrix = XMMatrixTranslation(-10.0f, -2.0f, -20.0f);
+	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
 
 	// Render the model using the transparent shader.
-	//m_Model->Render(m_Direct3D->GetDeviceContext());
+	m_Model->Render(m_Direct3D->GetDeviceContext());
 
-	//result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0), m_Lights[0]->GetDiffuseColor(), m_Lights[0]->GetPosition());
-	//if (!result)
-	//{
-	//	return false;
-	//}
+	result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0), diffuseColor, lightPosition);
+	if (!result)
+	{
+		return false;
+	}
 
 	// Turn off alpha blending.
 	m_Direct3D->DisableAlphaBlending();
