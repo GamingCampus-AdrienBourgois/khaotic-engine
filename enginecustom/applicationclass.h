@@ -28,9 +28,6 @@
 #include "frustumclass.h"
 #include "rendertextureclass.h"
 #include "displayplaneclass.h"
-#include "reflectionshaderclass.h"
-#include "refractionshaderclass.h"
-#include "watershaderclass.h"
 
 
 /////////////
@@ -140,6 +137,8 @@ private :
 	// ----------------------------------- //
 
 	ShaderManagerClass* m_ShaderManager;
+	LightShaderClass* m_LightShader;
+	RefractionShaderClass* m_RefractionShader;
 	WaterShaderClass* m_WaterShader;
 	FontShaderClass* m_FontShader;
 	BitmapClass* m_Bitmap;

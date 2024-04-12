@@ -10,6 +10,7 @@ ShaderManagerClass::ShaderManagerClass()
     m_SpecMapShader = 0;
     m_TransparentShader = 0;
     m_LightShader = 0;
+    m_LightShaderWater = 0;
     m_LightMapShader = 0;
     m_RefractionShader = 0;
     m_WaterShader = 0;
@@ -97,6 +98,15 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
     m_LightShader = new LightShaderClass;
 
     result = m_LightShader->Initialize(device, hwnd);
+    if (!result)
+    {
+        return false;
+    }
+
+    // Create and initialize the light shader object.
+    m_LightShaderWater = new LightShaderClass;
+
+    result = m_LightShaderWater->Initialize(device, hwnd);
     if (!result)
     {
         return false;
@@ -196,6 +206,14 @@ void ShaderManagerClass::Shutdown()
         m_LightShader->Shutdown();
         delete m_LightShader;
         m_LightShader = 0;
+    }
+
+    // Release the light shader object.
+    if (m_LightShaderWater)
+    {
+        m_LightShaderWater->Shutdown();
+        delete m_LightShaderWater;
+        m_LightShaderWater = 0;
     }
 
     // Release the light map shader object.
@@ -334,12 +352,27 @@ bool ShaderManagerClass::RenderTransparentShader(ID3D11DeviceContext* deviceCont
 }
 
 bool ShaderManagerClass::RenderlightShader(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
-    ID3D11ShaderResourceView* texture, XMFLOAT4 diffuseColor[], XMFLOAT4 lightPosition[])
+    ID3D11ShaderResourceView* texture, XMFLOAT4 diffuseColor[], XMFLOAT4 lightPosition[], XMFLOAT4 ambientColor[])
 {
     bool result;
 
 
-    result = m_LightShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture, diffuseColor, lightPosition);
+    result = m_LightShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture, diffuseColor, lightPosition, ambientColor);
+    if (!result)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ShaderManagerClass::RenderlightShaderWater(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
+    ID3D11ShaderResourceView* texture, XMFLOAT4 getDirection[], XMFLOAT4 ambientColor[], XMFLOAT4 diffuseColor[])
+{
+    bool result;
+
+
+    result = m_LightShaderWater->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture, getDirection, ambientColor, diffuseColor);
     if (!result)
     {
         return false;
