@@ -41,8 +41,8 @@ public:
     bool RenderlightMapShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, ID3D11ShaderResourceView*);
     bool RenderRefractionShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*,
         XMFLOAT3, XMFLOAT4, XMFLOAT4, XMFLOAT4);
-    bool RenderWaterShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, ID3D11ShaderResourceView*, 
-        ID3D11ShaderResourceView*, float, float);
+    bool RenderWaterShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*,
+        ID3D11ShaderResourceView*, ID3D11ShaderResourceView*, float, float);
 private:
     TextureShaderClass* m_TextureShader;
     NormalMapShaderClass* m_NormalMapShader;
