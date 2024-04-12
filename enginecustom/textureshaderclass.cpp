@@ -23,6 +23,8 @@ TextureShaderClass::~TextureShaderClass()
 
 bool TextureShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
+	logger.Log("Initializing texture shader", __FILE__, __LINE__);
+
 	bool result;
 	wchar_t vsFilename[128];
 	wchar_t psFilename[128];
@@ -31,6 +33,7 @@ bool TextureShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 	error = wcscpy_s(vsFilename, 128, L"texture.vs");
 	if (error != 0)
 	{
+		logger.Log("Error copying stirng", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -38,6 +41,7 @@ bool TextureShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 	error = wcscpy_s(psFilename, 128, L"texture.ps");
 	if (error != 0)
 	{
+		logger.Log("Error copying stirng", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -45,8 +49,11 @@ bool TextureShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 	result = InitializeShader(device, hwnd, vsFilename, psFilename);
 	if (!result)
 	{
+		logger.Log("Error initializing shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
+
+	logger.Log("Texture shader initialized", __FILE__, __LINE__);
 
 	return true;
 }
@@ -69,6 +76,7 @@ bool TextureShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCou
 	result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture);
 	if (!result)
 	{
+		logger.Log("Error setting shader parameters", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -80,6 +88,8 @@ bool TextureShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCou
 
 bool TextureShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
+	logger.Log("Initializing shader", __FILE__, __LINE__);
+
 	HRESULT result;
 	ID3D10Blob* errorMessage;
 	ID3D10Blob* vertexShaderBuffer;
@@ -107,7 +117,7 @@ bool TextureShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR
 		// If there was nothing in the error message then it simply could not find the shader file itself.
 		else
 		{
-			MessageBox(hwnd, vsFilename, L"Missing Shader File", MB_OK);
+			logger.Log("Error compiling shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		}
 
 		return false;
@@ -126,7 +136,7 @@ bool TextureShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR
 		// If there was nothing in the error message then it simply could not find the file itself.
 		else
 		{
-			MessageBox(hwnd, psFilename, L"Missing Shader File", MB_OK);
+			logger.Log("Error compiling shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		}
 
 		return false;
@@ -136,6 +146,7 @@ bool TextureShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR
 	result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &m_vertexShader);
 	if (FAILED(result))
 	{
+		logger.Log("Error creating vertex shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -143,6 +154,7 @@ bool TextureShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR
 	result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &m_pixelShader);
 	if (FAILED(result))
 	{
+		logger.Log("Error creating pixel shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 	// Create the vertex input layout description.
@@ -171,6 +183,7 @@ bool TextureShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR
 		vertexShaderBuffer->GetBufferSize(), &m_layout);
 	if (FAILED(result))
 	{
+		logger.Log("Error creating input layout", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -193,6 +206,7 @@ bool TextureShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR
 	result = device->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
 	if (FAILED(result))
 	{
+		logger.Log("Error creating constant buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 	// Create a texture sampler state description.
@@ -214,14 +228,18 @@ bool TextureShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR
 	result = device->CreateSamplerState(&samplerDesc, &m_sampleState);
 	if (FAILED(result))
 	{
+		logger.Log("Error creating sampler state", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
+
+	logger.Log("Shader initialized", __FILE__, __LINE__);
 
 	return true;
 }
 
 void TextureShaderClass::ShutdownShader()
 {
+	logger.Log("Shutting down shader", __FILE__, __LINE__);
 
 	// Release the sampler state.
 	if (m_sampleState)
@@ -257,6 +275,8 @@ void TextureShaderClass::ShutdownShader()
 		m_vertexShader->Release();
 		m_vertexShader = 0;
 	}
+
+	logger.Log("Shader shut down", __FILE__, __LINE__);
 
 	return;
 }
@@ -314,6 +334,7 @@ bool TextureShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext,
 	result = deviceContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 	if (FAILED(result))
 	{
+		logger.Log("Error mapping constant buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 

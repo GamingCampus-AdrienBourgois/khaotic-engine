@@ -17,6 +17,8 @@ TimerClass::~TimerClass()
 
 bool TimerClass::Initialize()
 {
+    logger.Log("Initilazing timer class", __FILE__, __LINE__);
+
     INT64 frequency;
 
 
@@ -24,6 +26,7 @@ bool TimerClass::Initialize()
     QueryPerformanceFrequency((LARGE_INTEGER*)&frequency);
     if (frequency == 0)
     {
+        logger.Log("QueryPerformanceFrequency failed", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 

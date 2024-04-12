@@ -5,6 +5,7 @@
 //////////////
 // INCLUDES //
 //////////////
+#include "Logger.h"
 #include <windows.h>
 
 
@@ -27,6 +28,9 @@ private:
     float m_frequency;
     INT64 m_startTime;
     float m_frameTime;
+
+    Logger logger;
+
 };
 
 #endif
