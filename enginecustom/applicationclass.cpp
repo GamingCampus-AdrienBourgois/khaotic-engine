@@ -1,6 +1,6 @@
 #include "applicationclass.h"
 
-ApplicationClass::ApplicationClass()
+ApplicationClass::ApplicationClass() : m_ShouldQuit(false)
 {
 	m_Direct3D = 0;
 	m_Camera = 0;
@@ -306,131 +306,191 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void ApplicationClass::Shutdown()
 {
+	logger.Log("Shutting down application class", __FILE__, __LINE__);
+
 	// Release the shader manager object.
 	if (m_ShaderManager)
 	{
+		logger.Log("Releasing the shader manager object", __FILE__, __LINE__);
+
 		m_ShaderManager->Shutdown();
 		delete m_ShaderManager;
 		m_ShaderManager = 0;
+
+		logger.Log("Shader manager object released", __FILE__, __LINE__);
 	}
 
 	// Release the frustum class object.
 	if (m_Frustum)
 	{
+		logger.Log("Releasing the frustum class object", __FILE__, __LINE__);
+
 		delete m_Frustum;
 		m_Frustum = 0;
+
+		logger.Log("Frustum class object released", __FILE__, __LINE__);
 	}
 
 	// Release the display plane object.
 	if (m_DisplayPlane)
 	{
+		logger.Log("Releasing the display plane object", __FILE__, __LINE__);
+
 		m_DisplayPlane->Shutdown();
 		delete m_DisplayPlane;
 		m_DisplayPlane = 0;
+
+		logger.Log("Display plane object released", __FILE__, __LINE__);
 	}
 
 	// Release the position object.
 	if (m_Position)
 	{
+		logger.Log("Releasing the position object", __FILE__, __LINE__);
+
 		delete m_Position;
 		m_Position = 0;
+
+		logger.Log("Position object released", __FILE__, __LINE__);
 	}
 
 	// Release the model list object.
 	if (m_ModelList)
 	{
+		logger.Log("Releasing the model list object", __FILE__, __LINE__);
+
 		m_ModelList->Shutdown();
 		delete m_ModelList;
 		m_ModelList = 0;
+
+		logger.Log("Model list object released", __FILE__, __LINE__);
 	}
 
 	// Release the text objects for the render count string.
 	if (m_RenderCountString)
 	{
+		logger.Log("Releasing the render count string object", __FILE__, __LINE__);
+
 		m_RenderCountString->Shutdown();
 		delete m_RenderCountString;
 		m_RenderCountString = 0;
+
+		logger.Log("Render count string object released", __FILE__, __LINE__);
 	}
 
 	// Release the text objects for the mouse strings.
 	if (m_MouseStrings)
 	{
+		logger.Log("Releasing the mouse strings", __FILE__, __LINE__);
+
 		m_MouseStrings[0].Shutdown();
 		m_MouseStrings[1].Shutdown();
 		m_MouseStrings[2].Shutdown();
 
 		delete[] m_MouseStrings;
 		m_MouseStrings = 0;
+
+		logger.Log("Mouse strings released", __FILE__, __LINE__);
 	}
 
 	// Release the text object for the fps string.
 	if (m_FpsString)
 	{
+		logger.Log("Releasing the fps string object", __FILE__, __LINE__);
+
 		m_FpsString->Shutdown();
 		delete m_FpsString;
 		m_FpsString = 0;
+
+		logger.Log("Fps string object released", __FILE__, __LINE__);
 	}
 
 	// Release the fps object.
 	if (m_Fps)
 	{
+		logger.Log("Releasing the fps object", __FILE__, __LINE__);
+
 		delete m_Fps;
 		m_Fps = 0;
+
+		logger.Log("Fps object released", __FILE__, __LINE__);
 	}
 
 	// Release the font object.
 	if (m_Font)
 	{
+		logger.Log("Releasing the font object", __FILE__, __LINE__);
+
 		m_Font->Shutdown();
 		delete m_Font;
 		m_Font = 0;
+
+		logger.Log("Font object released", __FILE__, __LINE__);
 	}
 
 	// Release the font shader object.
 	if (m_FontShader)
 	{
+		logger.Log("Releasing the font shader object", __FILE__, __LINE__);
+
 		m_FontShader->Shutdown();
 		delete m_FontShader;
 		m_FontShader = 0;
+
+		logger.Log("Font shader object released", __FILE__, __LINE__);
 	}
 
 	// Release the timer object.
 	if (m_Timer)
 	{
+		logger.Log("Releasing the timer object", __FILE__, __LINE__);
+
 		delete m_Timer;
 		m_Timer = 0;
+
+		logger.Log("Timer object released", __FILE__, __LINE__);
 	}
 
 	// Release the sprite object.
 	if (m_Sprite)
 	{
+		logger.Log("Releasing the sprite object", __FILE__, __LINE__);
+
 		m_Sprite->Shutdown();
 		delete m_Sprite;
 		m_Sprite = 0;
+
+		logger.Log("Sprite object released", __FILE__, __LINE__);
 	}
 
 	for (auto light : m_Lights)
 	{
+		logger.Log("Releasing the light object", __FILE__, __LINE__);
 		if (light)
 		{
 			delete light;
 			light = 0;
 		}
+		logger.Log("Light object released", __FILE__, __LINE__);
 	}
 
 	// Release the light object.
 	if (m_Light)
 	{
+		logger.Log("Releasing the light object", __FILE__, __LINE__);
 		delete m_Light;
 		m_Light = 0;
+		logger.Log("Light object released", __FILE__, __LINE__);
 	}
 
 	// Release the model object.
 	if (m_Model)
 	{
+		logger.Log("Releasing the model object", __FILE__, __LINE__);
 		m_Model->Shutdown();
 		delete m_Model;
 		m_Model = 0;
+		logger.Log("Model object released", __FILE__, __LINE__);
 	}
 }
 
@@ -460,7 +520,8 @@ bool ApplicationClass::Frame(InputClass* Input)
 	// Check if the user pressed escape and wants to exit the application.
 	if (Input->IsEscapePressed())
 	{
-		return false;
+		logger.Log("User pressed escape, exiting application", __FILE__, __LINE__);
+		m_ShouldQuit = true;
 	}
 
 	// Get the location of the mouse from the input object,

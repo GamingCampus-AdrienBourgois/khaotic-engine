@@ -201,7 +201,7 @@ void imguiManager::WidgetTerrainWindow(ApplicationClass* app)
 	ImGui::End();
 }
 
-void imguiManager::ImGuiWidgetRenderer(ApplicationClass* app)
+bool imguiManager::ImGuiWidgetRenderer(ApplicationClass* app)
 {
 	// Start the Dear ImGui frame
 	NewFrame();
@@ -255,6 +255,8 @@ void imguiManager::ImGuiWidgetRenderer(ApplicationClass* app)
 	Render();
 
 	app->GetDirect3D()->m_swapChain->Present(0, NULL);
+
+	return true;
 }
 
 void imguiManager::WidgetLightWindow(ApplicationClass* app)

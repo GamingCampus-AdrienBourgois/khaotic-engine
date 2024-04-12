@@ -29,6 +29,7 @@
 #include "rendertextureclass.h"
 #include "displayplaneclass.h"
 #include "reflectionshaderclass.h"
+#include "systemclass.h"
 
 
 /////////////
@@ -75,13 +76,13 @@ public:
 
 	XMVECTOR GetLightPosition(int index);
 	XMVECTOR GetLightColor(int index);
-
 	void SetLightPosition(int index, XMVECTOR color);
 	void SetLightColor(int index, XMVECTOR color);
-
 	void DeleteLight(int index);
-
 	std::vector<LightClass*> GetLights() const { return m_Lights; };
+
+	bool GetShouldQuit() const { return m_ShouldQuit; };
+	void SetShouldQuit(bool shouldQuit) { m_ShouldQuit = shouldQuit; };
 
 private:
 	bool Render(float, float, float, float, float);
@@ -158,6 +159,12 @@ private :
 	// ------------------- LOGGER ---------------------- //
 	// ------------------------------------------------- //
 	Logger logger;
+
+	// ------------------------------------------------- //
+	// ------------------- OTHER ----------------------- //
+	// ------------------------------------------------- //
+
+	bool m_ShouldQuit;
 };
 
 #endif

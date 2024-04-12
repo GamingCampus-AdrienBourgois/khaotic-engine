@@ -8,6 +8,7 @@
 #include "inputclass.h"
 #include "applicationclass.h"
 #include "imguiManager.h"
+#include <mutex>
 #include "resources.h"
 
 class SystemClass
@@ -42,6 +43,8 @@ private:
 	int m_initialWindowHeight;
 	bool m_isDirect3DInitialized;
 	bool m_isResizing = false;
+
+	std::mutex renderMutex;
 };
 
 

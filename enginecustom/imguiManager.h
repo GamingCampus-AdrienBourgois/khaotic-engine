@@ -32,7 +32,7 @@ public:
 	void WidgetTerrainWindow(ApplicationClass* app);
 	void WidgetLightWindow(ApplicationClass* app);
 
-	void ImGuiWidgetRenderer(ApplicationClass* app);
+	bool ImGuiWidgetRenderer(ApplicationClass* app);
 
 private :
 	bool showObjectWindow = false;

@@ -88,31 +88,51 @@ bool SystemClass::Initialize()
 
 void SystemClass::Shutdown()
 {
+	logger.Log("Shutting down system class", __FILE__, __LINE__);
+
+	std::lock_guard<std::mutex> guard(renderMutex);
+
+	// Shutdown imgui
+	if (m_imguiManager)
+	{
+		logger.Log("Shutting down imgui manager", __FILE__, __LINE__);
+
+		m_imguiManager->Shutdown();
+		delete m_imguiManager;
+		m_imguiManager = 0;
+
+		logger.Log("Imgui manager shut down", __FILE__, __LINE__);
+	}
+
 	// Release the application class object.
 	if (m_Application)
 	{
+		logger.Log("Shutting down application", __FILE__, __LINE__);
+
 		m_Application->Shutdown();
 		delete m_Application;
 		m_Application = 0;
+
+		logger.Log("Application shut down", __FILE__, __LINE__);
 	}
 
 	// Release the input object.
 	if (m_Input)
 	{
+		logger.Log("Shutting down input", __FILE__, __LINE__);
+
 		delete m_Input;
 		m_Input = 0;
+
+		logger.Log("Input shut down", __FILE__, __LINE__);
 	}
 
-	// Shutdown imgui
-	if (m_imguiManager)
-	{
-		m_imguiManager->Shutdown();
-		delete m_imguiManager;
-		m_imguiManager = 0;
-	}
+
 
 	// Shutdown the window.
 	ShutdownWindows();
+
+	logger.Log("System class shut down", __FILE__, __LINE__);
 
 	return;
 }
@@ -134,14 +154,21 @@ void SystemClass::Run()
 		// Handle the windows messages.
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
+			if(msg.message == WM_QUIT)
+			{
+				done = true;
+			}
+			else
+			{
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
 		}
 
 		// If windows signals to end the application then exit out.
-		if (msg.message == WM_QUIT)
+		if (m_Application != nullptr && m_Application->GetShouldQuit())
 		{
-			logger.Log("WM_QUIT message received", __FILE__, __LINE__);
+			logger.Log("Received quit signal from application", __FILE__, __LINE__);
 			done = true;
 		}
 		else
@@ -162,6 +189,8 @@ void SystemClass::Run()
 
 bool SystemClass::Frame()
 {
+
+	std::lock_guard<std::mutex> guard(renderMutex);
 	bool result;
 
 	// Do the input frame processing.
@@ -172,6 +201,14 @@ bool SystemClass::Frame()
 		return false;
 	}
 
+	// Render ImGui 
+	result = m_imguiManager->ImGuiWidgetRenderer(m_Application);
+	if (!result)
+	{
+		logger.Log("Failed to render ImGui widgets", __FILE__, __LINE__, Logger::LogLevel::Error);
+		return false;
+	}
+
 	// Do the frame processing for the application class object.
 	result = m_Application->Frame(m_Input);
 	if (!result)
@@ -179,9 +216,6 @@ bool SystemClass::Frame()
 		logger.Log("Failed to process application frame", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
-
-	// Render ImGui 
-	m_imguiManager->ImGuiWidgetRenderer(m_Application);
 
 	return true;
 }
@@ -265,6 +299,12 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 			}
 
 			DragFinish(hDrop);
+			return 0;
+		}
+		case WM_CLOSE:
+		{
+			logger.Log("WM_CLOSE message received", __FILE__, __LINE__);
+			m_Application->SetShouldQuit(true);
 			return 0;
 		}
 		// Any other messages send to the default message handler as our application won't make use of them.
@@ -365,6 +405,8 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 void SystemClass::ShutdownWindows()
 {
 
+	logger.Log("Shutting down windows", __FILE__, __LINE__);
+
 	logger.Log("Shutting down the windows", __FILE__, __LINE__);
 	// Show the mouse cursor.
 	ShowCursor(true);
@@ -385,11 +427,6 @@ void SystemClass::ShutdownWindows()
 
 	// Release the pointer to this class.
 	ApplicationHandle = NULL;
-
-	//Releases COM references that ImGui was given on setup
-	ImGui_ImplDX11_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
 
 	return;
 }
