@@ -19,8 +19,7 @@ ModelClass::~ModelClass()
 {
 }
 
-bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* modelFilename, char* textureFilename1, char* textureFilename2, char* textureFilename3, 
-	char* textureFilename4, char* textureFilename5, char* textureFilename6)
+bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* modelFilename, vector<string> filename)
 {
 	logger.Log("Initializing model class", __FILE__, __LINE__);
 
@@ -45,7 +44,7 @@ bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 		return false;
 	}
 	// Load the textures for this model.
-	result = LoadTextures(device, deviceContext, textureFilename1, textureFilename2, textureFilename3, textureFilename4, textureFilename5, textureFilename6);
+	result = LoadTextures(device, deviceContext, filename);
 	if (!result)
 	{
 		logger.Log("Failed to load textures", __FILE__, __LINE__, Logger::LogLevel::Error);
@@ -220,57 +219,23 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 }
 
 
-bool ModelClass::LoadTextures(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* filename1, char* filename2, char* filename3, char* filename4, char* filename5, 
-	char* filename6)
+bool ModelClass::LoadTextures(ID3D11Device* device, ID3D11DeviceContext* deviceContext, vector<string> textureFile)
 {
 	logger.Log("Loading textures", __FILE__, __LINE__);
 
 	bool result;
 
-
 	// Create and initialize the texture object array.
-	m_Textures = new TextureClass[6];
+	m_Textures = new TextureClass[textureFile.size()];
 
-	result = m_Textures[0].Initialize(device, deviceContext, filename1);
-	if (!result)
+	for (int i = 0; i < textureFile.size(); i++)
 	{
-		logger.Log("Failed to initialize texture", __FILE__, __LINE__, Logger::LogLevel::Error);
-		return false;
-	}
-
-	result = m_Textures[1].Initialize(device, deviceContext, filename2);
-	if (!result)
-	{
-		logger.Log("Failed to initialize texture", __FILE__, __LINE__, Logger::LogLevel::Error);
-		return false;
-	}
-
-	result = m_Textures[2].Initialize(device, deviceContext, filename3);
-	if (!result)
-	{
-		logger.Log("Failed to initialize texture", __FILE__, __LINE__, Logger::LogLevel::Error);
-		return false;
-	}
-
-	result = m_Textures[3].Initialize(device, deviceContext, filename4);
-	if (!result)
-	{
-		logger.Log("Failed to initialize texture", __FILE__, __LINE__, Logger::LogLevel::Error);
-		return false;
-	}
-
-	result = m_Textures[4].Initialize(device, deviceContext, filename5);
-	if (!result)
-	{
-		logger.Log("Failed to initialize texture", __FILE__, __LINE__, Logger::LogLevel::Error);
-		return false;
-	}
-
-	result = m_Textures[5].Initialize(device, deviceContext, filename6);
-	if (!result)
-	{
-		logger.Log("Failed to initialize texture", __FILE__, __LINE__, Logger::LogLevel::Error);
-		return false;
+		result = m_Textures[i].Initialize(device, deviceContext, textureFile[i]);
+		if (!result)
+		{
+			logger.Log("Failed to initialize texture", __FILE__, __LINE__, Logger::LogLevel::Error);
+			return false;
+		}
 	}
 
 	logger.Log("Textures loaded", __FILE__, __LINE__);
