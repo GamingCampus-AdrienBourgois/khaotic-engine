@@ -21,7 +21,7 @@ RenderTextureClass::~RenderTextureClass()
 
 bool RenderTextureClass::Initialize(ID3D11Device * device, int textureWidth, int textureHeight, float screenDepth, float screenNear, int format)
 {
-    logger.Log("Initializing RenderTextureClass", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing RenderTextureClass", __FILE__, __LINE__);
 
     D3D11_TEXTURE2D_DESC textureDesc;
     HRESULT result;
@@ -70,7 +70,7 @@ bool RenderTextureClass::Initialize(ID3D11Device * device, int textureWidth, int
     result = device->CreateTexture2D(&textureDesc, NULL, &m_renderTargetTexture);
     if (FAILED(result))
     {
-        logger.Log("Failed to create render target texture", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Failed to create render target texture", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -83,7 +83,7 @@ bool RenderTextureClass::Initialize(ID3D11Device * device, int textureWidth, int
     result = device->CreateRenderTargetView(m_renderTargetTexture, &renderTargetViewDesc, &m_renderTargetView);
     if (FAILED(result))
     {
-        logger.Log("Failed to create render target view", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Failed to create render target view", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -97,7 +97,7 @@ bool RenderTextureClass::Initialize(ID3D11Device * device, int textureWidth, int
     result = device->CreateShaderResourceView(m_renderTargetTexture, &shaderResourceViewDesc, &m_shaderResourceView);
     if (FAILED(result))
     {
-        logger.Log("Failed to create shader resource view", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Failed to create shader resource view", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -121,7 +121,7 @@ bool RenderTextureClass::Initialize(ID3D11Device * device, int textureWidth, int
     result = device->CreateTexture2D(&depthBufferDesc, NULL, &m_depthStencilBuffer);
     if (FAILED(result))
     {
-        logger.Log("Failed to create depth buffer texture", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Failed to create depth buffer texture", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -137,7 +137,7 @@ bool RenderTextureClass::Initialize(ID3D11Device * device, int textureWidth, int
     result = device->CreateDepthStencilView(m_depthStencilBuffer, &depthStencilViewDesc, &m_depthStencilView);
     if (FAILED(result))
     {
-        logger.Log("Failed to create depth stencil view", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Failed to create depth stencil view", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -155,14 +155,14 @@ bool RenderTextureClass::Initialize(ID3D11Device * device, int textureWidth, int
     // Create an orthographic projection matrix for 2D rendering.
     m_orthoMatrix = XMMatrixOrthographicLH((float)textureWidth, (float)textureHeight, screenNear, screenDepth);
 
-    logger.Log("RenderTextureClass initialized", __FILE__, __LINE__);
+    Logger::Get().Log("RenderTextureClass initialized", __FILE__, __LINE__);
 
     return true;
 }
 
 void RenderTextureClass::Shutdown()
 {
-    logger.Log("Shutting down RenderTextureClass", __FILE__, __LINE__);
+    Logger::Get().Log("Shutting down RenderTextureClass", __FILE__, __LINE__);
 
     if (m_depthStencilView)
     {
@@ -194,7 +194,7 @@ void RenderTextureClass::Shutdown()
         m_renderTargetTexture = 0;
     }
 
-    logger.Log("RenderTextureClass shut down", __FILE__, __LINE__);
+    Logger::Get().Log("RenderTextureClass shut down", __FILE__, __LINE__);
 
     return;
 }

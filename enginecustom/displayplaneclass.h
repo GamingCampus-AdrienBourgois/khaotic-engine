@@ -40,7 +40,6 @@ private:
     ID3D11Buffer* m_vertexBuffer, * m_indexBuffer;
     int m_vertexCount, m_indexCount;
 
-    Logger logger;
 };
 
 #endif

@@ -23,7 +23,7 @@ ColorShaderClass::~ColorShaderClass()
 
 bool ColorShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
-	logger.Log("Initializing ColorShaderClass", __FILE__, __LINE__);
+	Logger::Get().Log("Initializing ColorShaderClass", __FILE__, __LINE__);
 
 	bool result;
 	wchar_t vsFilename[128];
@@ -35,7 +35,7 @@ bool ColorShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 	error = wcscpy_s(vsFilename, 128, L"../enginecustom/Color.vs");
 	if (error != 0)
 	{
-		logger.Log("Error copying string", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Error copying string", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -43,7 +43,7 @@ bool ColorShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 	error = wcscpy_s(psFilename, 128, L"../enginecustom/Color.ps");
 	if (error != 0)
 	{
-		logger.Log("Error copying string", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Error copying string", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -51,11 +51,11 @@ bool ColorShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 	result = InitializeShader(device, hwnd, vsFilename, psFilename);
 	if (!result)
 	{
-		logger.Log("Error initializing shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Error initializing shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
-	logger.Log("ColorShaderClass initialized", __FILE__, __LINE__);
+	Logger::Get().Log("ColorShaderClass initialized", __FILE__, __LINE__);
 
 	return true;
 }
@@ -78,7 +78,7 @@ bool ColorShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount
 	result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix);
 	if (!result)
 	{
-		logger.Log("Error setting shader parameters", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Error setting shader parameters", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -90,7 +90,7 @@ bool ColorShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount
 
 bool ColorShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
-	logger.Log("Initializing shader", __FILE__, __LINE__);
+	Logger::Get().Log("Initializing shader", __FILE__, __LINE__);
 
 	HRESULT result;
 	ID3D10Blob* errorMessage;
@@ -119,7 +119,7 @@ bool ColorShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
 		// If there was  nothing in the error message then it simply could not find the shader file itself.
 		else
 		{
-			logger.Log("Error compiling shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+			Logger::Get().Log("Error compiling shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		}
 
 		return false;
@@ -138,7 +138,7 @@ bool ColorShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
 		// If there was nothing in the error message then it simply could not find the file itself.
 		else
 		{
-			logger.Log("Error compiling shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+			Logger::Get().Log("Error compiling shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		}
 
 		return false;
@@ -148,7 +148,7 @@ bool ColorShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
 	result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &m_vertexShader);
 	if (FAILED(result))
 	{
-		logger.Log("Error creating vertex shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Error creating vertex shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -156,7 +156,7 @@ bool ColorShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
 	result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &m_pixelShader);
 	if (FAILED(result))
 	{
-		logger.Log("Error creating pixel shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Error creating pixel shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -186,7 +186,7 @@ bool ColorShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
 		vertexShaderBuffer->GetBufferSize(), &m_layout);
 	if (FAILED(result))
 	{
-		logger.Log("Error creating input layout", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Error creating input layout", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -209,18 +209,18 @@ bool ColorShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
 	result = device->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
 	if (FAILED(result))
 	{
-		logger.Log("Error creating constant buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Error creating constant buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
-	logger.Log("Shader initialized", __FILE__, __LINE__);
+	Logger::Get().Log("Shader initialized", __FILE__, __LINE__);
 
 	return true;
 }
 
 void ColorShaderClass::ShutdownShader()
 {
-	logger.Log("Shutting down shader", __FILE__, __LINE__);
+	Logger::Get().Log("Shutting down shader", __FILE__, __LINE__);
 
 	// Release the matrix constant buffer.
 	if (m_matrixBuffer)
@@ -250,7 +250,7 @@ void ColorShaderClass::ShutdownShader()
 		m_vertexShader = 0;
 	}
 
-	logger.Log("Shader shut down", __FILE__, __LINE__);
+	Logger::Get().Log("Shader shut down", __FILE__, __LINE__);
 
 	return;
 }
@@ -293,7 +293,7 @@ void ColorShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND h
 bool ColorShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
 	XMMATRIX projectionMatrix)
 {
-	logger.Log("Setting shader parameters", __FILE__, __LINE__);
+	Logger::Get().Log("Setting shader parameters", __FILE__, __LINE__);
 
 	HRESULT result;
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -309,7 +309,7 @@ bool ColorShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
 	result = deviceContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 	if (FAILED(result))
 	{
-		logger.Log("Error mapping constant buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Error mapping constant buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 

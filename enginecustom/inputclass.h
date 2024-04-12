@@ -66,7 +66,6 @@ private:
 
 	int m_screenWidth, m_screenHeight, m_mouseX, m_mouseY;
 
-	Logger logger;
 };
 
 #endif

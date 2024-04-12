@@ -47,7 +47,6 @@ private:
     ID3D11ShaderResourceView* m_textureView;
     int m_width, m_height;
 
-    Logger logger;
 };
 
 #endif

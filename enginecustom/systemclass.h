@@ -33,7 +33,6 @@ private:
 	LPCWSTR m_applicationName;
 	HINSTANCE m_hinstance;
 	HWND m_hwnd;
-	Logger logger;
 
 	InputClass* m_Input;
 	ApplicationClass* m_Application;

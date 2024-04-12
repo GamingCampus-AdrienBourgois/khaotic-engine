@@ -47,7 +47,6 @@ private:
     SpecMapShaderClass* m_SpecMapShader;
     TransparentShaderClass* m_TransparentShader;
 
-    Logger logger;
     LightShaderClass* m_LightShader;
     LightMapShaderClass* m_LightMapShader;
 };

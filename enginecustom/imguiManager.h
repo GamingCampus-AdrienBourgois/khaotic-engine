@@ -42,7 +42,6 @@ private :
 private:
 	ImGuiIO* io;
 
-	Logger logger;
 };
 
 #endif

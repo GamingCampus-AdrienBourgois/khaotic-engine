@@ -19,7 +19,7 @@ DisplayPlaneClass::~DisplayPlaneClass()
 
 bool DisplayPlaneClass::Initialize(ID3D11Device* device, float width, float height)
 {
-    logger.Log("Initializing DisplayPlaneClass, width: " + std::to_string(width) + ", height: " + std::to_string(height), __FILE__, __LINE__);
+    Logger::Get().Log("Initializing DisplayPlaneClass, width: " + std::to_string(width) + ", height: " + std::to_string(height), __FILE__, __LINE__);
     bool result;
 
 
@@ -27,7 +27,7 @@ bool DisplayPlaneClass::Initialize(ID3D11Device* device, float width, float heig
     result = InitializeBuffers(device, width, height);
     if (!result)
     {
-        logger.Log("Could not initialize buffers", __FILE__, __LINE__);
+        Logger::Get().Log("Could not initialize buffers", __FILE__, __LINE__);
         return false;
     }
 
@@ -60,7 +60,7 @@ int DisplayPlaneClass::GetIndexCount()
 
 bool DisplayPlaneClass::InitializeBuffers(ID3D11Device* device, float width, float height)
 {
-    logger.Log("Initializing buffers", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing buffers", __FILE__, __LINE__);
 
     VertexType* vertices;
     unsigned long* indices;
@@ -126,7 +126,7 @@ bool DisplayPlaneClass::InitializeBuffers(ID3D11Device* device, float width, flo
     result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
     if (FAILED(result))
     {
-        logger.Log("Could not create vertex buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Could not create vertex buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -147,7 +147,7 @@ bool DisplayPlaneClass::InitializeBuffers(ID3D11Device* device, float width, flo
     result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
     if (FAILED(result))
     {
-        logger.Log("Could not create index buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Could not create index buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -158,7 +158,7 @@ bool DisplayPlaneClass::InitializeBuffers(ID3D11Device* device, float width, flo
     delete[] indices;
     indices = 0;
 
-    logger.Log("Buffers initialized", __FILE__, __LINE__);
+    Logger::Get().Log("Buffers initialized", __FILE__, __LINE__);
 
     return true;
 }

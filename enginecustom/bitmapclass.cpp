@@ -20,7 +20,7 @@ BitmapClass::~BitmapClass()
 
 bool BitmapClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, int screenWidth, int screenHeight, char* textureFilename, int renderX, int renderY)
 {
-    logger.Log("Initializing bitmap class", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing bitmap class", __FILE__, __LINE__);
 
     bool result;
 
@@ -36,7 +36,7 @@ bool BitmapClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCo
     result = InitializeBuffers(device);
     if (!result)
     {
-        logger.Log("Failed to initialize buffers", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Failed to initialize buffers", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -44,11 +44,11 @@ bool BitmapClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCo
     result = LoadTexture(device, deviceContext, textureFilename);
     if (!result)
     {
-        logger.Log("Failed to load texture", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Failed to load texture", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
-    logger.Log("Bitmap class initialized", __FILE__, __LINE__);
+    Logger::Get().Log("Bitmap class initialized", __FILE__, __LINE__);
 
     return true;
 }
@@ -73,7 +73,7 @@ bool BitmapClass::Render(ID3D11DeviceContext* deviceContext)
     result = UpdateBuffers(deviceContext);
     if (!result)
     {
-        logger.Log("Failed to update buffers", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Failed to update buffers", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -95,7 +95,7 @@ ID3D11ShaderResourceView* BitmapClass::GetTexture()
 
 bool BitmapClass::InitializeBuffers(ID3D11Device* device)
 {
-    logger.Log("Initializing buffers", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing buffers", __FILE__, __LINE__);
 
     VertexType* vertices;
     unsigned long* indices;
@@ -146,7 +146,7 @@ bool BitmapClass::InitializeBuffers(ID3D11Device* device)
     result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
     if (FAILED(result))
     {
-        logger.Log("Failed to create vertex buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Failed to create vertex buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -167,7 +167,7 @@ bool BitmapClass::InitializeBuffers(ID3D11Device* device)
     result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
     if (FAILED(result))
     {
-        logger.Log("Failed to create index buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Failed to create index buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -178,7 +178,7 @@ bool BitmapClass::InitializeBuffers(ID3D11Device* device)
     delete[] indices;
     indices = 0;
 
-    logger.Log("Buffers initialized", __FILE__, __LINE__);
+    Logger::Get().Log("Buffers initialized", __FILE__, __LINE__);
 
     return true;
 }
@@ -260,7 +260,7 @@ bool BitmapClass::UpdateBuffers(ID3D11DeviceContext* deviceContent)
     result = deviceContent->Map(m_vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
-        logger.Log("Failed to map vertex buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Failed to map vertex buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -316,7 +316,7 @@ bool BitmapClass::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceC
     result = m_Texture->Initialize(device, deviceContext, filename);
     if (!result)
     {
-        logger.Log("Failed to initialize texture object", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Failed to initialize texture object", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 

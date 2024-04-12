@@ -21,7 +21,7 @@ ModelClass::~ModelClass()
 
 bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* modelFilename, vector<string> filename)
 {
-	logger.Log("Initializing model class", __FILE__, __LINE__);
+	Logger::Get().Log("Initializing model class", __FILE__, __LINE__);
 
 	bool result;
 
@@ -29,7 +29,7 @@ bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 	result = LoadModel(modelFilename);
 	if (!result)
 	{
-		logger.Log("Failed to load model data", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to load model data", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -40,18 +40,18 @@ bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 	result = InitializeBuffers(device);
 	if (!result)
 	{
-		logger.Log("Failed to initialize buffers", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to initialize buffers", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 	// Load the textures for this model.
 	result = LoadTextures(device, deviceContext, filename);
 	if (!result)
 	{
-		logger.Log("Failed to load textures", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to load textures", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
-	logger.Log("Model class initialized", __FILE__, __LINE__);
+	Logger::Get().Log("Model class initialized", __FILE__, __LINE__);
 
 	return true;
 }
@@ -94,7 +94,7 @@ ID3D11ShaderResourceView* ModelClass::GetTexture(int index)
 
 bool ModelClass::InitializeBuffers(ID3D11Device* device)
 {
-	logger.Log("Initializing buffers", __FILE__, __LINE__);
+	Logger::Get().Log("Initializing buffers", __FILE__, __LINE__);
 
 	VertexType* vertices;
 	unsigned long* indices;
@@ -138,7 +138,7 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
 	if (FAILED(result))
 	{
-		logger.Log("Failed to create vertex buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to create vertex buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -159,7 +159,7 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
 	if (FAILED(result))
 	{
-		logger.Log("Failed to create index buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to create index buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -170,7 +170,7 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	delete[] indices;
 	indices = 0;
 
-	logger.Log("Buffers initialized", __FILE__, __LINE__);
+	Logger::Get().Log("Buffers initialized", __FILE__, __LINE__);
 
 	return true;
 }
@@ -221,7 +221,7 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 
 bool ModelClass::LoadTextures(ID3D11Device* device, ID3D11DeviceContext* deviceContext, vector<string> textureFile)
 {
-	logger.Log("Loading textures", __FILE__, __LINE__);
+	Logger::Get().Log("Loading textures", __FILE__, __LINE__);
 
 	bool result;
 
@@ -233,19 +233,19 @@ bool ModelClass::LoadTextures(ID3D11Device* device, ID3D11DeviceContext* deviceC
 		result = m_Textures[i].Initialize(device, deviceContext, textureFile[i]);
 		if (!result)
 		{
-			logger.Log("Failed to initialize texture", __FILE__, __LINE__, Logger::LogLevel::Error);
+			Logger::Get().Log("Failed to initialize texture", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 	}
 
-	logger.Log("Textures loaded", __FILE__, __LINE__);
+	Logger::Get().Log("Textures loaded", __FILE__, __LINE__);
 
 	return true;
 }
 
 void ModelClass::ReleaseTextures()
 {
-	logger.Log("Releasing textures", __FILE__, __LINE__);
+	Logger::Get().Log("Releasing textures", __FILE__, __LINE__);
 
 	// Release the texture object array.
 	if (m_Textures)
@@ -261,14 +261,14 @@ void ModelClass::ReleaseTextures()
 		m_Textures = 0;
 	}
 
-	logger.Log("Textures released", __FILE__, __LINE__);
+	Logger::Get().Log("Textures released", __FILE__, __LINE__);
 
 	return;
 }
 
 bool ModelClass::LoadModel(char* filename)
 {
-	logger.Log("Loading model", __FILE__, __LINE__);
+	Logger::Get().Log("Loading model", __FILE__, __LINE__);
 
 	ifstream fin;
 	char input;
@@ -281,7 +281,7 @@ bool ModelClass::LoadModel(char* filename)
 	// If it could not open the file then exit.
 	if (fin.fail())
 	{
-		logger.Log("Failed to open model file", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to open model file", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -321,14 +321,14 @@ bool ModelClass::LoadModel(char* filename)
 	// Close the model file.
 	fin.close();
 
-	logger.Log("Model loaded", __FILE__, __LINE__);
+	Logger::Get().Log("Model loaded", __FILE__, __LINE__);
 
 	return true;
 }
 
 void ModelClass::CalculateModelVectors()
 {
-	logger.Log("Calculating model vectors", __FILE__, __LINE__);
+	Logger::Get().Log("Calculating model vectors", __FILE__, __LINE__);
 
 	int faceCount, i, index;
 	TempVertexType vertex1, vertex2, vertex3;
@@ -392,14 +392,14 @@ void ModelClass::CalculateModelVectors()
 		m_model[index - 3].bz = binormal.z;
 	}
 
-	logger.Log("Model vectors calculated", __FILE__, __LINE__);
+	Logger::Get().Log("Model vectors calculated", __FILE__, __LINE__);
 
 	return;
 }
 
 void ModelClass::CalculateTangentBinormal(TempVertexType vertex1, TempVertexType vertex2, TempVertexType vertex3, VectorType& tangent, VectorType& binormal)
 {
-	logger.Log("Calculating tangent and binormal", __FILE__, __LINE__);
+	Logger::Get().Log("Calculating tangent and binormal", __FILE__, __LINE__);
 
 	float vector1[3], vector2[3];
 	float tuVector[2], tvVector[2];
@@ -451,14 +451,14 @@ void ModelClass::CalculateTangentBinormal(TempVertexType vertex1, TempVertexType
 	binormal.y = binormal.y / length;
 	binormal.z = binormal.z / length;
 
-	logger.Log("Tangent and binormal calculated", __FILE__, __LINE__);
+	Logger::Get().Log("Tangent and binormal calculated", __FILE__, __LINE__);
 
 	return;
 }
 
 void ModelClass::ReleaseModel()
 {
-	logger.Log("Releasing model", __FILE__, __LINE__);
+	Logger::Get().Log("Releasing model", __FILE__, __LINE__);
 
 	if (m_model)
 	{
@@ -466,7 +466,7 @@ void ModelClass::ReleaseModel()
 		m_model = 0;
 	}
 
-	logger.Log("Model released", __FILE__, __LINE__);
+	Logger::Get().Log("Model released", __FILE__, __LINE__);
 
 	return;
 }

@@ -89,7 +89,6 @@ private:
     ID3D11Buffer* m_lightColorBuffer;
     ID3D11Buffer* m_lightPositionBuffer;
 
-    Logger logger;
 };
 
 #endif

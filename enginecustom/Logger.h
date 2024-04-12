@@ -5,10 +5,20 @@
 #include <chrono>
 #include <iomanip>
 #include <sstream>
+#include <filesystem>
 
 class Logger
 {
 public:
+
+    static Logger& Get()
+	{
+		static Logger instance;
+		return instance;
+	}
+
+    Logger(Logger const&) = delete;
+    void operator=(Logger const&) = delete;
 
     enum class LogLevel
     {
@@ -33,6 +43,8 @@ public:
         free(appdata);
         std::string directoryPath = m_appdataPath + "\\Khaotic Engine";
         CreateDirectoryA(directoryPath.c_str(), NULL);
+
+        ManageLogFiles(directoryPath);
 
         m_logFilePath = directoryPath + "\\" + m_logFileName;
     }
@@ -77,9 +89,51 @@ public:
         }
     }
 
+    void ManageLogFiles(const std::string& directoryPath)
+    {
+        std::vector<std::filesystem::path> logFiles;
+
+        // Parcourez tous les fichiers dans le dossier
+        for (const auto& entry : std::filesystem::directory_iterator(directoryPath))
+        {
+            // Si le fichier est un fichier de log, ajoutez-le à la liste
+            if (entry.path().extension() == ".log")
+            {
+                logFiles.push_back(entry.path());
+            }
+        }
+
+        // Si nous avons plus de trois fichiers de log, supprimez le plus ancien
+        while (logFiles.size() >= 3)
+        {
+            // Triez les fichiers par date de modification, le plus ancien en premier
+            std::sort(logFiles.begin(), logFiles.end(), [](const std::filesystem::path& a, const std::filesystem::path& b)
+                {
+                    return std::filesystem::last_write_time(a) < std::filesystem::last_write_time(b);
+                });
+
+            // Supprimez le fichier le plus ancien
+            std::filesystem::remove(logFiles[0]);
+
+            // Supprimez-le de la liste
+            logFiles.erase(logFiles.begin());
+        }
+
+        // Créez un nouveau fichier de log pour cette exécution
+        auto now = std::chrono::system_clock::now();
+        auto in_time_t = std::chrono::system_clock::to_time_t(now);
+        std::tm buf;
+        localtime_s(&buf, &in_time_t); 
+
+        std::stringstream ss;
+        ss << "Khaotic_log_" << std::put_time(&buf, "%Y_%m_%d_%Hh%Mm%Ss") << ".log";
+        m_logFileName = ss.str();
+
+    }
+
 private:
     std::string m_filename;
     std::string m_appdataPath;
-    std::string m_logFileName = "enginecustom.log";
+    std::string m_logFileName;
     std::string m_logFilePath;
 };

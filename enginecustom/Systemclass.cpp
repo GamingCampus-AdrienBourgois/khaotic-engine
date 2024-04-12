@@ -4,7 +4,7 @@
 #include <windows.h>
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-SystemClass::SystemClass() : logger()
+SystemClass::SystemClass()
 {
 	m_Input = 0;
 	m_Application = 0;
@@ -25,7 +25,7 @@ bool SystemClass::Initialize()
 	int screenWidth, screenHeight;
 	bool result;
 
-	logger.Log("Initializing system class", __FILE__, __LINE__);
+	Logger::Get().Log("Initializing system class", __FILE__, __LINE__);
 
 	try
 	{
@@ -46,7 +46,7 @@ bool SystemClass::Initialize()
 		result = m_Input->Initialize(m_hinstance, m_hwnd, screenWidth, screenHeight);
 		if (!result)
 		{
-			logger.Log("Failed to initialize input class", __FILE__, __LINE__, Logger::LogLevel::Error);
+			Logger::Get().Log("Failed to initialize input class", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 
@@ -77,54 +77,54 @@ bool SystemClass::Initialize()
 	}
 	catch (const std::exception& e)
 	{
-		logger.Log(std::string("Exception caught during initialization: ") + e.what(), __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log(std::string("Exception caught during initialization: ") + e.what(), __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
-	logger.Log("System class initialized", __FILE__, __LINE__);
+	Logger::Get().Log("System class initialized", __FILE__, __LINE__);
 
 	return true;
 }
 
 void SystemClass::Shutdown()
 {
-	logger.Log("Shutting down system class", __FILE__, __LINE__);
+	Logger::Get().Log("Shutting down system class", __FILE__, __LINE__);
 
 	std::lock_guard<std::mutex> guard(renderMutex);
 
 	// Shutdown imgui
 	if (m_imguiManager)
 	{
-		logger.Log("Shutting down imgui manager", __FILE__, __LINE__);
+		Logger::Get().Log("Shutting down imgui manager", __FILE__, __LINE__);
 
 		m_imguiManager->Shutdown();
 		delete m_imguiManager;
 		m_imguiManager = 0;
 
-		logger.Log("Imgui manager shut down", __FILE__, __LINE__);
+		Logger::Get().Log("Imgui manager shut down", __FILE__, __LINE__);
 	}
 
 	// Release the application class object.
 	if (m_Application)
 	{
-		logger.Log("Shutting down application", __FILE__, __LINE__);
+		Logger::Get().Log("Shutting down application", __FILE__, __LINE__);
 
 		m_Application->Shutdown();
 		delete m_Application;
 		m_Application = 0;
 
-		logger.Log("Application shut down", __FILE__, __LINE__);
+		Logger::Get().Log("Application shut down", __FILE__, __LINE__);
 	}
 
 	// Release the input object.
 	if (m_Input)
 	{
-		logger.Log("Shutting down input", __FILE__, __LINE__);
+		Logger::Get().Log("Shutting down input", __FILE__, __LINE__);
 
 		delete m_Input;
 		m_Input = 0;
 
-		logger.Log("Input shut down", __FILE__, __LINE__);
+		Logger::Get().Log("Input shut down", __FILE__, __LINE__);
 	}
 
 
@@ -132,7 +132,7 @@ void SystemClass::Shutdown()
 	// Shutdown the window.
 	ShutdownWindows();
 
-	logger.Log("System class shut down", __FILE__, __LINE__);
+	Logger::Get().Log("System class shut down", __FILE__, __LINE__);
 
 	return;
 }
@@ -142,7 +142,7 @@ void SystemClass::Run()
 	MSG msg;
 	bool done, result;
 
-	logger.Log("Running the system", __FILE__, __LINE__);
+	Logger::Get().Log("Running the system", __FILE__, __LINE__);
 
 	// Initialize the message structure.
 	ZeroMemory(&msg, sizeof(MSG));
@@ -168,7 +168,7 @@ void SystemClass::Run()
 		// If windows signals to end the application then exit out.
 		if (m_Application != nullptr && m_Application->GetShouldQuit())
 		{
-			logger.Log("Received quit signal from application", __FILE__, __LINE__);
+			Logger::Get().Log("Received quit signal from application", __FILE__, __LINE__);
 			done = true;
 		}
 		else
@@ -177,7 +177,7 @@ void SystemClass::Run()
 			result = Frame();
 			if (!result)
 			{
-				logger.Log("Failed to process frame", __FILE__, __LINE__, Logger::LogLevel::Error);
+				Logger::Get().Log("Failed to process frame", __FILE__, __LINE__, Logger::LogLevel::Error);
 				done = true;
 			}
 		}
@@ -197,7 +197,7 @@ bool SystemClass::Frame()
 	result = m_Input->Frame();
 	if (!result)
 	{
-		logger.Log("Failed to process input frame", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to process input frame", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -205,7 +205,7 @@ bool SystemClass::Frame()
 	result = m_imguiManager->ImGuiWidgetRenderer(m_Application);
 	if (!result)
 	{
-		logger.Log("Failed to render ImGui widgets", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to render ImGui widgets", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -213,7 +213,7 @@ bool SystemClass::Frame()
 	result = m_Application->Frame(m_Input);
 	if (!result)
 	{
-		logger.Log("Failed to process application frame", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to process application frame", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -303,7 +303,7 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 		}
 		case WM_CLOSE:
 		{
-			logger.Log("WM_CLOSE message received", __FILE__, __LINE__);
+			Logger::Get().Log("WM_CLOSE message received", __FILE__, __LINE__);
 			m_Application->SetShouldQuit(true);
 			return 0;
 		}
@@ -324,7 +324,7 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	DEVMODE dmScreenSettings;
 	int posX, posY;
 
-	logger.Log("Initializing windows", __FILE__, __LINE__);
+	Logger::Get().Log("Initializing windows", __FILE__, __LINE__);
 	// Get an external pointer to this object.	
 	ApplicationHandle = this;
 
@@ -405,9 +405,9 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 void SystemClass::ShutdownWindows()
 {
 
-	logger.Log("Shutting down windows", __FILE__, __LINE__);
+	Logger::Get().Log("Shutting down windows", __FILE__, __LINE__);
 
-	logger.Log("Shutting down the windows", __FILE__, __LINE__);
+	Logger::Get().Log("Shutting down the windows", __FILE__, __LINE__);
 	// Show the mouse cursor.
 	ShowCursor(true);
 

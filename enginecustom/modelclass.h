@@ -107,8 +107,6 @@ private:
 	int m_vertexCount, m_indexCount;
 	TextureClass* m_Textures;
 	ModelType* m_model;
-
-	Logger logger;
 };
 
 #endif

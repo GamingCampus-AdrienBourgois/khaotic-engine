@@ -19,7 +19,7 @@ TextureClass::~TextureClass()
 
 bool TextureClass::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, std::string filename)
 {
-	logger.Log(("Iinitializing texture: %s", filename), __FILE__, __LINE__);
+	Logger::Get().Log(("Iinitializing texture: %s", filename), __FILE__, __LINE__);
 
 	bool result;
 	D3D11_TEXTURE2D_DESC textureDesc;
@@ -30,7 +30,7 @@ bool TextureClass::Initialize(ID3D11Device * device, ID3D11DeviceContext * devic
 	result = LoadTarga(filename);
 	if (!result)
 	{
-		logger.Log("Failed to load targa data", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to load targa data", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 	// Setup the description of the texture.
@@ -50,7 +50,7 @@ bool TextureClass::Initialize(ID3D11Device * device, ID3D11DeviceContext * devic
 	hResult = device->CreateTexture2D(&textureDesc, NULL, &m_texture);
 	if (FAILED(hResult))
 	{
-		logger.Log("Failed to create texture", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to create texture", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -68,7 +68,7 @@ bool TextureClass::Initialize(ID3D11Device * device, ID3D11DeviceContext * devic
 	hResult = device->CreateShaderResourceView(m_texture, &srvDesc, &m_textureView);
 	if (FAILED(hResult))
 	{
-		logger.Log("Failed to create shader resource view", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to create shader resource view", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -126,7 +126,7 @@ bool TextureClass::LoadTarga(std::string filename)
 	error = fopen_s(&filePtr, filename.c_str(), "rb");
 	if (error != 0)
 	{
-		logger.Log("Failed to open targa file", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to open targa file", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -134,7 +134,7 @@ bool TextureClass::LoadTarga(std::string filename)
 	count = (unsigned int)fread(&targaFileHeader, sizeof(TargaHeader), 1, filePtr);
 	if (count != 1)
 	{
-		logger.Log("Failed to read targa file header", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to read targa file header", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -146,7 +146,7 @@ bool TextureClass::LoadTarga(std::string filename)
 	// Check that it is 32 bit and not 24 bit.
 	if (bpp != 32 && bpp != 24)
 	{
-		logger.Log("Targa file is not 32 or 24 bit", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Targa file is not 32 or 24 bit", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -160,7 +160,7 @@ bool TextureClass::LoadTarga(std::string filename)
 	count = (unsigned int)fread(targaImage, 1, imageSize, filePtr);
 	if (count != imageSize)
 	{
-		logger.Log("Failed to read targa image data", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to read targa image data", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -168,7 +168,7 @@ bool TextureClass::LoadTarga(std::string filename)
 	error = fclose(filePtr);
 	if (error != 0)
 	{
-		logger.Log("Failed to close targa file", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to close targa file", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -198,7 +198,7 @@ bool TextureClass::LoadTarga(std::string filename)
 			}
 			else
 			{
-				logger.Log("Index out of bounds", __FILE__, __LINE__, Logger::LogLevel::Error);
+				Logger::Get().Log("Index out of bounds", __FILE__, __LINE__, Logger::LogLevel::Error);
 				return false;
 			}
 
@@ -216,7 +216,7 @@ bool TextureClass::LoadTarga(std::string filename)
 	delete[] targaImage;
 	targaImage = 0;
 
-	logger.Log("Targa file loaded", __FILE__, __LINE__);
+	Logger::Get().Log("Targa file loaded", __FILE__, __LINE__);
 
 	return true;
 }

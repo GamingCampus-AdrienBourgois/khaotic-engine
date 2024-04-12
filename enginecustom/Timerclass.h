@@ -29,8 +29,6 @@ private:
     INT64 m_startTime;
     float m_frameTime;
 
-    Logger logger;
-
 };
 
 #endif

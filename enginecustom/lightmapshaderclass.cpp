@@ -23,7 +23,7 @@ LightMapShaderClass::~LightMapShaderClass()
 
 bool LightMapShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
-    logger.Log("Initializing LightMapShaderClass", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing LightMapShaderClass", __FILE__, __LINE__);
 
     bool result;
     wchar_t vsFilename[128];
@@ -34,7 +34,7 @@ bool LightMapShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
     error = wcscpy_s(vsFilename, 128, L"lightmap.vs");
     if (error != 0)
     {
-        logger.Log("Error copying string", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Error copying string", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -42,7 +42,7 @@ bool LightMapShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
     error = wcscpy_s(psFilename, 128, L"lightmap.ps");
     if (error != 0)
     {
-        logger.Log("Error copying string", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Error copying string", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -50,11 +50,11 @@ bool LightMapShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
     result = InitializeShader(device, hwnd, vsFilename, psFilename);
     if (!result)
     {
-        logger.Log("Error initializing shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Error initializing shader", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
-    logger.Log("LightMapShaderClass initialized", __FILE__, __LINE__);
+    Logger::Get().Log("LightMapShaderClass initialized", __FILE__, __LINE__);
 
     return true;
 }
@@ -79,7 +79,7 @@ bool LightMapShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCo
     result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture1, texture2);
     if (!result)
     {
-        logger.Log("Error setting shader parameters", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Error setting shader parameters", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -120,7 +120,7 @@ bool LightMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHA
         // If there was nothing in the error message then it simply could not find the shader file itself.
         else
         {
-            logger.Log("Error compiling shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+            Logger::Get().Log("Error compiling shader", __FILE__, __LINE__, Logger::LogLevel::Error);
         }
 
         return false;
@@ -139,7 +139,7 @@ bool LightMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHA
         // If there was nothing in the error message then it simply could not find the file itself.
         else
         {
-            logger.Log("Error compiling shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+            Logger::Get().Log("Error compiling shader", __FILE__, __LINE__, Logger::LogLevel::Error);
         }
 
         return false;
@@ -149,7 +149,7 @@ bool LightMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHA
     result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &m_vertexShader);
     if (FAILED(result))
     {
-        logger.Log("Error creating vertex shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Error creating vertex shader", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -157,7 +157,7 @@ bool LightMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHA
     result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &m_pixelShader);
     if (FAILED(result))
     {
-        logger.Log("Error creating pixel shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Error creating pixel shader", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -194,7 +194,7 @@ bool LightMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHA
         vertexShaderBuffer->GetBufferSize(), &m_layout);
     if (FAILED(result))
     {
-        logger.Log("Error creating input layout", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Error creating input layout", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -217,7 +217,7 @@ bool LightMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHA
     result = device->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
     if (FAILED(result))
     {
-        logger.Log("Error creating constant buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Error creating constant buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -240,11 +240,11 @@ bool LightMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHA
     result = device->CreateSamplerState(&samplerDesc, &m_sampleState);
     if (FAILED(result))
     {
-        logger.Log("Error creating sampler state", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Error creating sampler state", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
-    logger.Log("Shader initialized", __FILE__, __LINE__);
+    Logger::Get().Log("Shader initialized", __FILE__, __LINE__);
 
     return true;
 }
@@ -252,7 +252,7 @@ bool LightMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHA
 
 void LightMapShaderClass::ShutdownShader()
 {
-    logger.Log("Shutting down LightMapShaderClass", __FILE__, __LINE__);
+    Logger::Get().Log("Shutting down LightMapShaderClass", __FILE__, __LINE__);
 
     // Release the sampler state.
     if (m_sampleState)
@@ -289,7 +289,7 @@ void LightMapShaderClass::ShutdownShader()
         m_vertexShader = 0;
     }
 
-    logger.Log("LightMapShaderClass shut down", __FILE__, __LINE__);
+    Logger::Get().Log("LightMapShaderClass shut down", __FILE__, __LINE__);
 
     return;
 }
@@ -349,7 +349,7 @@ bool LightMapShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext
     result = deviceContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
-        logger.Log("Error mapping constant buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Error mapping constant buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 

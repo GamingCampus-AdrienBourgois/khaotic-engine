@@ -52,7 +52,6 @@ private:
     ID3D11Buffer* m_matrixBuffer;
     ID3D11SamplerState* m_sampleState;
 
-    Logger logger;
 };
 
 #endif

@@ -18,7 +18,7 @@ FontClass::~FontClass()
 
 bool FontClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, int fontChoice)
 {
-    logger.Log("Initializing font class", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing font class", __FILE__, __LINE__);
 
     char fontFilename[128];
     char fontTextureFilename[128];
@@ -49,7 +49,7 @@ bool FontClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
     result = LoadFontData(fontFilename);
     if (!result)
     {
-        logger.Log("Failed to load font data", __FILE__, __LINE__);
+        Logger::Get().Log("Failed to load font data", __FILE__, __LINE__);
         return false;
     }
 
@@ -57,11 +57,11 @@ bool FontClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
     result = LoadTexture(device, deviceContext, fontTextureFilename);
     if (!result)
     {
-        logger.Log("Failed to load font texture", __FILE__, __LINE__);
+        Logger::Get().Log("Failed to load font texture", __FILE__, __LINE__);
         return false;
     }
 
-    logger.Log("Font class initialized", __FILE__, __LINE__);
+    Logger::Get().Log("Font class initialized", __FILE__, __LINE__);
 
     return true;
 }
@@ -79,7 +79,7 @@ void FontClass::Shutdown()
 
 bool FontClass::LoadFontData(char* filename)
 {
-    logger.Log(("Loading font data from %s", filename), __FILE__, __LINE__);
+    Logger::Get().Log(("Loading font data from %s", filename), __FILE__, __LINE__);
 
     std::ifstream fin;
     int i;
@@ -92,7 +92,7 @@ bool FontClass::LoadFontData(char* filename)
     fin.open(filename);
     if (fin.fail())
     {
-        logger.Log("Failed to open font file", __FILE__, __LINE__, Logger::LogLevel::Error);
+        Logger::Get().Log("Failed to open font file", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -118,7 +118,7 @@ bool FontClass::LoadFontData(char* filename)
     // Close the file.
     fin.close();
 
-    logger.Log("Font data loaded", __FILE__, __LINE__);
+    Logger::Get().Log("Font data loaded", __FILE__, __LINE__);
 
     return true;
 }
@@ -137,7 +137,7 @@ void FontClass::ReleaseFontData()
 
 bool FontClass::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* filename)
 {
-    logger.Log(("Loading font texture from %s", filename), __FILE__, __LINE__);
+    Logger::Get().Log(("Loading font texture from %s", filename), __FILE__, __LINE__);
 
     bool result;
 
@@ -148,11 +148,11 @@ bool FontClass::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceCon
     result = m_Texture->Initialize(device, deviceContext, filename);
     if (!result)
     {
-        logger.Log("Failed to initialize font texture", __FILE__, __LINE__);
+        Logger::Get().Log("Failed to initialize font texture", __FILE__, __LINE__);
         return false;
     }
 
-    logger.Log("Font texture loaded", __FILE__, __LINE__);
+    Logger::Get().Log("Font texture loaded", __FILE__, __LINE__);
 
     return true;
 }

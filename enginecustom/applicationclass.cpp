@@ -36,7 +36,7 @@ ApplicationClass::~ApplicationClass()
 bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 
-	logger.Log("Initializing application class", __FILE__, __LINE__);
+	Logger::Get().Log("Initializing application class", __FILE__, __LINE__);
 
 	try 
 	{
@@ -55,14 +55,14 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		m_Direct3D = new D3DClass;
 		if (!m_Direct3D)
 		{
-			logger.Log("Could not create the Direct3D object", __FILE__, __LINE__, Logger::LogLevel::Error);
+			Logger::Get().Log("Could not create the Direct3D object", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 
 		result = m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
 		if (!result)
 		{
-			logger.Log("Could not initialize Direct3D", __FILE__, __LINE__, Logger::LogLevel::Error);
+			Logger::Get().Log("Could not initialize Direct3D", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 
@@ -70,7 +70,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		m_Camera = new CameraClass;
 		if (!m_Camera)
 		{
-			logger.Log("Could not create the camera object", __FILE__, __LINE__, Logger::LogLevel::Error);
+			Logger::Get().Log("Could not create the camera object", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 
@@ -86,7 +86,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		result = m_FontShader->Initialize(m_Direct3D->GetDevice(), hwnd);
 		if (!result)
 		{
-			logger.Log("Could not initialize the font shader object", __FILE__, __LINE__, Logger::LogLevel::Error);
+			Logger::Get().Log("Could not initialize the font shader object", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 
@@ -96,7 +96,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		result = m_Font->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), 0);
 		if (!result)
 		{
-			logger.Log("Could not initialize the font object", __FILE__, __LINE__, Logger::LogLevel::Error);
+			Logger::Get().Log("Could not initialize the font object", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 
@@ -106,7 +106,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		result = m_RenderTexture->Initialize(m_Direct3D->GetDevice(), 256, 256, SCREEN_DEPTH, SCREEN_NEAR, 1);
 		if (!result)
 		{
-			logger.Log("Could not initialize the render texture object", __FILE__, __LINE__, Logger::LogLevel::Error);
+			Logger::Get().Log("Could not initialize the render texture object", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 
@@ -116,7 +116,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		result = m_DisplayPlane->Initialize(m_Direct3D->GetDevice(), 1.0f, 1.0f);
 		if (!result)
 		{	
-			logger.Log("Could not initialize the display plane object", __FILE__, __LINE__, Logger::LogLevel::Error);
+			Logger::Get().Log("Could not initialize the display plane object", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 
@@ -130,7 +130,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		result = m_Sprite->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, spriteFilename, 50, 50);
 		if (!result)
 		{
-			logger.Log("Could not initialize the sprite object", __FILE__, __LINE__, Logger::LogLevel::Error);
+			Logger::Get().Log("Could not initialize the sprite object", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 
@@ -148,7 +148,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 			result = m_MouseStrings[i].Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, 32, m_Font, mouseString1, 10, y, 1.0f, 1.0f, 1.0f);
 			if (!result)
 			{
-				logger.Log("Could not initialize the mouse strings", __FILE__, __LINE__, Logger::LogLevel::Error);
+				Logger::Get().Log("Could not initialize the mouse strings", __FILE__, __LINE__, Logger::LogLevel::Error);
 				return false;
 			}
 		}
@@ -162,7 +162,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		result = m_Bitmap->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, bitmapFilename, 50, 50);
 		if (!result)
 		{
-			logger.Log("Could not initialize the bitmap object", __FILE__, __LINE__, Logger::LogLevel::Error);
+			Logger::Get().Log("Could not initialize the bitmap object", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 
@@ -183,7 +183,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		result = m_Model->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, Filename);
 		if (!result)
 		{
-			logger.Log("Could not initialize the model object", __FILE__, __LINE__, Logger::LogLevel::Error);
+			Logger::Get().Log("Could not initialize the model object", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 
@@ -237,7 +237,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		result = m_ShaderManager->Initialize(m_Direct3D->GetDevice(), hwnd);
 		if (!result)
 		{
-			logger.Log("Could not initialize the shader manager object", __FILE__, __LINE__, Logger::LogLevel::Error);
+			Logger::Get().Log("Could not initialize the shader manager object", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 
@@ -250,7 +250,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		result = m_RenderCountString->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, 32, m_Font, renderString, 10, 10, 1.0f, 1.0f, 1.0f);
 		if (!result)
 		{
-			logger.Log("Could not initialize the render count string", __FILE__, __LINE__, Logger::LogLevel::Error);
+			Logger::Get().Log("Could not initialize the render count string", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 
@@ -264,7 +264,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		result = m_Timer->Initialize();
 		if (!result)
 		{
-			logger.Log("Could not initialize the timer object", __FILE__, __LINE__, Logger::LogLevel::Error);
+			Logger::Get().Log("Could not initialize the timer object", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 
@@ -289,16 +289,16 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		result = m_FpsString->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), screenWidth, screenHeight, 32, m_Font, fpsString, 10, 10, 0.0f, 1.0f, 0.0f);
 		if (!result)
 		{
-			logger.Log("Could not initialize the fps string", __FILE__, __LINE__, Logger::LogLevel::Error);
+			Logger::Get().Log("Could not initialize the fps string", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 	}
 	catch (const std::exception& e)
 	{
-		logger.Log(std::string("Exception caught during initialization: ") + e.what(), __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log(std::string("Exception caught during initialization: ") + e.what(), __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
-	logger.Log("Application class initialized", __FILE__, __LINE__);
+	Logger::Get().Log("Application class initialized", __FILE__, __LINE__);
 
 	return true;
 }
@@ -306,82 +306,82 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void ApplicationClass::Shutdown()
 {
-	logger.Log("Shutting down application class", __FILE__, __LINE__);
+	Logger::Get().Log("Shutting down application class", __FILE__, __LINE__);
 
 	// Release the shader manager object.
 	if (m_ShaderManager)
 	{
-		logger.Log("Releasing the shader manager object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the shader manager object", __FILE__, __LINE__);
 
 		m_ShaderManager->Shutdown();
 		delete m_ShaderManager;
 		m_ShaderManager = 0;
 
-		logger.Log("Shader manager object released", __FILE__, __LINE__);
+		Logger::Get().Log("Shader manager object released", __FILE__, __LINE__);
 	}
 
 	// Release the frustum class object.
 	if (m_Frustum)
 	{
-		logger.Log("Releasing the frustum class object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the frustum class object", __FILE__, __LINE__);
 
 		delete m_Frustum;
 		m_Frustum = 0;
 
-		logger.Log("Frustum class object released", __FILE__, __LINE__);
+		Logger::Get().Log("Frustum class object released", __FILE__, __LINE__);
 	}
 
 	// Release the display plane object.
 	if (m_DisplayPlane)
 	{
-		logger.Log("Releasing the display plane object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the display plane object", __FILE__, __LINE__);
 
 		m_DisplayPlane->Shutdown();
 		delete m_DisplayPlane;
 		m_DisplayPlane = 0;
 
-		logger.Log("Display plane object released", __FILE__, __LINE__);
+		Logger::Get().Log("Display plane object released", __FILE__, __LINE__);
 	}
 
 	// Release the position object.
 	if (m_Position)
 	{
-		logger.Log("Releasing the position object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the position object", __FILE__, __LINE__);
 
 		delete m_Position;
 		m_Position = 0;
 
-		logger.Log("Position object released", __FILE__, __LINE__);
+		Logger::Get().Log("Position object released", __FILE__, __LINE__);
 	}
 
 	// Release the model list object.
 	if (m_ModelList)
 	{
-		logger.Log("Releasing the model list object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the model list object", __FILE__, __LINE__);
 
 		m_ModelList->Shutdown();
 		delete m_ModelList;
 		m_ModelList = 0;
 
-		logger.Log("Model list object released", __FILE__, __LINE__);
+		Logger::Get().Log("Model list object released", __FILE__, __LINE__);
 	}
 
 	// Release the text objects for the render count string.
 	if (m_RenderCountString)
 	{
-		logger.Log("Releasing the render count string object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the render count string object", __FILE__, __LINE__);
 
 		m_RenderCountString->Shutdown();
 		delete m_RenderCountString;
 		m_RenderCountString = 0;
 
-		logger.Log("Render count string object released", __FILE__, __LINE__);
+		Logger::Get().Log("Render count string object released", __FILE__, __LINE__);
 	}
 
 	// Release the text objects for the mouse strings.
 	if (m_MouseStrings)
 	{
-		logger.Log("Releasing the mouse strings", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the mouse strings", __FILE__, __LINE__);
 
 		m_MouseStrings[0].Shutdown();
 		m_MouseStrings[1].Shutdown();
@@ -390,107 +390,107 @@ void ApplicationClass::Shutdown()
 		delete[] m_MouseStrings;
 		m_MouseStrings = 0;
 
-		logger.Log("Mouse strings released", __FILE__, __LINE__);
+		Logger::Get().Log("Mouse strings released", __FILE__, __LINE__);
 	}
 
 	// Release the text object for the fps string.
 	if (m_FpsString)
 	{
-		logger.Log("Releasing the fps string object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the fps string object", __FILE__, __LINE__);
 
 		m_FpsString->Shutdown();
 		delete m_FpsString;
 		m_FpsString = 0;
 
-		logger.Log("Fps string object released", __FILE__, __LINE__);
+		Logger::Get().Log("Fps string object released", __FILE__, __LINE__);
 	}
 
 	// Release the fps object.
 	if (m_Fps)
 	{
-		logger.Log("Releasing the fps object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the fps object", __FILE__, __LINE__);
 
 		delete m_Fps;
 		m_Fps = 0;
 
-		logger.Log("Fps object released", __FILE__, __LINE__);
+		Logger::Get().Log("Fps object released", __FILE__, __LINE__);
 	}
 
 	// Release the font object.
 	if (m_Font)
 	{
-		logger.Log("Releasing the font object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the font object", __FILE__, __LINE__);
 
 		m_Font->Shutdown();
 		delete m_Font;
 		m_Font = 0;
 
-		logger.Log("Font object released", __FILE__, __LINE__);
+		Logger::Get().Log("Font object released", __FILE__, __LINE__);
 	}
 
 	// Release the font shader object.
 	if (m_FontShader)
 	{
-		logger.Log("Releasing the font shader object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the font shader object", __FILE__, __LINE__);
 
 		m_FontShader->Shutdown();
 		delete m_FontShader;
 		m_FontShader = 0;
 
-		logger.Log("Font shader object released", __FILE__, __LINE__);
+		Logger::Get().Log("Font shader object released", __FILE__, __LINE__);
 	}
 
 	// Release the timer object.
 	if (m_Timer)
 	{
-		logger.Log("Releasing the timer object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the timer object", __FILE__, __LINE__);
 
 		delete m_Timer;
 		m_Timer = 0;
 
-		logger.Log("Timer object released", __FILE__, __LINE__);
+		Logger::Get().Log("Timer object released", __FILE__, __LINE__);
 	}
 
 	// Release the sprite object.
 	if (m_Sprite)
 	{
-		logger.Log("Releasing the sprite object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the sprite object", __FILE__, __LINE__);
 
 		m_Sprite->Shutdown();
 		delete m_Sprite;
 		m_Sprite = 0;
 
-		logger.Log("Sprite object released", __FILE__, __LINE__);
+		Logger::Get().Log("Sprite object released", __FILE__, __LINE__);
 	}
 
 	for (auto light : m_Lights)
 	{
-		logger.Log("Releasing the light object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the light object", __FILE__, __LINE__);
 		if (light)
 		{
 			delete light;
 			light = 0;
 		}
-		logger.Log("Light object released", __FILE__, __LINE__);
+		Logger::Get().Log("Light object released", __FILE__, __LINE__);
 	}
 
 	// Release the light object.
 	if (m_Light)
 	{
-		logger.Log("Releasing the light object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the light object", __FILE__, __LINE__);
 		delete m_Light;
 		m_Light = 0;
-		logger.Log("Light object released", __FILE__, __LINE__);
+		Logger::Get().Log("Light object released", __FILE__, __LINE__);
 	}
 
 	// Release the model object.
 	if (m_Model)
 	{
-		logger.Log("Releasing the model object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the model object", __FILE__, __LINE__);
 		m_Model->Shutdown();
 		delete m_Model;
 		m_Model = 0;
-		logger.Log("Model object released", __FILE__, __LINE__);
+		Logger::Get().Log("Model object released", __FILE__, __LINE__);
 	}
 }
 
@@ -520,7 +520,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	// Check if the user pressed escape and wants to exit the application.
 	if (Input->IsEscapePressed())
 	{
-		logger.Log("User pressed escape, exiting application", __FILE__, __LINE__);
+		Logger::Get().Log("User pressed escape, exiting application", __FILE__, __LINE__);
 		m_ShouldQuit = true;
 	}
 
@@ -575,7 +575,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	result = Render(rotation, x, y, z, textureTranslation);
 	if (!result)
 	{
-		logger.Log("Could not render the graphics scene", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Could not render the graphics scene", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -583,7 +583,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	result = UpdateFps();
 	if (!result)
 	{
-		logger.Log("Could not update the frames per second", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Could not update the frames per second", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -606,7 +606,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	result = RenderSceneToTexture(rotation);
 	if (!result)
 	{
-		logger.Log("Could not render the scene to the render texture", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Could not render the scene to the render texture", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -614,7 +614,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	result = UpdateMouseStrings(mouseX, mouseY, leftMouseDown);
 	if (!result)
 	{
-		logger.Log("Could not update the mouse strings", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Could not update the mouse strings", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -752,7 +752,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 			diffuseColor, lightPosition);
 		if (!result)
 		{
-			logger.Log("Could not render the cube model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+			Logger::Get().Log("Could not render the cube model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 	}
@@ -777,7 +777,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 
 		if (!result)
 		{
-			logger.Log("Could not render the object model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+			Logger::Get().Log("Could not render the object model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 	}
@@ -800,7 +800,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 			
 		if (!result)
 		{
-			logger.Log("Could not render the terrain model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+			Logger::Get().Log("Could not render the terrain model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 	}
@@ -815,7 +815,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		m_RenderTexture->GetShaderResourceView()); 
 	if (!result)
 	{
-		logger.Log("Could not render the display plane using the texture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Could not render the display plane using the texture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -829,7 +829,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		m_RenderTexture->GetShaderResourceView());
 	if (!result)
 	{
-		logger.Log("Could not render the display plane using the texture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Could not render the display plane using the texture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -843,7 +843,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		m_RenderTexture->GetShaderResourceView());
 	if (!result)
 	{
-		logger.Log("Could not render the display plane using the texture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Could not render the display plane using the texture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -881,7 +881,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 				diffuseColor, lightPosition);
 			if (!result)
 			{
-				logger.Log("Could not render the model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+				Logger::Get().Log("Could not render the model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 				return false;
 			}
 
@@ -894,7 +894,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	result = UpdateRenderCountString(renderCount);
 	if (!result)
 	{
-		logger.Log("Could not update the render count string", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Could not update the render count string", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -912,7 +912,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		m_Font->GetTexture(), m_RenderCountString->GetPixelColor());
 	if (!result)
 	{
-		logger.Log("Could not render the render count text string using the font shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Could not render the render count text string using the font shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -923,7 +923,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		m_Font->GetTexture(), m_FpsString->GetPixelColor());
 	if (!result)
 	{
-		logger.Log("Could not render the fps text string using the font shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Could not render the fps text string using the font shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -936,7 +936,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 			m_Font->GetTexture(), m_MouseStrings[i].GetPixelColor());
 		if (!result)
 		{
-			logger.Log("Could not render the mouse text strings using the font shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+			Logger::Get().Log("Could not render the mouse text strings using the font shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
 	}
@@ -953,7 +953,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		m_Sprite->GetTexture());
 	if (!result)
 	{
-		logger.Log("Could not render the sprite using the texture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Could not render the sprite using the texture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -1007,7 +1007,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		m_Model->GetTexture(0), m_Model->GetTexture(5), m_Model->GetTexture(3));
 	if (!result)
 	{
-		logger.Log("Could not render the model using the alpha map shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Could not render the model using the alpha map shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -1023,7 +1023,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		m_Model->GetTexture(0));
 	if (!result)
 	{
-		logger.Log("Could not render the model using the texture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Could not render the model using the texture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -1039,7 +1039,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		m_Model->GetTexture(0), m_Model->GetTexture(1), m_Lights[0]->GetDirection(), m_Lights[0]->GetDiffuseColor());
 	if (!result)
 	{
-		logger.Log("Could not render the model using the normal map shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Could not render the model using the normal map shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 	
@@ -1056,7 +1056,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		m_Model->GetTexture(0), m_Model->GetTexture(5));
 	if (!result)
 	{
-		logger.Log("Could not render the model using the multitexture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Could not render the model using the multitexture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 	
@@ -1073,7 +1073,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		m_Model->GetTexture(0), textureTranslation);
 	if (!result)
 	{
-		logger.Log("Could not render the model using the translate shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Could not render the model using the translate shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -1090,7 +1090,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		m_Camera->GetPosition(), m_Lights[0]->GetSpecularColor(), m_Lights[0]->GetSpecularPower());
 	if (!result)
 	{
-		logger.Log("Could not render the model using the specular map shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Could not render the model using the specular map shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -1105,7 +1105,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	result = m_ShaderManager->RenderTransparentShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0), blendAmount);
 	if (!result)
 	{
-		logger.Log("Could not render the model using the transparent shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Could not render the model using the transparent shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -1165,7 +1165,7 @@ int ApplicationClass::GetScreenHeight() const
 void ApplicationClass::GenerateTerrain()
 {
 
-	logger.Log("Generating terrain", __FILE__, __LINE__);
+	Logger::Get().Log("Generating terrain", __FILE__, __LINE__);
 
 	char modelFilename[128];
 	std::vector<string> Filename;
@@ -1211,7 +1211,7 @@ void ApplicationClass::GenerateTerrain()
 void ApplicationClass::AddKobject(WCHAR* filepath)
 {
 
-	logger.Log("Adding object", __FILE__, __LINE__);
+	Logger::Get().Log("Adding object", __FILE__, __LINE__);
 
 	char modelFilename[128];
 	vector<string> Filename;
@@ -1243,7 +1243,7 @@ void ApplicationClass::AddKobject(WCHAR* filepath)
 void ApplicationClass::AddCube()
 {
 
-	logger.Log("Adding cube", __FILE__, __LINE__);
+	Logger::Get().Log("Adding cube", __FILE__, __LINE__);
 
 	char modelFilename[128];
 	vector<string> Filename;
@@ -1271,7 +1271,7 @@ void ApplicationClass::AddCube()
 
 void ApplicationClass::DeleteKobject(int index)
 {
-	logger.Log("Deleting object", __FILE__, __LINE__);
+	Logger::Get().Log("Deleting object", __FILE__, __LINE__);
 
 	if (index < m_object.size())
 	{
@@ -1283,7 +1283,7 @@ void ApplicationClass::DeleteKobject(int index)
 
 void ApplicationClass::DeleteTerrain()
 {
-	logger.Log("Deleting terrain", __FILE__, __LINE__);
+	Logger::Get().Log("Deleting terrain", __FILE__, __LINE__);
 
 	for (auto cube : m_terrainChunk)
 	{
@@ -1310,7 +1310,7 @@ bool ApplicationClass::UpdateMouseStrings(int mouseX, int mouseY, bool mouseDown
 	result = m_MouseStrings[0].UpdateText(m_Direct3D->GetDeviceContext(), m_Font, finalString, 10, 50, 1.0f, 1.0f, 1.0f);
 	if (!result)
 	{
-		logger.Log("Could not update the mouse X string", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Could not update the mouse X string", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -1325,7 +1325,7 @@ bool ApplicationClass::UpdateMouseStrings(int mouseX, int mouseY, bool mouseDown
 	result = m_MouseStrings[1].UpdateText(m_Direct3D->GetDeviceContext(), m_Font, finalString, 10, 75, 1.0f, 1.0f, 1.0f);
 	if (!result)
 	{
-		logger.Log("Could not update the mouse Y string", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Could not update the mouse Y string", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -1344,7 +1344,7 @@ bool ApplicationClass::UpdateMouseStrings(int mouseX, int mouseY, bool mouseDown
 
 	if (!result)
 	{
-		logger.Log("Could not update the mouse button string", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Could not update the mouse button string", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -1415,7 +1415,7 @@ bool ApplicationClass::UpdateFps()
 	result = m_FpsString->UpdateText(m_Direct3D->GetDeviceContext(), m_Font, finalString, 10, 10, red, green, blue);
 	if (!result)
 	{
-		logger.Log("Could not update the fps string", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Could not update the fps string", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -1439,7 +1439,7 @@ bool ApplicationClass::UpdateRenderCountString(int renderCount)
 	result = m_RenderCountString->UpdateText(m_Direct3D->GetDeviceContext(), m_Font, finalString, 10, 30, 1.0f, 1.0f, 1.0f);
 	if (!result)
 	{
-		logger.Log("Could not update the render count string", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Could not update the render count string", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -1484,7 +1484,7 @@ void ApplicationClass::SetLightPosition(int index, XMVECTOR position)
 
 void ApplicationClass::DeleteLight(int index)
 {
-	logger.Log("Deleting light", __FILE__, __LINE__);
+	Logger::Get().Log("Deleting light", __FILE__, __LINE__);
 
 	if (index < 0 || index >= m_Lights.size())
 	{

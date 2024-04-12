@@ -32,7 +32,7 @@ D3DClass::~D3DClass()
 
 bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear)
 {
-	logger.Log("Initializing D3Dclass", __FILE__, __LINE__);
+	Logger::Get().Log("Initializing D3Dclass", __FILE__, __LINE__);
 
 	HRESULT result;
 	IDXGIFactory* factory;
@@ -61,7 +61,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
 	if (FAILED(result))
 	{
-		logger.Log("Failed to create DXGIFactory", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to create DXGIFactory", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -69,7 +69,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	result = factory->EnumAdapters(0, &adapter);
 	if (FAILED(result))
 	{
-		logger.Log("Failed to create adapter", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to create adapter", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -77,7 +77,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	result = adapter->EnumOutputs(0, &adapterOutput);
 	if (FAILED(result))
 	{
-		logger.Log("Failed to create adapter output", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to create adapter output", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -85,7 +85,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, NULL);
 	if (FAILED(result))
 	{
-		logger.Log("Failed to get display mode list", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to get display mode list", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -93,7 +93,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	displayModeList = new DXGI_MODE_DESC[numModes];
 	if (!displayModeList)
 	{
-		logger.Log("Failed to create display mode list", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to create display mode list", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -101,7 +101,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	result = adapterOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_ENUM_MODES_INTERLACED, &numModes, displayModeList);
 	if (FAILED(result))
 	{
-		logger.Log("Failed to fill display mode list", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to fill display mode list", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -123,7 +123,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	result = adapter->GetDesc(&adapterDesc);
 	if (FAILED(result))
 	{
-		logger.Log("Failed to get adapter description", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to get adapter description", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -134,7 +134,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	error = wcstombs_s(&stringLength, m_videoCardDescription, 128, adapterDesc.Description, 128);
 	if (error != 0)
 	{
-		logger.Log("Failed to convert video card name to character array", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to convert video card name to character array", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -217,7 +217,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 		D3D11_SDK_VERSION, &swapChainDesc, &m_swapChain, &m_device, NULL, &m_deviceContext);
 	if (FAILED(result))
 	{
-		logger.Log("Failed to create swap chain, device and device context", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to create swap chain, device and device context", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -225,7 +225,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	result = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr);
 	if (FAILED(result))
 	{
-		logger.Log("Failed to get pointer to back buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to get pointer to back buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -233,7 +233,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	result = m_device->CreateRenderTargetView(backBufferPtr, NULL, &m_renderTargetView);
 	if (FAILED(result))
 	{
-		logger.Log("Failed to create render target view", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to create render target view", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -261,7 +261,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	result = m_device->CreateTexture2D(&depthBufferDesc, NULL, &m_depthStencilBuffer);
 	if (FAILED(result))
 	{
-		logger.Log("Failed to create texture for depth buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to create texture for depth buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -293,7 +293,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	result = m_device->CreateDepthStencilState(&depthStencilDesc, &m_depthStencilState);
 	if (FAILED(result))
 	{
-		logger.Log("Failed to create depth stencil state", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to create depth stencil state", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -312,7 +312,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	result = m_device->CreateDepthStencilView(m_depthStencilBuffer, &depthStencilViewDesc, &m_depthStencilView);
 	if (FAILED(result))
 	{
-		logger.Log("Failed to create depth stencil view", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to create depth stencil view", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -335,7 +335,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	result = m_device->CreateRasterizerState(&rasterDesc, &m_rasterState);
 	if (FAILED(result))
 	{
-		logger.Log("Failed to create rasterizer state", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to create rasterizer state", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -390,7 +390,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	result = m_device->CreateDepthStencilState(&depthDisabledStencilDesc, &m_depthDisabledStencilState);
 	if (FAILED(result))
 	{
-		logger.Log("Failed to create depth disabled stencil state", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to create depth disabled stencil state", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -411,7 +411,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	result = m_device->CreateBlendState(&blendStateDescription, &m_alphaEnableBlendingState);
 	if (FAILED(result))
 	{
-		logger.Log("Failed to create alpha enabled blend state", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to create alpha enabled blend state", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -422,7 +422,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	result = m_device->CreateBlendState(&blendStateDescription, &m_alphaDisableBlendingState);
 	if (FAILED(result))
 	{
-		logger.Log("Failed to create alpha disabled blend state", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to create alpha disabled blend state", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
 
@@ -433,7 +433,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 void D3DClass::Shutdown()
 {
 
-	logger.Log("Shutting down D3Dclass", __FILE__, __LINE__);
+	Logger::Get().Log("Shutting down D3Dclass", __FILE__, __LINE__);
 
 	// Before shutting down set to windowed mode or when you release the swap chain it will throw an exception.
 	if (m_swapChain)
@@ -507,7 +507,7 @@ void D3DClass::Shutdown()
 		m_swapChain = 0;
 	}
 
-	logger.Log("D3Dclass shutdown", __FILE__, __LINE__);
+	Logger::Get().Log("D3Dclass shutdown", __FILE__, __LINE__);
 
 	return;
 }
@@ -614,7 +614,7 @@ void D3DClass::ResetViewport()
 
 void D3DClass::ReleaseResources()
 {
-	logger.Log("Releasing D3D resources", __FILE__, __LINE__);
+	Logger::Get().Log("Releasing D3D resources", __FILE__, __LINE__);
 
 	// libere la vue
 	if (m_renderTargetView)
@@ -637,13 +637,13 @@ void D3DClass::ReleaseResources()
 		m_depthStencilView = 0;
 	}
 
-	logger.Log("D3D resources released", __FILE__, __LINE__);
+	Logger::Get().Log("D3D resources released", __FILE__, __LINE__);
 }
 
 // Reset the resources for the swap chain
 void D3DClass::ResetResources(int newWidth, int newHeight)
 {
-	logger.Log("Resetting D3D resources", __FILE__, __LINE__);
+	Logger::Get().Log("Resetting D3D resources", __FILE__, __LINE__);
 
 	HRESULT result;
 
@@ -651,21 +651,21 @@ void D3DClass::ResetResources(int newWidth, int newHeight)
 	result = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
 	if (FAILED(result))
 	{
-		logger.Log("Failed to get back buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to get back buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return;
 	}
 
 	result = m_device->CreateRenderTargetView(backBuffer, NULL, &m_renderTargetView);
 	if (FAILED(result))
 	{
-		logger.Log("Failed to create render target view", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to create render target view", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return;
 	}
 
 	result = backBuffer->Release();
 	if (FAILED(result))
 	{
-		logger.Log("Failed to release back buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to release back buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return;
 	}
 
@@ -694,14 +694,14 @@ void D3DClass::ResetResources(int newWidth, int newHeight)
 	result = m_device->CreateTexture2D(&depthBufferDesc, NULL, &m_depthStencilBuffer);
 	if (FAILED(result))
 	{
-		logger.Log("Failed to create depth stencil buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to create depth stencil buffer", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return;
 	}
 
 	result = m_device->CreateDepthStencilView(m_depthStencilBuffer, &depthStencilViewDesc, &m_depthStencilView); 
 	if (FAILED(result))
 	{
-		logger.Log("Failed to create depth stencil view", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to create depth stencil view", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return;
 	}
 
@@ -717,7 +717,7 @@ IDXGISwapChain* D3DClass::GetSwapChain()
 void D3DClass::ResizeSwapChain(int newWidth, int newHeight)
 {
 
-	logger.Log("Resizing swap chain", __FILE__, __LINE__);
+	Logger::Get().Log("Resizing swap chain", __FILE__, __LINE__);
 
 	HRESULT result;
 
@@ -729,7 +729,7 @@ void D3DClass::ResizeSwapChain(int newWidth, int newHeight)
 	result = m_swapChain->ResizeBuffers(0, newWidth, newHeight, DXGI_FORMAT_UNKNOWN, 0);
 	if (FAILED(result))
 	{
-		logger.Log("Failed to resize swap chain", __FILE__, __LINE__, Logger::LogLevel::Error);
+		Logger::Get().Log("Failed to resize swap chain", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return;
 	}
 

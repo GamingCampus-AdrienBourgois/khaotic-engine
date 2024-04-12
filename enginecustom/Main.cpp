@@ -5,8 +5,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 {
 	SystemClass* System;
 	bool result;
-	Logger logger;
-
 
 	// Create the system object.
 	System = new SystemClass;
@@ -15,7 +13,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
 	result = System->Initialize();
 	if (result)
 	{
-		logger.Log("System initialized", __FILE__, __LINE__);
+		Logger::Get().Log("System initialized", __FILE__, __LINE__);
 		System->Run();
 	}
 
