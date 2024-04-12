@@ -1,26 +1,23 @@
-#include "systemclass.h"
+#include "TCPSocket.hpp"
 
+#include <iostream>
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
+int main()
 {
-	SystemClass* System;
-	bool result;
-
-
-	// Create the system object.
-	System = new SystemClass;
-
-	// Initialize and run the system object.
-	result = System->Initialize();
-	if (result)
+	if (!Sockets::Start())
 	{
-		System->Run();
+		std::cout << "Erreur initialisation : " << Sockets::GetError() << std::endl;
+		return 0;
 	}
 
-	// Shutdown and release the system object.
-	System->Shutdown();
-	delete System;
-	System = 0;
-
-	return 0;
+	{
+		TCPSocket socket;
+		if (!socket.Connect("127.0.0.1", 6666))
+		{
+			std::cout << "Erreur connection : " << Sockets::GetError() << std::endl;
+			return 0;
+		}
+		std::cout << "Socket connecte !" << std::endl;
+	}
+	Sockets::Release();
 }
