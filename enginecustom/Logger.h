@@ -22,7 +22,7 @@ public:
         char* appdata = nullptr;
         size_t len;
         _dupenv_s(&appdata, &len, "APPDATA");
-        if (appdata == 0 ||appdata == nullptr)
+        if (appdata == nullptr)
         {
             m_appdataPath = "log.log";
 		}
@@ -45,6 +45,9 @@ public:
         std::tm buf;
         localtime_s(&buf, &in_time_t);
 
+        // Obtenez les millisecondes à partir de maintenant
+        auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
+
         std::string levelStr;
         switch (level)
         {
@@ -61,7 +64,7 @@ public:
 
         std::stringstream ss;
         ss << "[" << std::put_time(&buf, "%Y-%m-%d") << "] "
-            << "[" << std::put_time(&buf, "%X") << "] "
+            << "[" << std::put_time(&buf, "%X") << "." << std::setfill('0') << std::setw(3) << ms.count() << "] "
             << "[" << levelStr << "] "
             << "[" << fileName << ":" << lineNumber << "] "
             << message;
