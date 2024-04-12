@@ -628,7 +628,7 @@ void ApplicationClass::Shutdown()
 bool ApplicationClass::Frame(InputClass* Input)
 {
 	int mouseX, mouseY, currentMouseX, currentMouseY;
-	bool result, leftMouseDown, rightMouseDown, keyLeft, keyRight, keyUp, keyDown, buttonQ, buttonD, buttonZ, buttonS, buttonA, buttonE;
+	bool result, leftMouseDown, rightMouseDown, keyLeft, keyRight, keyUp, keyDown, buttonQ, buttonD, buttonZ, buttonS, buttonA, buttonE, scrollUp, scrollDown;
 	float rotationY, rotationX, positionX, positionY, positionZ;
 
 	float frameTime;
@@ -684,6 +684,9 @@ bool ApplicationClass::Frame(InputClass* Input)
 	// Get the current view point rotation.
 	m_Position->GetRotation(rotationY, rotationX);
 
+	scrollUp = Input->IsScrollUp();
+	scrollDown = Input->IsScrollDown();
+
 	// Check if the a(q), d, w(z), s, q(a), e have been pressed, if so move the camera accordingly.
 	buttonQ = Input->IsAPressed();
 	buttonD = Input->IsDPressed();
@@ -691,7 +694,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	buttonS = Input->IsSPressed();
 	buttonA = Input->IsQPressed();
 	buttonE = Input->IsEPressed();
-	m_Position->MoveCamera(buttonZ, buttonS, buttonQ, buttonD, buttonE, buttonA);
+	m_Position->MoveCamera(buttonZ, buttonS, buttonQ, buttonD, buttonE, buttonA, scrollUp, scrollDown, rightMouseDown);
 	m_Position->GetPosition(positionX, positionY, positionZ);
 
 	// Set the postion and rotation of the camera.

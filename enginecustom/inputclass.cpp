@@ -392,3 +392,23 @@ bool InputClass::IsRightMousePressed()
 
 	return false;
 }
+
+bool InputClass::IsScrollUp()
+{
+	if (m_mouseState.lZ > 0)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool InputClass::IsScrollDown()
+{
+	if (m_mouseState.lZ < 0)
+	{
+		return true;
+	}
+
+	return false;
+}

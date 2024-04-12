@@ -10,6 +10,7 @@ PositionClass::PositionClass()
     m_positionZ = 0.0f;
     m_leftTurnSpeed = 0.0f;
     m_rightTurnSpeed = 0.0f;
+    m_cameraSpeed = 4.0f;
 }
 
 
@@ -144,19 +145,48 @@ void PositionClass::TurnMouse(float deltaX, float deltaY, bool rightMouseDown)
     return;
 }
 
-void PositionClass::MoveCamera(bool forward, bool backward, bool left, bool right, bool up, bool down)
+void PositionClass::MoveCamera(bool forward, bool backward, bool left, bool right, bool up, bool down, bool scrollUp, bool scrollDown, bool rightClick)
 {
-    float radiansY, radiansX;
-    float speed;
+    float radiansY, radiansX, speed;
 
     // Set the speed of the camera.
-    speed = 2.0f * m_frameTime;
+    if (scrollUp && rightClick)
+    {
+        m_cameraSpeed *= 1.1f;
+    }
+    if (scrollDown && rightClick)
+    {
+        m_cameraSpeed *= 0.9f;
+
+        if (m_cameraSpeed < 0.25f)
+        {
+			m_cameraSpeed = 0.25f;
+		}
+	}
 
     // Convert degrees to radians.
     radiansY = m_rotationY * 0.0174532925f;
     radiansX = m_rotationX * 0.0174532925f;
 
     // Update the position.
+
+    if (scrollUp && !rightClick)
+    {
+        speed = m_cameraSpeed * 20 * m_frameTime;
+        m_positionX += sinf(radiansY) * cosf(radiansX) * speed;
+        m_positionZ += cosf(radiansY) * cosf(radiansX) * speed;
+        m_positionY -= sinf(radiansX) * speed;
+    }
+
+    speed = m_cameraSpeed * m_frameTime;
+
+    if (scrollDown && !rightClick)
+    {
+        speed = m_cameraSpeed * 20 * m_frameTime;
+        m_positionX -= sinf(radiansY) * cosf(radiansX) * speed;
+        m_positionZ -= cosf(radiansY) * cosf(radiansX) * speed;
+        m_positionY += sinf(radiansX) * speed;
+	}
 
     // If moving forward, the position moves in the direction of the camera and accordingly to its angle.
     if (forward)

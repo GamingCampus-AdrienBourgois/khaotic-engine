@@ -25,13 +25,13 @@ public:
     void TurnLeft(bool);
     void TurnRight(bool);
     void TurnMouse(float, float, bool);
-    void MoveCamera(bool, bool, bool, bool, bool, bool);
+    void MoveCamera(bool, bool, bool, bool, bool, bool, bool, bool, bool);
 
 private:
     float m_frameTime;
     float m_rotationY, m_rotationX;
     float m_positionX, m_positionY, m_positionZ;
-    float m_leftTurnSpeed, m_rightTurnSpeed, m_horizontalTurnSpeed, m_verticalTurnSpeed;
+    float m_leftTurnSpeed, m_rightTurnSpeed, m_horizontalTurnSpeed, m_verticalTurnSpeed, m_cameraSpeed;
 };
 
 #endif
