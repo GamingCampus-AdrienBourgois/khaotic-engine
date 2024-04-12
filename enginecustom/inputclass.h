@@ -31,26 +31,26 @@ public:
 	void Shutdown();
 	bool Frame();
 
-	bool IsEscapePressed();
-	void GetMouseLocation(int&, int&);
-	bool IsLeftMousePressed();
-	bool IsRightMousePressed();
+	bool IsEscapePressed() const;
+	void GetMouseLocation(int&, int&) const;
+	bool IsLeftMousePressed() const;
+	bool IsRightMousePressed() const;
 	void KeyDown(unsigned int);
 	void KeyUp(unsigned int);
-	bool IsLeftArrowPressed();
-	bool IsRightArrowPressed();
-	bool IsScrollUp();
-	bool IsScrollDown();
-	bool IsUpArrowPressed();
-	bool IsDownArrowPressed();
-	bool IsAPressed();
-	bool IsDPressed();
-	bool IsWPressed();
-	bool IsSPressed();
-	bool IsQPressed();
-	bool IsEPressed();
+	bool IsLeftArrowPressed() const;
+	bool IsRightArrowPressed() const;
+	bool IsScrollUp() const;
+	bool IsScrollDown() const;
+	bool IsUpArrowPressed() const;
+	bool IsDownArrowPressed() const;
+	bool IsAPressed() const;
+	bool IsDPressed() const;
+	bool IsWPressed() const;
+	bool IsSPressed() const;
+	bool IsQPressed() const;
+	bool IsEPressed()const;
 
-	bool IsKeyDown(unsigned int);
+	bool IsKeyDown(unsigned int) const;
 
 private:
 	bool m_keys[256];

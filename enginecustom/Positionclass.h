@@ -19,8 +19,8 @@ public:
     ~PositionClass();
 
     void SetFrameTime(float);
-    void GetRotation(float&, float&);
-    void GetPosition(float&, float&, float&);
+    void GetRotation(float&, float&) const;
+    void GetPosition(float&, float&, float&) const;
 
     void TurnLeft(bool);
     void TurnRight(bool);
@@ -31,7 +31,7 @@ private:
     float m_frameTime;
     float m_rotationY, m_rotationX;
     float m_positionX, m_positionY, m_positionZ;
-    float m_leftTurnSpeed, m_rightTurnSpeed, m_horizontalTurnSpeed, m_verticalTurnSpeed, m_cameraSpeed;
+    float m_leftTurnSpeed, m_rightTurnSpeed, m_horizontalTurnSpeed, m_verticalTurnSpeed, m_cameraSpeed, m_speed;
 };
 
 #endif

@@ -123,7 +123,7 @@ void InputClass::KeyUp(unsigned int input)
 }
 
 
-bool InputClass::IsKeyDown(unsigned int key)
+bool InputClass::IsKeyDown(unsigned int key) const
 {
 	// Return what state the key is in (pressed/not pressed).
 	return m_keys[key];
@@ -244,7 +244,7 @@ void InputClass::ProcessInput()
 	return;
 }
 
-bool InputClass::IsEscapePressed()
+bool InputClass::IsEscapePressed() const
 {
 	// Do a bitwise and on the keyboard state to check if the escape key is currently being pressed.
 	if (m_keyboardState[DIK_ESCAPE] & 0x80)
@@ -255,7 +255,7 @@ bool InputClass::IsEscapePressed()
 	return false;
 }
 
-bool InputClass::IsLeftArrowPressed()
+bool InputClass::IsLeftArrowPressed() const
 {
 	if (m_keyboardState[DIK_LEFT] & 0x80)
 	{
@@ -266,7 +266,7 @@ bool InputClass::IsLeftArrowPressed()
 }
 
 
-bool InputClass::IsRightArrowPressed()
+bool InputClass::IsRightArrowPressed() const
 {
 	if (m_keyboardState[DIK_RIGHT] & 0x80)
 	{
@@ -276,7 +276,7 @@ bool InputClass::IsRightArrowPressed()
 	return false;
 }
 
-bool InputClass::IsUpArrowPressed()
+bool InputClass::IsUpArrowPressed() const
 {
 	if (m_keyboardState[DIK_UP] & 0x80)
 	{
@@ -287,7 +287,7 @@ bool InputClass::IsUpArrowPressed()
 }
 
 
-bool InputClass::IsDownArrowPressed()
+bool InputClass::IsDownArrowPressed() const
 {
 	if (m_keyboardState[DIK_DOWN] & 0x80)
 	{
@@ -301,7 +301,7 @@ bool InputClass::IsDownArrowPressed()
 // Les touches correspondent aux claviers QWERTY //
 ///////////////////////////////////////////////////
 
-bool InputClass::IsAPressed()
+bool InputClass::IsAPressed() const
 {
 	// Touche A sur QWERTY, Q sur AZERTY
 	if (m_keyboardState[DIK_A] & 0x80)
@@ -312,7 +312,7 @@ bool InputClass::IsAPressed()
 	return false;
 }
 
-bool InputClass::IsDPressed()
+bool InputClass::IsDPressed() const
 {
 	if (m_keyboardState[DIK_D] & 0x80)
 	{
@@ -322,7 +322,7 @@ bool InputClass::IsDPressed()
 	return false;
 }
 
-bool InputClass::IsWPressed()
+bool InputClass::IsWPressed() const
 {
 	// Touche W sur QWERTY, Z sur AZERTY
 	if (m_keyboardState[DIK_W] & 0x80)
@@ -333,7 +333,7 @@ bool InputClass::IsWPressed()
 	return false;
 }
 
-bool InputClass::IsSPressed()
+bool InputClass::IsSPressed() const
 {
 	if (m_keyboardState[DIK_S] & 0x80)
 	{
@@ -343,7 +343,7 @@ bool InputClass::IsSPressed()
 	return false;
 }
 
-bool InputClass::IsQPressed()
+bool InputClass::IsQPressed() const
 {
 	// Touche Q sur QWERTY, A sur AZERTY
 	if (m_keyboardState[DIK_Q] & 0x80)
@@ -354,7 +354,7 @@ bool InputClass::IsQPressed()
 	return false;
 }
 
-bool InputClass::IsEPressed()
+bool InputClass::IsEPressed() const
 {
 	if (m_keyboardState[DIK_E] & 0x80)
 	{
@@ -364,14 +364,14 @@ bool InputClass::IsEPressed()
 	return false;
 }
 
-void InputClass::GetMouseLocation(int& mouseX, int& mouseY)
+void InputClass::GetMouseLocation(int& mouseX, int& mouseY) const
 {
 	mouseX = m_mouseX;
 	mouseY = m_mouseY;
 	return;
 }
 
-bool InputClass::IsLeftMousePressed()
+bool InputClass::IsLeftMousePressed() const
 {
 	// Check the left mouse button state.
 	if (m_mouseState.rgbButtons[0] & 0x80)
@@ -382,7 +382,7 @@ bool InputClass::IsLeftMousePressed()
 	return false;
 }
 
-bool InputClass::IsRightMousePressed()
+bool InputClass::IsRightMousePressed() const
 {
 	// Check the left mouse button state.
 	if (m_mouseState.rgbButtons[1] & 0x80)
@@ -393,7 +393,7 @@ bool InputClass::IsRightMousePressed()
 	return false;
 }
 
-bool InputClass::IsScrollUp()
+bool InputClass::IsScrollUp() const
 {
 	if (m_mouseState.lZ > 0)
 	{
@@ -403,7 +403,7 @@ bool InputClass::IsScrollUp()
 	return false;
 }
 
-bool InputClass::IsScrollDown()
+bool InputClass::IsScrollDown() const
 {
 	if (m_mouseState.lZ < 0)
 	{

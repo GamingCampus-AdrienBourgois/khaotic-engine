@@ -10,7 +10,7 @@ public:
     explicit Physics(const Physics&); // Use explicit to avoid implicit conversion
     ~Physics();
 
-    XMVECTOR GetGravity(); // Get the gravity value
+    XMVECTOR GetGravity() const; // Get the gravity value
     void SetGravity(XMVECTOR gravity); // Define the gravity value
     void ApplyGravity(Object*, float); // Apply gravity to an object
     void ApplyDrag(Object*, float, float);

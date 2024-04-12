@@ -17,22 +17,22 @@ public:
 	void SetRotation(XMVECTOR rotation);
 	void SetScale(XMVECTOR scale);
 
-	XMMATRIX GetScaleMatrix();
-	XMMATRIX GetRotateMatrix();
-	XMMATRIX GetTranslateMatrix();
-	XMMATRIX GetSRMatrix();
-	XMMATRIX GetWorldMatrix();
+	XMMATRIX GetScaleMatrix() const;
+	XMMATRIX GetRotateMatrix() const;
+	XMMATRIX GetTranslateMatrix() const;
+	XMMATRIX GetSRMatrix() const;
+	XMMATRIX GetWorldMatrix() const;
 
 	XMVECTOR GetPosition();
 	XMVECTOR GetRotation();
 	XMVECTOR GetScale();
 
 	void SetVelocity(XMVECTOR);
-	XMVECTOR GetVelocity();
+	XMVECTOR GetVelocity() const;
 	void SetAcceleration(XMVECTOR);
-	XMVECTOR GetAcceleration();
+	XMVECTOR GetAcceleration() const;
 	void SetMass(float);
-	float GetMass();
+	float GetMass() const;
 
 	void UpdateWorldMatrix();
 	void UpdateSRMatrix();

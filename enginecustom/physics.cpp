@@ -15,7 +15,7 @@ Physics::~Physics()
 }
 
 // Get the gravity value
-XMVECTOR Physics::GetGravity()
+XMVECTOR Physics::GetGravity() const
 {
 	return m_gravity;
 }

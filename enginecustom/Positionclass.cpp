@@ -11,6 +11,7 @@ PositionClass::PositionClass()
     m_leftTurnSpeed = 0.0f;
     m_rightTurnSpeed = 0.0f;
     m_cameraSpeed = 4.0f;
+    m_speed = m_cameraSpeed;
 }
 
 
@@ -29,14 +30,14 @@ void PositionClass::SetFrameTime(float time)
     return;
 }
 
-void PositionClass::GetRotation(float& y, float& x)
+void PositionClass::GetRotation(float& y, float& x) const
 {
     y = m_rotationY;
     x = m_rotationX;
     return;
 }
 
-void PositionClass::GetPosition(float& x, float& y, float& z)
+void PositionClass::GetPosition(float& x, float& y, float& z) const
 {
     x = m_positionX;
     y = m_positionY;
@@ -172,21 +173,22 @@ void PositionClass::MoveCamera(bool forward, bool backward, bool left, bool righ
 
     if (scrollUp && !rightClick)
     {
-        speed = m_cameraSpeed * 20 * m_frameTime;
+        speed = m_speed * 20 * m_frameTime;
         m_positionX += sinf(radiansY) * cosf(radiansX) * speed;
         m_positionZ += cosf(radiansY) * cosf(radiansX) * speed;
         m_positionY -= sinf(radiansX) * speed;
     }
 
-    speed = m_cameraSpeed * m_frameTime;
-
     if (scrollDown && !rightClick)
     {
-        speed = m_cameraSpeed * 20 * m_frameTime;
+        speed = m_speed * 20 * m_frameTime;
         m_positionX -= sinf(radiansY) * cosf(radiansX) * speed;
         m_positionZ -= cosf(radiansY) * cosf(radiansX) * speed;
         m_positionY += sinf(radiansX) * speed;
 	}
+
+
+    speed = m_cameraSpeed * m_frameTime;
 
     // If moving forward, the position moves in the direction of the camera and accordingly to its angle.
     if (forward)
