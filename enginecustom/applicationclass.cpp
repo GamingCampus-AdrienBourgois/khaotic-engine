@@ -679,7 +679,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	//keyDown = Input->IsRightArrowPressed();
 	//m_Position->TurnRight(keyDown);
 
-	m_Position->TurnMouse(deltaX, deltaY, rightMouseDown);
+	m_Position->TurnMouse(deltaX, deltaY, 0.1f, rightMouseDown);
 
 	// Get the current view point rotation.
 	m_Position->GetRotation(rotationY, rotationX);

@@ -24,7 +24,7 @@ public:
 
     void TurnLeft(bool);
     void TurnRight(bool);
-    void TurnMouse(float, float, bool);
+    void TurnMouse(float, float, float, bool);
     void MoveCamera(bool, bool, bool, bool, bool, bool, bool, bool, bool);
 
 private:

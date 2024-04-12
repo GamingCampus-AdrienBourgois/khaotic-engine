@@ -10,6 +10,9 @@ PositionClass::PositionClass()
     m_positionZ = 0.0f;
     m_leftTurnSpeed = 0.0f;
     m_rightTurnSpeed = 0.0f;
+    m_horizontalTurnSpeed = 0.0f;
+    m_verticalTurnSpeed = 0.0f;
+    m_verticalTurnSpeed = 0.0f;
     m_cameraSpeed = 4.0f;
     m_speed = m_cameraSpeed;
 }
@@ -110,11 +113,10 @@ void PositionClass::TurnRight(bool keydown)
     return;
 }
 
-void PositionClass::TurnMouse(float deltaX, float deltaY, bool rightMouseDown)
+void PositionClass::TurnMouse(float deltaX, float deltaY, float sensitivity, bool rightMouseDown)
 {
-    float speed = 0.1f;
     // The turning speed is proportional to the horizontal mouse movement
-    m_horizontalTurnSpeed = deltaX * speed;
+    m_horizontalTurnSpeed = deltaX * sensitivity;
 
     if (rightMouseDown)
     {
@@ -130,7 +132,7 @@ void PositionClass::TurnMouse(float deltaX, float deltaY, bool rightMouseDown)
         }
 
         // The turning speed is proportional to the vertical mouse movement
-        m_verticalTurnSpeed = deltaY * speed;
+        m_verticalTurnSpeed = deltaY * sensitivity;
 
         // Update the rotation using the turning speed
         m_rotationX += m_verticalTurnSpeed;
@@ -150,7 +152,7 @@ void PositionClass::MoveCamera(bool forward, bool backward, bool left, bool righ
 {
     float radiansY, radiansX, speed;
 
-    // Set the speed of the camera.
+    // Set the speed of the camera if the right click is down.
     if (scrollUp && rightClick)
     {
         m_cameraSpeed *= 1.1f;
@@ -159,7 +161,7 @@ void PositionClass::MoveCamera(bool forward, bool backward, bool left, bool righ
     {
         m_cameraSpeed *= 0.9f;
 
-        if (m_cameraSpeed < 0.25f)
+        if (m_cameraSpeed < 0.25f) // Minimum speed.
         {
 			m_cameraSpeed = 0.25f;
 		}
@@ -169,8 +171,11 @@ void PositionClass::MoveCamera(bool forward, bool backward, bool left, bool righ
     radiansY = m_rotationY * 0.0174532925f;
     radiansX = m_rotationX * 0.0174532925f;
 
-    // Update the position.
+    //////////////////////////
+    // Update the position. //
+    //////////////////////////
 
+    // Moves the camera forward on a greater scale than the arrows.
     if (scrollUp && !rightClick)
     {
         speed = m_speed * 20 * m_frameTime;
@@ -179,6 +184,7 @@ void PositionClass::MoveCamera(bool forward, bool backward, bool left, bool righ
         m_positionY -= sinf(radiansX) * speed;
     }
 
+    // Moves the camera backward on a greater scale than the arrows.
     if (scrollDown && !rightClick)
     {
         speed = m_speed * 20 * m_frameTime;
@@ -187,7 +193,7 @@ void PositionClass::MoveCamera(bool forward, bool backward, bool left, bool righ
         m_positionY += sinf(radiansX) * speed;
 	}
 
-
+    // Set the speed of the camera.
     speed = m_cameraSpeed * m_frameTime;
 
     // If moving forward, the position moves in the direction of the camera and accordingly to its angle.
