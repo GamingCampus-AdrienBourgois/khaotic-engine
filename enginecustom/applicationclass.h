@@ -79,6 +79,7 @@ public:
 	void SetLightPosition(int index, XMVECTOR color);
 	void SetLightColor(int index, XMVECTOR color);
 	void DeleteLight(int index);
+	void AddLight();
 	std::vector<LightClass*> GetLights() const { return m_Lights; };
 
 	bool GetShouldQuit() const { return m_ShouldQuit; };

@@ -254,8 +254,6 @@ bool imguiManager::ImGuiWidgetRenderer(ApplicationClass* app)
 	//render imgui
 	Render();
 
-	app->GetDirect3D()->m_swapChain->Present(0, NULL);
-
 	return true;
 }
 
@@ -263,6 +261,12 @@ void imguiManager::WidgetLightWindow(ApplicationClass* app)
 {
 	ImGui::Begin("Light", &showLightWindow);
 	int index = 0;
+	// add light button
+	if (ImGui::Button("Add Light"))
+	{
+		app->AddLight();
+	}
+
 	for(auto& light : app->GetLights())
 	{
 		std::string headerName = "Light " + std::to_string(index);

@@ -691,9 +691,6 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	// Set the blending amount to 10%.
 	blendAmount = 0.1f;
 
-	// Clear the buffers to begin the scene.
-	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
-
 	// Generate the view matrix based on the camera's position.
 	m_Camera->Render();
 	
@@ -1141,9 +1138,6 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	m_Direct3D->TurnZBufferOn();
 	m_Direct3D->DisableAlphaBlending();
 
-	// Present the rendered scene to the screen.
-	m_Direct3D->EndScene();
-
 	return true;
 }
 
@@ -1497,4 +1491,43 @@ void ApplicationClass::DeleteLight(int index)
 
 	// Remove the light from the vector
 	m_Lights.erase(m_Lights.begin() + index);
+
+	// Decrement the number of lights
+	m_numLights--;
+
+	// Update the light position and color
+	for (int i = 0; i < m_numLights; i++)
+	{
+		m_Lights[i]->SetPosition(i * 10.0f, 10.0f, -10.0f);
+		m_Lights[i]->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
+	}
+}
+
+void ApplicationClass::AddLight()
+{
+	Logger::Get().Log("Adding light", __FILE__, __LINE__);
+
+	// Create a new light object
+	LightClass* newLight = new LightClass();
+
+	// Set the light position
+	newLight->SetPosition(m_numLights * 10.0f, 10.0f, -10.0f);
+
+	// Set the light color
+	newLight->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+	// Set the light direction
+	newLight->SetDirection(0.0f, 0.0f, 1.0f);
+
+	// Set the light specular color
+	newLight->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+	// Set the light specular power
+	newLight->SetSpecularPower(16.0f);
+
+	// Add the light to the vector
+	m_Lights.push_back(newLight);
+
+	// Increment the number of lights
+	m_numLights++;
 }

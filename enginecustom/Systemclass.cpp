@@ -189,6 +189,8 @@ void SystemClass::Run()
 
 bool SystemClass::Frame()
 {
+	// Clear the buffers to begin the scene.
+	m_Application->GetDirect3D()->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
 	std::lock_guard<std::mutex> guard(renderMutex);
 	bool result;
@@ -201,6 +203,14 @@ bool SystemClass::Frame()
 		return false;
 	}
 
+	// Do the frame processing for the application class object.
+	result = m_Application->Frame(m_Input);
+	if (!result)
+	{
+		Logger::Get().Log("Failed to process application frame", __FILE__, __LINE__, Logger::LogLevel::Error);
+		return false;
+	}
+
 	// Render ImGui 
 	result = m_imguiManager->ImGuiWidgetRenderer(m_Application);
 	if (!result)
@@ -209,13 +219,7 @@ bool SystemClass::Frame()
 		return false;
 	}
 
-	// Do the frame processing for the application class object.
-	result = m_Application->Frame(m_Input);
-	if (!result)
-	{
-		Logger::Get().Log("Failed to process application frame", __FILE__, __LINE__, Logger::LogLevel::Error);
-		return false;
-	}
+	m_Application->GetDirect3D()->EndScene();
 
 	return true;
 }
