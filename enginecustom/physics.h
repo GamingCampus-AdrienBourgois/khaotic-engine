@@ -12,8 +12,7 @@ public:
 
     XMVECTOR GetGravity() const; // Get the gravity value
     void SetGravity(XMVECTOR gravity); // Define the gravity value
-    void ApplyGravity(Object*, float); // Apply gravity to an object
-    void ApplyDrag(Object*, float, float);
+    void ApplyGravity(Object*, float, float); // Apply gravity to an object
     void ApplyForce(Object*, XMVECTOR);
 
 private:

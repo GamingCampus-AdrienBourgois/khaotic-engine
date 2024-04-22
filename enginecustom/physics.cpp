@@ -28,7 +28,7 @@ void Physics::SetGravity(XMVECTOR gravity)
 }
 
 // Apply gravity to an object
-void Physics::ApplyGravity(Object* object, float frameTime)
+void Physics::ApplyGravity(Object* object, float dragValue, float frameTime)
 {
     if (object == nullptr) // Verify if the object is not null
     {
@@ -41,30 +41,13 @@ void Physics::ApplyGravity(Object* object, float frameTime)
     // Add the gravity acceleration to the object's current acceleration
     object->SetAcceleration(object->GetAcceleration() + gravityAcceleration);
 
-    // Get the object velocity
-    XMVECTOR velocity = object->GetVelocity();
-
-    // Update the velocity with the object's acceleration
-    velocity += object->GetAcceleration() * frameTime;
-
-    // Set the new velocity
-    object->SetVelocity(velocity);
-}
-
-void Physics::ApplyDrag(Object* object, float dragValue, float frameTime)
-{
-    if (object == nullptr) // Verify if the object is not null
-    {
-        return;
-    }
-
     // Calculate the acceleration caused by drag
     XMVECTOR dragAcceleration = -object->GetVelocity() * dragValue / object->GetMass();
 
     // Add the drag acceleration to the object's current acceleration
     object->SetAcceleration(object->GetAcceleration() + dragAcceleration);
 
-    // Get the velocity of the object
+    // Get the object velocity
     XMVECTOR velocity = object->GetVelocity();
 
     // Update the velocity with the object's acceleration

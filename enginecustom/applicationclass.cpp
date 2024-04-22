@@ -636,9 +636,9 @@ bool ApplicationClass::Frame(InputClass* Input)
 	static int lastMouseX = 0, lastMouseY = 0;
 
 	static float rotation = 360.0f;
-	static float x = 0.f;
-	static float y = 3.f;
-	static float z = 0.f;
+	static float x = 0.0f;
+	static float y = 3.0f;
+	static float z = 0.0f;
 
 	// Update the system stats.
 	m_Timer->Frame();
@@ -736,7 +736,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	keyUp = Input->IsUpArrowPressed();
 	keyDown = Input->IsDownArrowPressed();
 
-	for (auto object : m_object)
+	for (auto& object : m_object)
 	{
 		if (object != nullptr) // Check if the object is not null
 		{
@@ -778,8 +778,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 			position = position + velocity * frameTime;
 			object->SetPosition(position);
 
-			m_Physics->ApplyGravity(object, frameTime);
-			m_Physics->ApplyDrag(object, 1.0f, frameTime);
+			m_Physics->ApplyGravity(object, 1.0f, frameTime);
 
 			// Check if the object has fallen below a certain position
 			if (XMVectorGetY(object->GetPosition()) < -30.0f)
