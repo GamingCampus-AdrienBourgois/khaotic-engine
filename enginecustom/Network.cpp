@@ -1,11 +1,9 @@
 #include "Network.h"
 
-Network::Network() : serverSocket(INVALID_SOCKET) {}
+Network::Network() : serverSocket(INVALID_SOCKET), clientSocket(INVALID_SOCKET) {}
 
 Network::~Network() {
-    if (serverSocket != INVALID_SOCKET) {
-        closesocket(serverSocket);
-    }
+    closesocket(serverSocket);
     WSACleanup();
 }
 
@@ -50,7 +48,7 @@ bool Network::Listen() {
 }
 
 SOCKET Network::Accept() {
-    SOCKET clientSocket = accept(serverSocket, NULL, NULL);
+    clientSocket = accept(serverSocket, NULL, NULL);
     if (clientSocket == INVALID_SOCKET) {
         std::cerr << "Erreur lors de l'acceptation de la connexion entrante" << std::endl;
         closesocket(serverSocket);
@@ -59,8 +57,22 @@ SOCKET Network::Accept() {
     return clientSocket;
 }
 
-bool Network::Send(SOCKET clientSocket, const char* message) {
-    int bytesSent = send(clientSocket, message, strlen(message), 0);
+bool Network::Connect(const std::string& ipAddress) {
+    sockaddr_in serverAddr;
+    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_port = htons(DEFAULT_PORT);
+    inet_pton(AF_INET, ipAddress.c_str(), &serverAddr.sin_addr);
+
+    if (connect(clientSocket, (sockaddr*)&serverAddr, sizeof(serverAddr)) == SOCKET_ERROR) {
+        std::cerr << "Erreur lors de la connexion au serveur" << std::endl;
+        closesocket(clientSocket);
+        return false;
+    }
+    return true;
+}
+
+bool Network::Send(SOCKET socket, const std::string& message) {
+    int bytesSent = send(socket, message.c_str(), message.length(), 0);
     if (bytesSent == SOCKET_ERROR) {
         std::cerr << "Erreur lors de l'envoi des données" << std::endl;
         return false;
@@ -68,16 +80,15 @@ bool Network::Send(SOCKET clientSocket, const char* message) {
     return true;
 }
 
-int Network::Receive(SOCKET clientSocket, char* buffer, int bufferSize) {
-    int bytesReceived = recv(clientSocket, buffer, bufferSize, 0);
+std::string Network::Receive(SOCKET socket) {
+    char buffer[4096];
+    int bytesReceived = recv(socket, buffer, sizeof(buffer), 0);
     if (bytesReceived > 0) {
         buffer[bytesReceived] = '\0';
-    }
-    else if (bytesReceived == 0) {
-        std::cerr << "La connexion a été fermée par le client" << std::endl;
+        return std::string(buffer);
     }
     else {
         std::cerr << "Erreur lors de la réception des données" << std::endl;
+        return ""; // Ou une indication d'erreur
     }
-    return bytesReceived;
 }
