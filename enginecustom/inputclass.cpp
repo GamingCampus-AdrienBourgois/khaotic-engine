@@ -20,7 +20,7 @@ InputClass::~InputClass()
 
 bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeight)
 {
-	Logger::Get().Log("Initializing input class", __FILE__, __LINE__);
+	Logger::Get().Log("Initializing input class", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	HRESULT result;
 	int i;
@@ -123,6 +123,7 @@ bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int
 void InputClass::KeyDown(unsigned int input)
 {
 	// If a key is pressed then save that state in the key array.
+	Logger::Get().Log("Key down", __FILE__, __LINE__, Logger::LogLevel::Input);
 	m_keys[input] = true;
 	return;
 }
@@ -131,6 +132,7 @@ void InputClass::KeyDown(unsigned int input)
 void InputClass::KeyUp(unsigned int input)
 {
 	// If a key is released then clear that state in the key array.
+	Logger::Get().Log("Key up", __FILE__, __LINE__, Logger::LogLevel::Input);
 	m_keys[input] = false;
 	return;
 }
@@ -144,7 +146,7 @@ bool InputClass::IsKeyDown(unsigned int key)
 
 void InputClass::Shutdown()
 {
-	Logger::Get().Log("Shutting down input class", __FILE__, __LINE__);
+	Logger::Get().Log("Shutting down input class", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 	// Release the mouse.
 	if (m_mouse)
