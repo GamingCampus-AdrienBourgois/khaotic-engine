@@ -10,7 +10,7 @@ Object::Object() : ModelClass()
 	m_previousPosition = XMVectorZero();
 	m_velocity = XMVectorZero();
 	m_acceleration = XMVectorZero();
-	m_mass = 1.0f;
+	m_mass = NULL;
 }
 
 Object::~Object()

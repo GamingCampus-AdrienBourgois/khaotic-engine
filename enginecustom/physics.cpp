@@ -1,8 +1,9 @@
 #include "physics.h"
 
 
-Physics::Physics() : m_gravity(XMVectorSet(0.0f, -9.81f, 0.0f, 0.0f)) // Initialize the gravity vector
+Physics::Physics() 
 {
+    m_gravity = XMVectorSet(0.0f, -9.81f, 0.0f, 0.0f); // Initialize the gravity vector
 }
 
 Physics::Physics(const Physics& other)

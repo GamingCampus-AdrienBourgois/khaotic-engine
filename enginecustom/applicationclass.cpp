@@ -744,8 +744,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 			object->SetAcceleration(XMVectorZero());
 
 			// Apply forces
-			m_Physics->ApplyGravity(object, frameTime);
-			m_Physics->ApplyDrag(object, 1.0f, frameTime);
+
 
 			float forceX = 0, forceY = 0, forceZ = 0, forceW = 0;
 
@@ -779,11 +778,14 @@ bool ApplicationClass::Frame(InputClass* Input)
 			position = position + velocity * frameTime;
 			object->SetPosition(position);
 
-			// Check if the object has fallen below the ground
-			if (XMVectorGetY(object->GetPosition()) < -10.0f)
+			m_Physics->ApplyGravity(object, frameTime);
+			m_Physics->ApplyDrag(object, 1.0f, frameTime);
+
+			// Check if the object has fallen below a certain position
+			if (XMVectorGetY(object->GetPosition()) < -30.0f)
 			{
 				XMVECTOR currentPosition = object->GetPosition(); // Obtain the current position of the object
-				object->SetPosition(XMVectorSetY(currentPosition, 20.0f)); // Define the new position of the object
+				object->SetPosition(XMVectorSetY(currentPosition, 50.0f)); // Define the new position of the object
 			}
 
 			object->m_previousPosition = object->GetPosition();
