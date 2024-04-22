@@ -197,7 +197,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 		// Set the number of lights we will use.
 		m_numLights = 4;
-
 		// Create and initialize the light objects array.
 		m_Lights.resize(m_numLights);
 
@@ -208,28 +207,26 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		m_Lights[0]->SetSpecularPower(16.0f);
 		m_Lights[0]->SetPosition(10.0f, 7.0f, -5.0f);
 
-		// Manually set the color and position of each light.
 		m_Lights[1] = new LightClass;
 		m_Lights[1]->SetDiffuseColor(1.0f, 0.0f, 0.0f, 1.0f);  // Red
-		m_Lights[1]->SetDirection(0.0f, 0.0f, 1.0f);
+		m_Lights[1]->SetDirection(0.0f, 0.0f, -1.0f);
 		m_Lights[1]->SetSpecularColor(1.0f, 0.0f, 0.0f, 1.0f);
 		m_Lights[1]->SetSpecularPower(16.0f);
-		m_Lights[1]->SetPosition(10.0f, 7.0f, -5.0f);
+		m_Lights[1]->SetPosition(-10.0f, 7.0f, -5.0f);
 
 		m_Lights[2] = new LightClass;
 		m_Lights[2]->SetDiffuseColor(0.0f, 1.0f, 0.0f, 1.0f);  // Green
-		m_Lights[2]->SetDirection(0.0f, 0.0f, 1.0f);
+		m_Lights[2]->SetDirection(0.0f, 0.0f, -1.0f);
 		m_Lights[2]->SetSpecularColor(0.0f, 1.0f, 0.0f, 1.0f);
 		m_Lights[2]->SetSpecularPower(16.0f);
-		m_Lights[2]->SetPosition(10.0f, 7.0f, -5.0f);
+		m_Lights[2]->SetPosition(10.0f, 7.0f, 5.0f);
 
 		m_Lights[3] = new LightClass;
 		m_Lights[3]->SetDiffuseColor(0.0f, 0.0f, 1.0f, 1.0f);  // Blue
-		m_Lights[3]->SetDirection(0.0f, 0.0f, 1.0f);
+		m_Lights[3]->SetDirection(0.0f, 0.0f, -1.0f);
 		m_Lights[3]->SetSpecularColor(0.0f, 0.0f, 1.0f, 1.0f);
 		m_Lights[3]->SetSpecularPower(16.0f);
-		m_Lights[3]->SetPosition(10.0f, 7.0f, -5.0f);
-
+		m_Lights[3]->SetPosition(-10.0f, 7.0f, 5.0f);
 
 		// Create and initialize the normal map shader object.
 		m_ShaderManager = new ShaderManagerClass;
@@ -666,7 +663,7 @@ bool ApplicationClass::RenderSceneToTexture(float rotation)
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
 	result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-		m_Model->GetTexture(1));
+		m_Model->GetTexture(0));
 	if (!result)
 	{
 		return false;
@@ -745,7 +742,15 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 
 		cube->Render(m_Direct3D->GetDeviceContext());
 
-		result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
+		// render the texture using the texture shader.
+		result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), cube->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, cube->GetTexture(0));
+		if (!result)
+		{
+			Logger::Get().Log("Could not render the cube model using the texture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+			return false;
+		}
+
+		result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, cube->GetTexture(0),
 			diffuseColor, lightPosition);
 		if (!result)
 		{
@@ -768,6 +773,14 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
 		object->Render(m_Direct3D->GetDeviceContext());
+
+		// render the texture using the texture shader.
+		result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), object->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, object->GetTexture(0));
+		if (!result)
+		{
+			Logger::Get().Log("Could not render the cube model using the texture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+			return false;
+		}
 
 		result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
 			diffuseColor, lightPosition);
@@ -1474,60 +1487,4 @@ void ApplicationClass::SetLightPosition(int index, XMVECTOR position)
 
 	//set the position
 	m_Lights[index]->SetPosition(lightPosition.x, lightPosition.y, lightPosition.z);
-}
-
-void ApplicationClass::DeleteLight(int index)
-{
-	Logger::Get().Log("Deleting light", __FILE__, __LINE__);
-
-	if (index < 0 || index >= m_Lights.size())
-	{
-		// Index out of bounds
-		return;
-	}
-
-	// Delete the light object
-	delete m_Lights[index];
-
-	// Remove the light from the vector
-	m_Lights.erase(m_Lights.begin() + index);
-
-	// Decrement the number of lights
-	m_numLights--;
-
-	// Update the light position and color
-	for (int i = 0; i < m_numLights; i++)
-	{
-		m_Lights[i]->SetPosition(i * 10.0f, 10.0f, -10.0f);
-		m_Lights[i]->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-	}
-}
-
-void ApplicationClass::AddLight()
-{
-	Logger::Get().Log("Adding light", __FILE__, __LINE__);
-
-	// Create a new light object
-	LightClass* newLight = new LightClass();
-
-	// Set the light position
-	newLight->SetPosition(m_numLights * 10.0f, 10.0f, -10.0f);
-
-	// Set the light color
-	newLight->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-	// Set the light direction
-	newLight->SetDirection(0.0f, 0.0f, 1.0f);
-
-	// Set the light specular color
-	newLight->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-	// Set the light specular power
-	newLight->SetSpecularPower(16.0f);
-
-	// Add the light to the vector
-	m_Lights.push_back(newLight);
-
-	// Increment the number of lights
-	m_numLights++;
 }

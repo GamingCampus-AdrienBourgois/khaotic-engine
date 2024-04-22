@@ -88,6 +88,7 @@ public:
 
 	int GetIndexCount();
 	ID3D11ShaderResourceView* GetTexture(int);
+	bool ChangeTexture(ID3D11Device*, ID3D11DeviceContext*, std::wstring filename, int index);
 
 private:
 	bool InitializeBuffers(ID3D11Device*);

@@ -475,10 +475,10 @@ bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
     dataPtr2 = (LightPositionBufferType*)mappedResource.pData;
 
     // Copy the light position variables into the constant buffer.
-    dataPtr2->lightPosition[0] = lightPosition[0];
-    dataPtr2->lightPosition[1] = lightPosition[1];
-    dataPtr2->lightPosition[2] = lightPosition[2];
-    dataPtr2->lightPosition[3] = lightPosition[3];
+    for (int i = 0; i < NUM_LIGHTS; i++)
+	{
+		dataPtr2->lightPosition[i] = lightPosition[i];
+	}
 
     // Unlock the constant buffer.
     deviceContext->Unmap(m_lightPositionBuffer, 0);
@@ -504,10 +504,10 @@ bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
     dataPtr3 = (LightColorBufferType*)mappedResource.pData;
 
     // Copy the light color variables into the constant buffer.
-    dataPtr3->diffuseColor[0] = diffuseColor[0];
-    dataPtr3->diffuseColor[1] = diffuseColor[1];
-    dataPtr3->diffuseColor[2] = diffuseColor[2];
-    dataPtr3->diffuseColor[3] = diffuseColor[3];
+    for (int i = 0; i < NUM_LIGHTS; i++)
+    {
+        dataPtr3->diffuseColor[i] = diffuseColor[i];
+	}
 
     // Unlock the constant buffer.
     deviceContext->Unmap(m_lightColorBuffer, 0);

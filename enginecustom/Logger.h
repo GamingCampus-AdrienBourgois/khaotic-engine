@@ -24,7 +24,20 @@ public:
     {
 		Info,
 		Warning,
-		Error
+		Error,
+        Shutdown,
+        Initialize,
+        Update,
+        Render,
+        Input,
+        Physics,
+        Audio,
+        Network,
+        Scripting,
+        AI,
+        Resource,
+        Memory,
+        Debug
 	};
 
     Logger() 
