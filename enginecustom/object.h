@@ -33,6 +33,8 @@ public:
 	XMVECTOR GetAcceleration() const;
 	void SetMass(float);
 	float GetMass() const;
+	void SetGrounded(bool);
+	bool GetGrounded() const;
 
 	void UpdateWorldMatrix();
 	void UpdateSRMatrix();
@@ -59,6 +61,7 @@ private:
 
 	XMVECTOR m_acceleration;
 	float m_mass;
+	bool m_isGrounded;
 
 	std::string m_name;
 };

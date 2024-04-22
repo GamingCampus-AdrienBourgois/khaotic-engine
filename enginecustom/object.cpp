@@ -11,6 +11,7 @@ Object::Object() : ModelClass()
 	m_velocity = XMVectorZero();
 	m_acceleration = XMVectorZero();
 	m_mass = NULL;
+	m_isGrounded = false;
 }
 
 Object::~Object()
@@ -196,3 +197,14 @@ float Object::GetMass() const
 {
 	return m_mass;
 }
+
+void Object::SetGrounded(bool isGrounded)
+{
+	m_isGrounded = isGrounded;
+}
+
+bool Object::GetGrounded() const
+{
+	return m_isGrounded;
+}
+

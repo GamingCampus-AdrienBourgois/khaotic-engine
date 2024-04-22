@@ -624,7 +624,6 @@ void ApplicationClass::Shutdown()
 	}
 }
 
-
 bool ApplicationClass::Frame(InputClass* Input)
 {
 	int mouseX, mouseY, currentMouseX, currentMouseY;
@@ -765,20 +764,39 @@ bool ApplicationClass::Frame(InputClass* Input)
 				forceY = -40.0f;
 			}
 
-			XMVECTOR force = XMVectorSet(forceX, forceY, forceZ, forceW);
-			m_Physics->ApplyForce(object, force);
+			bool isGrounded = object->GetGrounded();
 
-			// Update velocity based on acceleration
-			XMVECTOR velocity = object->GetVelocity();
-			velocity = velocity + object->GetAcceleration() * frameTime;
-			object->SetVelocity(velocity);
+			for (auto& chunk : m_terrainChunk)
+			{
+				if (m_Physics->IsColliding(object, chunk))
+				{
+					isGrounded = true;
+				}
+			}
 
-			// Update position based on velocity
-			XMVECTOR position = object->GetPosition();
-			position = position + velocity * frameTime;
-			object->SetPosition(position);
+			if (!isGrounded)
+			{
+				XMVECTOR force = XMVectorSet(forceX, forceY, forceZ, forceW);
+				m_Physics->ApplyForce(object, force);
 
-			m_Physics->ApplyGravity(object, 1.0f, frameTime);
+				// Update velocity based on acceleration
+				XMVECTOR velocity = object->GetVelocity();
+				velocity = velocity + object->GetAcceleration() * frameTime;
+				object->SetVelocity(velocity);
+
+				// Update position based on velocity
+				XMVECTOR position = object->GetPosition();
+				position = position + velocity * frameTime;
+				object->SetPosition(position);
+
+				m_Physics->ApplyGravity(object, 1.0f, frameTime);
+			}
+			else
+			{
+				object->SetVelocity(XMVectorZero());
+			}
+
+
 
 			// Check if the object has fallen below a certain position
 			if (XMVectorGetY(object->GetPosition()) < -30.0f)
@@ -1311,7 +1329,7 @@ void ApplicationClass::AddKobject(WCHAR* filepath)
 	newObject->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2, textureFilename3);
 	newObject->SetMass(1.0f);
 
-	newObject->SetTranslateMatrix(XMMatrixTranslation(0.0f, 0.0f, 0.0f));
+	newObject->SetTranslateMatrix(XMMatrixTranslation(0.0f, 10.0f, 0.0f));
 	newObject->SetName(filename);
 
 	m_object.push_back(newObject);
