@@ -727,8 +727,8 @@ bool ApplicationClass::RenderRefractionToTexture()
 	// Render the bath model using the refraction shader.
 	m_BathModel->Render(m_Direct3D->GetDeviceContext());
 
-	result = m_ShaderManager->RenderRefractionShader(m_Direct3D->GetDeviceContext(), m_BathModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_BathModel->GetTexture(0),
-		m_Lights[0]->GetDirection(), m_Light->GetAmbientColor(), m_Lights[0]->GetDiffuseColor(), clipPlane);
+	result = m_ShaderManager->RenderRefractionShader(m_Direct3D->GetDeviceContext(), m_BathModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, 
+		m_BathModel->GetTexture(0), m_Lights[0]->GetDirection(), m_Lights[0]->GetAmbientColor(), m_Lights[0]->GetDiffuseColor(), clipPlane);
 	if (!result)
 	{
 		return false;

@@ -211,6 +211,7 @@
     <CopyFileToFolders Include="sprite04.tga" />
     <CopyFileToFolders Include="stone01.tga" />
     <Image Include="wall.tga" />
+    <Image Include="water01.tga" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="cube.txt" />
