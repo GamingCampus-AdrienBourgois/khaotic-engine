@@ -137,9 +137,6 @@ private :
 	// ----------------------------------- //
 
 	ShaderManagerClass* m_ShaderManager;
-	LightShaderClass* m_LightShader;
-	RefractionShaderClass* m_RefractionShader;
-	WaterShaderClass* m_WaterShader;
 	FontShaderClass* m_FontShader;
 	BitmapClass* m_Bitmap;
 	SpriteClass* m_Sprite;

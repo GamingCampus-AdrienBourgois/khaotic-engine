@@ -19,16 +19,11 @@ ApplicationClass::ApplicationClass()
 	m_Position = 0;
 	m_Frustum = 0;
 	m_DisplayPlane = 0;
-	m_GroundModel = 0;
-	m_WallModel = 0;
 	m_BathModel = 0;
 	m_WaterModel = 0;
 	m_Light = 0;
 	m_RefractionTexture = 0;
 	m_ReflectionTexture = 0;
-	m_LightShader = 0;
-	m_RefractionShader = 0;
-	m_WaterShader = 0;
 }
 
 
@@ -214,6 +209,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		m_Lights[0] = new LightClass;
 		m_Lights[0]->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);  // White
 		m_Lights[0]->SetDirection(0.0f, 0.0f, -1.0f);
+		m_Lights[0]->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 		m_Lights[0]->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
 		m_Lights[0]->SetSpecularPower(16.0f);
 		m_Lights[0]->SetPosition(10.0f, 7.0f, -5.0f);
@@ -222,6 +218,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		m_Lights[1] = new LightClass;
 		m_Lights[1]->SetDiffuseColor(1.0f, 0.0f, 0.0f, 1.0f);  // Red
 		m_Lights[1]->SetDirection(0.0f, 0.0f, 1.0f);
+		m_Lights[1]->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 		m_Lights[1]->SetSpecularColor(1.0f, 0.0f, 0.0f, 1.0f);
 		m_Lights[1]->SetSpecularPower(16.0f);
 		m_Lights[1]->SetPosition(10.0f, 7.0f, -5.0f);
@@ -229,6 +226,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		m_Lights[2] = new LightClass;
 		m_Lights[2]->SetDiffuseColor(0.0f, 1.0f, 0.0f, 1.0f);  // Green
 		m_Lights[2]->SetDirection(0.0f, 0.0f, 1.0f);
+		m_Lights[2]->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 		m_Lights[2]->SetSpecularColor(0.0f, 1.0f, 0.0f, 1.0f);
 		m_Lights[2]->SetSpecularPower(16.0f);
 		m_Lights[2]->SetPosition(10.0f, 7.0f, -5.0f);
@@ -236,6 +234,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		m_Lights[3] = new LightClass;
 		m_Lights[3]->SetDiffuseColor(0.0f, 0.0f, 1.0f, 1.0f);  // Blue
 		m_Lights[3]->SetDirection(0.0f, 0.0f, 1.0f);
+		m_Lights[3]->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 		m_Lights[3]->SetSpecularColor(0.0f, 0.0f, 1.0f, 1.0f);
 		m_Lights[3]->SetSpecularPower(16.0f);
 		m_Lights[3]->SetPosition(10.0f, 7.0f, -5.0f);
@@ -267,36 +266,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		// Create and initialize the model list object.
 		m_ModelList = new ModelListClass;
 		m_ModelList->Initialize(25);
-
-		// Set the file names of the ground model.
-		strcpy_s(modelFilename, "ground.txt");
-		strcpy_s(textureFilename1, "ground01.tga");
-
-		// Create and initialize the ground model object.
-		m_GroundModel = new ModelClass;
-
-		result = m_GroundModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2, textureFilename3, textureFilename4,
-			textureFilename5, textureFilename6);
-		if (!result)
-		{
-			MessageBox(hwnd, L"Could not initialize the ground model object.", L"Error", MB_OK);
-			return false;
-		}
-
-		// Set the file names of the wall model.
-		strcpy_s(modelFilename, "wall.txt");
-		strcpy_s(textureFilename1, "wall01.tga");
-
-		// Create and initialize the wall model object.
-		m_WallModel = new ModelClass;
-
-		result = m_WallModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2, textureFilename3, textureFilename4,
-			textureFilename5, textureFilename6);
-		if (!result)
-		{
-			MessageBox(hwnd, L"Could not initialize the wall model object.", L"Error", MB_OK);
-			return false;
-		}
 
 		// Set the file names of the bath model.
 		strcpy_s(modelFilename, "bath.txt");
@@ -348,41 +317,11 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 			return false;
 		}
 
-		// Create and initialize the light shader object.
-		m_LightShader = new LightShaderClass;
-
-		result = m_LightShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-		if (!result)
-		{
-			MessageBox(hwnd, L"Could not initialize the light shader object.", L"Error", MB_OK);
-			return false;
-		}
-
-		// Create and initialize the refraction shader object.
-		m_RefractionShader = new RefractionShaderClass;
-
-		result = m_RefractionShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-		if (!result)
-		{
-			MessageBox(hwnd, L"Could not initialize the refraction shader object.", L"Error", MB_OK);
-			return false;
-		}
-
-		// Create and initialize the water shader object.
-		m_WaterShader = new WaterShaderClass;
-
-		result = m_WaterShader->Initialize(m_Direct3D->GetDevice(), hwnd);
-		if (!result)
-		{
-			MessageBox(hwnd, L"Could not initialize the water shader object.", L"Error", MB_OK);
-			return false;
-		}
-
 		// Set the height of the water.
-		m_waterHeight = 2.75f;
+		m_waterHeight = -9.25f;
 
 		// Initialize the position of the water.
-		m_waterTranslation = 0.0f;
+		m_waterTranslation = 100.0f;
 
 		// Create and initialize the timer object.
 		m_Timer = new TimerClass;
@@ -440,30 +379,6 @@ void ApplicationClass::Shutdown()
 		m_ShaderManager = 0;
 	}
 
-	// Release the water shader object.
-	if (m_WaterShader)
-	{
-		m_WaterShader->Shutdown();
-		delete m_WaterShader;
-		m_WaterShader = 0;
-	}
-
-	// Release the refraction shader object.
-	if (m_RefractionShader)
-	{
-		m_RefractionShader->Shutdown();
-		delete m_RefractionShader;
-		m_RefractionShader = 0;
-	}
-
-	// Release the light shader object.
-	if (m_LightShader)
-	{
-		m_LightShader->Shutdown();
-		delete m_LightShader;
-		m_LightShader = 0;
-	}
-
 	// Release the reflection render texture object.
 	if (m_ReflectionTexture)
 	{
@@ -494,22 +409,6 @@ void ApplicationClass::Shutdown()
 		m_BathModel->Shutdown();
 		delete m_BathModel;
 		m_BathModel = 0;
-	}
-
-	// Release the wall model object.
-	if (m_WallModel)
-	{
-		m_WallModel->Shutdown();
-		delete m_WallModel;
-		m_WallModel = 0;
-	}
-
-	// Release the ground model object.
-	if (m_GroundModel)
-	{
-		m_GroundModel->Shutdown();
-		delete m_GroundModel;
-		m_GroundModel = 0;
 	}
 
 	// Release the frustum class object.
@@ -823,13 +722,13 @@ bool ApplicationClass::RenderRefractionToTexture()
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 
 	// Translate to where the bath model will be rendered.
-	worldMatrix = XMMatrixTranslation(0.0f, 2.0f, 0.0f);
+	worldMatrix = XMMatrixTranslation(0.0f, -10.0f, 0.0f);
 
 	// Render the bath model using the refraction shader.
 	m_BathModel->Render(m_Direct3D->GetDeviceContext());
 
-	result = m_RefractionShader->Render(m_Direct3D->GetDeviceContext(), m_BathModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_BathModel->GetTexture(0),
-		m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(), clipPlane);
+	result = m_ShaderManager->RenderRefractionShader(m_Direct3D->GetDeviceContext(), m_BathModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_BathModel->GetTexture(0),
+		m_Lights[0]->GetDirection(), m_Light->GetAmbientColor(), m_Lights[0]->GetDiffuseColor(), clipPlane);
 	if (!result)
 	{
 		return false;
@@ -863,18 +762,6 @@ bool ApplicationClass::RenderReflectionToTexture()
 	m_Direct3D->GetWorldMatrix(worldMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 
-	// Translate to where the wall model will be rendered.
-	worldMatrix = XMMatrixTranslation(0.0f, 6.0f, 8.0f);
-
-	// Render the wall model using the light shader and the reflection view matrix.
-	m_WallModel->Render(m_Direct3D->GetDeviceContext());
-
-	result = m_ShaderManager->RenderlightShaderWater(m_Direct3D->GetDeviceContext(), m_WallModel->GetIndexCount(), worldMatrix, reflectionViewMatrix, projectionMatrix, m_WallModel->GetTexture(4),
-		getDirection, ambientColor, diffuseColor);
-	if (!result)
-	{
-		return false;
-	}
 
 	// Reset the render target back to the original back buffer and not the render to texture anymore.  And reset the viewport back to the original.
 	m_Direct3D->SetBackBufferRenderTarget();
@@ -1230,52 +1117,15 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		lightPosition[i] = m_Lights[i]->GetPosition();
 	}
 
-
-	// Translate to where the ground model will be rendered.
-	worldMatrix = XMMatrixTranslation(0.0f, 1.0f, 0.0f);
-
-	// Put the ground model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	m_GroundModel->Render(m_Direct3D->GetDeviceContext());
-
-	// Render the ground model using the light shader.
-	result = m_ShaderManager->RenderlightShaderWater(m_Direct3D->GetDeviceContext(), m_GroundModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_GroundModel->GetTexture(0),
-		getDirection, ambientColor, diffuseColor);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Reset the world matrix.
-	m_Direct3D->GetWorldMatrix(worldMatrix);
-
-
-	// Translate to where the wall model will be rendered.
-	worldMatrix = XMMatrixTranslation(0.0f, 6.0f, 8.0f);
-
-	// Put the wall model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	m_WallModel->Render(m_Direct3D->GetDeviceContext());
-
-	// Render the wall model using the light shader.
-	result = m_ShaderManager->RenderlightShaderWater(m_Direct3D->GetDeviceContext(), m_GroundModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_GroundModel->GetTexture(0),
-		getDirection, ambientColor, diffuseColor);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Reset the world matrix.
-	m_Direct3D->GetWorldMatrix(worldMatrix);
-
-
 	// Translate to where the bath model will be rendered.
-	worldMatrix = XMMatrixTranslation(0.0f, 2.0f, 0.0f);
+	worldMatrix = XMMatrixTranslation(0.0f, -10.0f, 0.0f);
 
 	// Put the bath model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	m_BathModel->Render(m_Direct3D->GetDeviceContext());
 
 	// Render the bath model using the light shader.
-	result = m_ShaderManager->RenderlightShaderWater(m_Direct3D->GetDeviceContext(), m_GroundModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_GroundModel->GetTexture(0),
-		getDirection, ambientColor, diffuseColor);
+	result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), m_BathModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_BathModel->GetTexture(0));
 	if (!result)
 	{
 		return false;
@@ -1294,7 +1144,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	m_WaterModel->Render(m_Direct3D->GetDeviceContext());
 
 	// Render the water model using the water shader.
-	result = m_WaterShader->Render(m_Direct3D->GetDeviceContext(), m_WaterModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, reflectionMatrix,
+	result = m_ShaderManager->RenderWaterShader(m_Direct3D->GetDeviceContext(), m_WaterModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, reflectionMatrix,
 		m_ReflectionTexture->GetShaderResourceView(), m_RefractionTexture->GetShaderResourceView(), m_WaterModel->GetTexture(0),
 		m_waterTranslation, 0.01f);
 	if (!result)
