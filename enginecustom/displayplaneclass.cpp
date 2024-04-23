@@ -19,7 +19,7 @@ DisplayPlaneClass::~DisplayPlaneClass()
 
 bool DisplayPlaneClass::Initialize(ID3D11Device* device, float width, float height)
 {
-    Logger::Get().Log("Initializing DisplayPlaneClass, width: " + std::to_string(width) + ", height: " + std::to_string(height), __FILE__, __LINE__);
+    Logger::Get().Log("Initializing DisplayPlaneClass, width: " + std::to_string(width) + ", height: " + std::to_string(height), __FILE__, __LINE__, Logger::LogLevel::Initialize);
     bool result;
 
 
@@ -27,7 +27,7 @@ bool DisplayPlaneClass::Initialize(ID3D11Device* device, float width, float heig
     result = InitializeBuffers(device, width, height);
     if (!result)
     {
-        Logger::Get().Log("Could not initialize buffers", __FILE__, __LINE__);
+        Logger::Get().Log("Could not initialize buffers", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -60,7 +60,7 @@ int DisplayPlaneClass::GetIndexCount()
 
 bool DisplayPlaneClass::InitializeBuffers(ID3D11Device* device, float width, float height)
 {
-    Logger::Get().Log("Initializing buffers", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing buffers", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     VertexType* vertices;
     unsigned long* indices;
@@ -158,7 +158,7 @@ bool DisplayPlaneClass::InitializeBuffers(ID3D11Device* device, float width, flo
     delete[] indices;
     indices = 0;
 
-    Logger::Get().Log("Buffers initialized", __FILE__, __LINE__);
+    Logger::Get().Log("Buffers initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     return true;
 }
@@ -166,6 +166,8 @@ bool DisplayPlaneClass::InitializeBuffers(ID3D11Device* device, float width, flo
 
 void DisplayPlaneClass::ShutdownBuffers()
 {
+    Logger::Get().Log("Shutting down Plane buffers", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
+
     // Release the index buffer.
     if (m_indexBuffer)
     {
@@ -179,6 +181,8 @@ void DisplayPlaneClass::ShutdownBuffers()
         m_vertexBuffer->Release();
         m_vertexBuffer = 0;
     }
+
+    Logger::Get().Log("Plane buffers shut down", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     return;
 }

@@ -24,7 +24,7 @@ TransparentShaderClass::~TransparentShaderClass()
 
 bool TransparentShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
-    Logger::Get().Log("Initializing TransparentShaderClass", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing TransparentShaderClass", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     bool result;
     wchar_t vsFilename[128];
@@ -55,7 +55,7 @@ bool TransparentShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
         return false;
     }
 
-    Logger::Get().Log("TransparentShaderClass initialized", __FILE__, __LINE__);
+    Logger::Get().Log("TransparentShaderClass initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     return true;
 }
@@ -92,7 +92,7 @@ bool TransparentShaderClass::Render(ID3D11DeviceContext* deviceContext, int inde
 
 bool TransparentShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
-    Logger::Get().Log("Initializing transparent shader", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing transparent shader", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     HRESULT result;
     ID3D10Blob* errorMessage;
@@ -255,7 +255,7 @@ bool TransparentShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, W
         return false;
     }
 
-    Logger::Get().Log("Transparent shader initialized", __FILE__, __LINE__);
+    Logger::Get().Log("Transparent shader initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     return true;
 }
@@ -263,7 +263,7 @@ bool TransparentShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, W
 
 void TransparentShaderClass::ShutdownShader()
 {
-    Logger::Get().Log("Shutting down transparent shader", __FILE__, __LINE__);
+    Logger::Get().Log("Shutting down transparent shader", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     // Release the transparent constant buffer.
     if (m_transparentBuffer)
@@ -307,7 +307,7 @@ void TransparentShaderClass::ShutdownShader()
         m_vertexShader = 0;
     }
 
-    Logger::Get().Log("Transparent shader shut down", __FILE__, __LINE__);
+    Logger::Get().Log("Transparent shader shut down", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     return;
 }

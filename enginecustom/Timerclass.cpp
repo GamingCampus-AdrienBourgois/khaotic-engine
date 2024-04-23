@@ -17,7 +17,7 @@ TimerClass::~TimerClass()
 
 bool TimerClass::Initialize()
 {
-    Logger::Get().Log("Initilazing timer class", __FILE__, __LINE__);
+    Logger::Get().Log("Initilazing timer class", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     INT64 frequency;
 
@@ -35,6 +35,8 @@ bool TimerClass::Initialize()
 
     // Get the initial start time.
     QueryPerformanceCounter((LARGE_INTEGER*)&m_startTime);
+
+    Logger::Get().Log("Timer class initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     return true;
 }

@@ -13,7 +13,7 @@ imguiManager::~imguiManager()
 
 bool imguiManager::Initialize(HWND hwnd, ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
-	Logger::Get().Log("Initializing imgui", __FILE__, __LINE__);
+	Logger::Get().Log("Initializing imgui", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	m_device = device;
 	m_deviceContext = deviceContext;
@@ -26,16 +26,18 @@ bool imguiManager::Initialize(HWND hwnd, ID3D11Device* device, ID3D11DeviceConte
 	ImGui_ImplDX11_Init(m_device, m_deviceContext); 
 	ImGui::StyleColorsDark();
 
-	Logger::Get().Log("imgui initialized", __FILE__, __LINE__);
+	Logger::Get().Log("imgui initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	return true;
 }
 
 void imguiManager::Shutdown()
 {
+	Logger::Get().Log("Shutting down imgui", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
+	Logger::Get().Log("imgui shutdown", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 }
 
 void imguiManager::Render()

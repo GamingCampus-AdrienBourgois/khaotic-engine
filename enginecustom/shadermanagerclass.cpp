@@ -26,7 +26,7 @@ ShaderManagerClass::~ShaderManagerClass()
 
 bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
-    Logger::Get().Log("Initializing ShaderManagerClass", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing ShaderManagerClass", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     bool result;
 
@@ -100,13 +100,13 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
         return false;
     }
 
-    Logger::Get().Log("ShaderManagerClass initialized", __FILE__, __LINE__);
     // Create and initialize the light shader object.
     m_LightShader = new LightShaderClass;
 
     result = m_LightShader->Initialize(device, hwnd);
     if (!result)
     {
+        Logger::Get().Log("Error initializing LightShaderClass", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -116,15 +116,18 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
     result = m_LightMapShader->Initialize(device, hwnd);
     if (!result)
     {
+        Logger::Get().Log("Error initializing LightMapShaderClass", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
+
+    Logger::Get().Log("ShaderManagerClass initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     return true;
 }
 
 void ShaderManagerClass::Shutdown()
 {
-    Logger::Get().Log("Shutting down ShaderManagerClass", __FILE__, __LINE__);
+    Logger::Get().Log("Shutting down ShaderManagerClass", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     // Release the normal map shader object.
     if (m_NormalMapShader)
@@ -182,7 +185,6 @@ void ShaderManagerClass::Shutdown()
         m_TransparentShader = 0;
     }
 
-    Logger::Get().Log("ShaderManagerClass shut down", __FILE__, __LINE__);
     // Release the light shader object.
     if (m_LightShader)
     {
@@ -198,6 +200,8 @@ void ShaderManagerClass::Shutdown()
         delete m_LightMapShader;
         m_LightMapShader = 0;
     }
+
+    Logger::Get().Log("ShaderManagerClass shut down", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     return;
       

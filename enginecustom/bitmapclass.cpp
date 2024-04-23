@@ -20,7 +20,7 @@ BitmapClass::~BitmapClass()
 
 bool BitmapClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, int screenWidth, int screenHeight, char* textureFilename, int renderX, int renderY)
 {
-    Logger::Get().Log("Initializing bitmap class", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing bitmap class", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     bool result;
 
@@ -48,7 +48,7 @@ bool BitmapClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCo
         return false;
     }
 
-    Logger::Get().Log("Bitmap class initialized", __FILE__, __LINE__);
+    Logger::Get().Log("Bitmap class initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     return true;
 }
@@ -95,7 +95,7 @@ ID3D11ShaderResourceView* BitmapClass::GetTexture()
 
 bool BitmapClass::InitializeBuffers(ID3D11Device* device)
 {
-    Logger::Get().Log("Initializing buffers", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing buffers", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     VertexType* vertices;
     unsigned long* indices;
@@ -178,26 +178,34 @@ bool BitmapClass::InitializeBuffers(ID3D11Device* device)
     delete[] indices;
     indices = 0;
 
-    Logger::Get().Log("Buffers initialized", __FILE__, __LINE__);
+    Logger::Get().Log("Buffers initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     return true;
 }
 
 void BitmapClass::ShutdownBuffers()
 {
+    Logger::Get().Log("Shutting down buffers", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
+
     // Release the index buffer.
     if (m_indexBuffer)
     {
+        Logger::Get().Log("Releasing index buffer", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
         m_indexBuffer->Release();
         m_indexBuffer = 0;
+        Logger::Get().Log("Index buffer released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
     }
 
     // Release the vertex buffer.
     if (m_vertexBuffer)
     {
+        Logger::Get().Log("Releasing vertex buffer", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
         m_vertexBuffer->Release();
         m_vertexBuffer = 0;
+        Logger::Get().Log("Vertex buffer released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
     }
+
+    Logger::Get().Log("Buffers shut down", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     return;
 }
@@ -329,13 +337,18 @@ bool BitmapClass::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceC
 
 void BitmapClass::ReleaseTexture()
 {
+    Logger::Get().Log("Releasing texture", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
     // Release the texture object.
     if (m_Texture)
     {
+        Logger::Get().Log("Releasing texture object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
         m_Texture->Shutdown();
         delete m_Texture;
         m_Texture = 0;
+        Logger::Get().Log("Texture object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
     }
+
+    Logger::Get().Log("Texture released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     return;
 }

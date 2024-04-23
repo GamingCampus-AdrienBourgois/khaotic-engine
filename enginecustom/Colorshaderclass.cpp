@@ -23,7 +23,7 @@ ColorShaderClass::~ColorShaderClass()
 
 bool ColorShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
-	Logger::Get().Log("Initializing ColorShaderClass", __FILE__, __LINE__);
+	Logger::Get().Log("Initializing ColorShaderClass", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	bool result;
 	wchar_t vsFilename[128];
@@ -55,7 +55,7 @@ bool ColorShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 		return false;
 	}
 
-	Logger::Get().Log("ColorShaderClass initialized", __FILE__, __LINE__);
+	Logger::Get().Log("ColorShaderClass initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	return true;
 }
@@ -90,7 +90,7 @@ bool ColorShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount
 
 bool ColorShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
-	Logger::Get().Log("Initializing shader", __FILE__, __LINE__);
+	Logger::Get().Log("Initializing shader", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	HRESULT result;
 	ID3D10Blob* errorMessage;
@@ -213,41 +213,49 @@ bool ColorShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
 		return false;
 	}
 
-	Logger::Get().Log("Shader initialized", __FILE__, __LINE__);
+	Logger::Get().Log("Shader initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	return true;
 }
 
 void ColorShaderClass::ShutdownShader()
 {
-	Logger::Get().Log("Shutting down shader", __FILE__, __LINE__);
+	Logger::Get().Log("Shutting down shader", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 	// Release the matrix constant buffer.
 	if (m_matrixBuffer)
 	{
+		Logger::Get().Log("Releasing matrix buffer", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 		m_matrixBuffer->Release();
 		m_matrixBuffer = 0;
+		Logger::Get().Log("Matrix buffer released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the layout.
 	if (m_layout)
 	{
+		Logger::Get().Log("Releasing layout", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 		m_layout->Release();
 		m_layout = 0;
+		Logger::Get().Log("Layout released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the pixel shader.
 	if (m_pixelShader)
 	{
+		Logger::Get().Log("Releasing pixel shader", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 		m_pixelShader->Release();
 		m_pixelShader = 0;
+		Logger::Get().Log("Pixel shader released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the vertex shader.
 	if (m_vertexShader)
 	{
+		Logger::Get().Log("Releasing vertex shader", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 		m_vertexShader->Release();
 		m_vertexShader = 0;
+		Logger::Get().Log("Vertex shader released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	Logger::Get().Log("Shader shut down", __FILE__, __LINE__);

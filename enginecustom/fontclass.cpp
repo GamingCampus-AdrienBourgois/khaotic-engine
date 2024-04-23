@@ -18,7 +18,7 @@ FontClass::~FontClass()
 
 bool FontClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, int fontChoice)
 {
-    Logger::Get().Log("Initializing font class", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing font class", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     char fontFilename[128];
     char fontTextureFilename[128];
@@ -49,7 +49,7 @@ bool FontClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
     result = LoadFontData(fontFilename);
     if (!result)
     {
-        Logger::Get().Log("Failed to load font data", __FILE__, __LINE__);
+        Logger::Get().Log("Failed to load font data", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -57,11 +57,11 @@ bool FontClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCont
     result = LoadTexture(device, deviceContext, fontTextureFilename);
     if (!result)
     {
-        Logger::Get().Log("Failed to load font texture", __FILE__, __LINE__);
+        Logger::Get().Log("Failed to load font texture", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
-    Logger::Get().Log("Font class initialized", __FILE__, __LINE__);
+    Logger::Get().Log("Font class initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     return true;
 }
@@ -148,7 +148,7 @@ bool FontClass::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceCon
     result = m_Texture->Initialize(device, deviceContext, filename);
     if (!result)
     {
-        Logger::Get().Log("Failed to initialize font texture", __FILE__, __LINE__);
+        Logger::Get().Log("Failed to initialize font texture", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 

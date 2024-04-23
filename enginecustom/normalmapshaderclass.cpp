@@ -24,7 +24,7 @@ NormalMapShaderClass::~NormalMapShaderClass()
 
 bool NormalMapShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
-    Logger::Get().Log("Initializing normal map shader", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing normal map shader", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     bool result;
     wchar_t vsFilename[128];
@@ -55,6 +55,8 @@ bool NormalMapShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
         return false;
     }
 
+    Logger::Get().Log("Successfully initialized normal map shader", __FILE__, __LINE__, Logger::LogLevel::Initialize);
+
     return true;
 }
 
@@ -77,7 +79,7 @@ bool NormalMapShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexC
     result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture1, texture2, lightDirection, diffuseColor);
     if (!result)
     {
-        Logger::Get().Log("Failed to set the shader parameters that will be used for rendering", __FILE__, __LINE__);
+        Logger::Get().Log("Failed to set the shader parameters that will be used for rendering", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -90,7 +92,7 @@ bool NormalMapShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexC
 
 bool NormalMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
-    Logger::Get().Log("Initializing normal map shader", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing normal map shader", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     HRESULT result;
     ID3D10Blob* errorMessage;
@@ -277,7 +279,7 @@ bool NormalMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCH
         return false;
     }
 
-    Logger::Get().Log("Successfully initialized normal map shader", __FILE__, __LINE__);
+    Logger::Get().Log("Successfully initialized normal map shader", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     return true;
 }
@@ -285,7 +287,7 @@ bool NormalMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCH
 
 void NormalMapShaderClass::ShutdownShader()
 {
-    Logger::Get().Log("Shutting down normal map shader", __FILE__, __LINE__);
+    Logger::Get().Log("Shutting down normal map shader", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     // Release the light constant buffer.
     if (m_lightBuffer)
@@ -329,7 +331,7 @@ void NormalMapShaderClass::ShutdownShader()
         m_vertexShader = 0;
     }
 
-    Logger::Get().Log("Successfully shut down normal map shader", __FILE__, __LINE__);
+    Logger::Get().Log("Successfully shut down normal map shader", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     return;
 }

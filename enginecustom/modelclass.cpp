@@ -21,7 +21,7 @@ ModelClass::~ModelClass()
 
 bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* modelFilename, vector<string> filename)
 {
-	Logger::Get().Log("Initializing model class", __FILE__, __LINE__);
+	Logger::Get().Log("Initializing model class", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	bool result;
 
@@ -51,7 +51,7 @@ bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 		return false;
 	}
 
-	Logger::Get().Log("Model class initialized", __FILE__, __LINE__);
+	Logger::Get().Log("Model class initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	return true;
 }
@@ -94,7 +94,7 @@ ID3D11ShaderResourceView* ModelClass::GetTexture(int index)
 
 bool ModelClass::InitializeBuffers(ID3D11Device* device)
 {
-	Logger::Get().Log("Initializing buffers", __FILE__, __LINE__);
+	Logger::Get().Log("Initializing buffers", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	VertexType* vertices;
 	unsigned long* indices;
@@ -170,7 +170,7 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	delete[] indices;
 	indices = 0;
 
-	Logger::Get().Log("Buffers initialized", __FILE__, __LINE__);
+	Logger::Get().Log("Buffers initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	return true;
 }
@@ -178,6 +178,7 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 
 void ModelClass::ShutdownBuffers()
 {
+	Logger::Get().Log("Shutting down buffers", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	// Release the index buffer.
 	if (m_indexBuffer)
 	{
@@ -191,6 +192,8 @@ void ModelClass::ShutdownBuffers()
 		m_vertexBuffer->Release();
 		m_vertexBuffer = 0;
 	}
+
+	Logger::Get().Log("Buffers shut down", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 	return;
 }

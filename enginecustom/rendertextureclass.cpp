@@ -21,7 +21,7 @@ RenderTextureClass::~RenderTextureClass()
 
 bool RenderTextureClass::Initialize(ID3D11Device * device, int textureWidth, int textureHeight, float screenDepth, float screenNear, int format)
 {
-    Logger::Get().Log("Initializing RenderTextureClass", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing RenderTextureClass", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     D3D11_TEXTURE2D_DESC textureDesc;
     HRESULT result;
@@ -155,14 +155,14 @@ bool RenderTextureClass::Initialize(ID3D11Device * device, int textureWidth, int
     // Create an orthographic projection matrix for 2D rendering.
     m_orthoMatrix = XMMatrixOrthographicLH((float)textureWidth, (float)textureHeight, screenNear, screenDepth);
 
-    Logger::Get().Log("RenderTextureClass initialized", __FILE__, __LINE__);
+    Logger::Get().Log("RenderTextureClass initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     return true;
 }
 
 void RenderTextureClass::Shutdown()
 {
-    Logger::Get().Log("Shutting down RenderTextureClass", __FILE__, __LINE__);
+    Logger::Get().Log("Shutting down RenderTextureClass", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     if (m_depthStencilView)
     {
@@ -194,7 +194,7 @@ void RenderTextureClass::Shutdown()
         m_renderTargetTexture = 0;
     }
 
-    Logger::Get().Log("RenderTextureClass shut down", __FILE__, __LINE__);
+    Logger::Get().Log("RenderTextureClass shut down", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     return;
 }

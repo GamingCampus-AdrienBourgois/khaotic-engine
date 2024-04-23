@@ -36,7 +36,7 @@ ApplicationClass::~ApplicationClass()
 bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 
-	Logger::Get().Log("Initializing application class", __FILE__, __LINE__);
+	Logger::Get().Log("Initializing application class", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	try 
 	{
@@ -295,7 +295,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		Logger::Get().Log(std::string("Exception caught during initialization: ") + e.what(), __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
-	Logger::Get().Log("Application class initialized", __FILE__, __LINE__);
+	Logger::Get().Log("Application class initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	return true;
 }
@@ -303,82 +303,82 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void ApplicationClass::Shutdown()
 {
-	Logger::Get().Log("Shutting down application class", __FILE__, __LINE__);
+	Logger::Get().Log("Shutting down application class", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 	// Release the shader manager object.
 	if (m_ShaderManager)
 	{
-		Logger::Get().Log("Releasing the shader manager object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the shader manager object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		m_ShaderManager->Shutdown();
 		delete m_ShaderManager;
 		m_ShaderManager = 0;
 
-		Logger::Get().Log("Shader manager object released", __FILE__, __LINE__);
+		Logger::Get().Log("Shader manager object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the frustum class object.
 	if (m_Frustum)
 	{
-		Logger::Get().Log("Releasing the frustum class object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the frustum class object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		delete m_Frustum;
 		m_Frustum = 0;
 
-		Logger::Get().Log("Frustum class object released", __FILE__, __LINE__);
+		Logger::Get().Log("Frustum class object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the display plane object.
 	if (m_DisplayPlane)
 	{
-		Logger::Get().Log("Releasing the display plane object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the display plane object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		m_DisplayPlane->Shutdown();
 		delete m_DisplayPlane;
 		m_DisplayPlane = 0;
 
-		Logger::Get().Log("Display plane object released", __FILE__, __LINE__);
+		Logger::Get().Log("Display plane object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the position object.
 	if (m_Position)
 	{
-		Logger::Get().Log("Releasing the position object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the position object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		delete m_Position;
 		m_Position = 0;
 
-		Logger::Get().Log("Position object released", __FILE__, __LINE__);
+		Logger::Get().Log("Position object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the model list object.
 	if (m_ModelList)
 	{
-		Logger::Get().Log("Releasing the model list object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the model list object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		m_ModelList->Shutdown();
 		delete m_ModelList;
 		m_ModelList = 0;
 
-		Logger::Get().Log("Model list object released", __FILE__, __LINE__);
+		Logger::Get().Log("Model list object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the text objects for the render count string.
 	if (m_RenderCountString)
 	{
-		Logger::Get().Log("Releasing the render count string object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the render count string object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		m_RenderCountString->Shutdown();
 		delete m_RenderCountString;
 		m_RenderCountString = 0;
 
-		Logger::Get().Log("Render count string object released", __FILE__, __LINE__);
+		Logger::Get().Log("Render count string object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the text objects for the mouse strings.
 	if (m_MouseStrings)
 	{
-		Logger::Get().Log("Releasing the mouse strings", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the mouse strings", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		m_MouseStrings[0].Shutdown();
 		m_MouseStrings[1].Shutdown();
@@ -387,108 +387,110 @@ void ApplicationClass::Shutdown()
 		delete[] m_MouseStrings;
 		m_MouseStrings = 0;
 
-		Logger::Get().Log("Mouse strings released", __FILE__, __LINE__);
+		Logger::Get().Log("Mouse strings released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the text object for the fps string.
 	if (m_FpsString)
 	{
-		Logger::Get().Log("Releasing the fps string object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the fps string object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		m_FpsString->Shutdown();
 		delete m_FpsString;
 		m_FpsString = 0;
 
-		Logger::Get().Log("Fps string object released", __FILE__, __LINE__);
+		Logger::Get().Log("Fps string object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the fps object.
 	if (m_Fps)
 	{
-		Logger::Get().Log("Releasing the fps object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the fps object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		delete m_Fps;
 		m_Fps = 0;
 
-		Logger::Get().Log("Fps object released", __FILE__, __LINE__);
+		Logger::Get().Log("Fps object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the font object.
 	if (m_Font)
 	{
-		Logger::Get().Log("Releasing the font object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the font object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		m_Font->Shutdown();
 		delete m_Font;
 		m_Font = 0;
 
-		Logger::Get().Log("Font object released", __FILE__, __LINE__);
+		Logger::Get().Log("Font object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the font shader object.
 	if (m_FontShader)
 	{
-		Logger::Get().Log("Releasing the font shader object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the font shader object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		m_FontShader->Shutdown();
 		delete m_FontShader;
 		m_FontShader = 0;
 
-		Logger::Get().Log("Font shader object released", __FILE__, __LINE__);
+		Logger::Get().Log("Font shader object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the timer object.
 	if (m_Timer)
 	{
-		Logger::Get().Log("Releasing the timer object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the timer object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		delete m_Timer;
 		m_Timer = 0;
 
-		Logger::Get().Log("Timer object released", __FILE__, __LINE__);
+		Logger::Get().Log("Timer object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the sprite object.
 	if (m_Sprite)
 	{
-		Logger::Get().Log("Releasing the sprite object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the sprite object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		m_Sprite->Shutdown();
 		delete m_Sprite;
 		m_Sprite = 0;
 
-		Logger::Get().Log("Sprite object released", __FILE__, __LINE__);
+		Logger::Get().Log("Sprite object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	for (auto light : m_Lights)
 	{
-		Logger::Get().Log("Releasing the light object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the light object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 		if (light)
 		{
 			delete light;
 			light = 0;
 		}
-		Logger::Get().Log("Light object released", __FILE__, __LINE__);
+		Logger::Get().Log("Light object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the light object.
 	if (m_Light)
 	{
-		Logger::Get().Log("Releasing the light object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the light object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 		delete m_Light;
 		m_Light = 0;
-		Logger::Get().Log("Light object released", __FILE__, __LINE__);
+		Logger::Get().Log("Light object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the model object.
 	if (m_Model)
 	{
-		Logger::Get().Log("Releasing the model object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the model object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 		m_Model->Shutdown();
 		delete m_Model;
 		m_Model = 0;
-		Logger::Get().Log("Model object released", __FILE__, __LINE__);
+		Logger::Get().Log("Model object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
+
+	Logger::Get().Log("Application class shut down", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 }
 
 
@@ -517,7 +519,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	// Check if the user pressed escape and wants to exit the application.
 	if (Input->IsEscapePressed())
 	{
-		Logger::Get().Log("User pressed escape, exiting application", __FILE__, __LINE__);
+		Logger::Get().Log("User pressed escape, exiting application", __FILE__, __LINE__, Logger::LogLevel::Input);
 		m_ShouldQuit = true;
 	}
 

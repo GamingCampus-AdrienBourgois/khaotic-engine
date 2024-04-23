@@ -23,7 +23,7 @@ LightMapShaderClass::~LightMapShaderClass()
 
 bool LightMapShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
-    Logger::Get().Log("Initializing LightMapShaderClass", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing LightMapShaderClass", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     bool result;
     wchar_t vsFilename[128];
@@ -54,7 +54,7 @@ bool LightMapShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
         return false;
     }
 
-    Logger::Get().Log("LightMapShaderClass initialized", __FILE__, __LINE__);
+    Logger::Get().Log("LightMapShaderClass initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     return true;
 }
@@ -92,6 +92,7 @@ bool LightMapShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCo
 
 bool LightMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
+    Logger::Get().Log("Initializing shader", __FILE__, __LINE__, Logger::LogLevel::Initialize);
     HRESULT result;
     ID3D10Blob* errorMessage;
     ID3D10Blob* vertexShaderBuffer;
@@ -244,7 +245,7 @@ bool LightMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHA
         return false;
     }
 
-    Logger::Get().Log("Shader initialized", __FILE__, __LINE__);
+    Logger::Get().Log("Shader initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     return true;
 }
@@ -252,7 +253,7 @@ bool LightMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHA
 
 void LightMapShaderClass::ShutdownShader()
 {
-    Logger::Get().Log("Shutting down LightMapShaderClass", __FILE__, __LINE__);
+    Logger::Get().Log("Shutting down LightMapShaderClass", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     // Release the sampler state.
     if (m_sampleState)
@@ -289,7 +290,7 @@ void LightMapShaderClass::ShutdownShader()
         m_vertexShader = 0;
     }
 
-    Logger::Get().Log("LightMapShaderClass shut down", __FILE__, __LINE__);
+    Logger::Get().Log("LightMapShaderClass shut down", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     return;
 }

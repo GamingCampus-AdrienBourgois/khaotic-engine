@@ -21,7 +21,7 @@ ReflectionShaderClass::~ReflectionShaderClass()
 
 bool ReflectionShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
-    Logger::Get().Log("Initializing reflection shader", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing reflection shader", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     bool result;
     wchar_t vsFilename[128];
@@ -51,6 +51,8 @@ bool ReflectionShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
         Logger::Get().Log("Error initializing shader", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
+
+    Logger::Get().Log("Reflection shader initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     return true;
 }
@@ -85,7 +87,7 @@ bool ReflectionShaderClass::Render(ID3D11DeviceContext* deviceContext, int index
 
 bool ReflectionShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
-    Logger::Get().Log("Initializing reflection shader", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing reflection shader", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     HRESULT result;
     ID3D10Blob* errorMessage;
@@ -245,14 +247,14 @@ bool ReflectionShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WC
         return false;
     }
 
-    Logger::Get().Log("Reflection shader initialized", __FILE__, __LINE__);
+    Logger::Get().Log("Reflection shader initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     return true;
 }
 
 void ReflectionShaderClass::ShutdownShader()
 {
-    Logger::Get().Log("Shutting down reflection shader", __FILE__, __LINE__);
+    Logger::Get().Log("Shutting down reflection shader", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     // Release the reflection constant buffer.
     if (m_reflectionBuffer)
@@ -296,7 +298,7 @@ void ReflectionShaderClass::ShutdownShader()
         m_vertexShader = 0;
     }
 
-    Logger::Get().Log("Reflection shader shut down", __FILE__, __LINE__);
+    Logger::Get().Log("Reflection shader shut down", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     return;
 }
