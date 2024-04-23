@@ -168,6 +168,9 @@
     <ClCompile Include="refractionshaderclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="glassshaderclass.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="systemclass.h">
@@ -328,13 +331,44 @@
     <Image Include="water01.tga">
       <Filter>Assets</Filter>
     </Image>
+    <Image Include="glass01.tga">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="ice01.tga">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="icebump01.tga">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="normal03.tga">
+      <Filter>Assets</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-    <None Include="water.vs" />
-    <None Include="..\KhaoticDemo\water.ps" />
-    <None Include="refraction.vs" />
-    <None Include="refraction.ps" />
+    <None Include="glass.ps">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="glass.vs">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="packages.config">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="refraction.ps">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="refraction.vs">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="..\KhaoticDemo\water.ps">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="water.vs">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="glassshaderclass.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="sphere.txt">
@@ -380,26 +414,6 @@
     <CopyFileToFolders Include="plane.txt">
       <Filter>Assets</Filter>
     </CopyFileToFolders>
-    <CopyFileToFolders Include="alphamap.ps" />
-    <CopyFileToFolders Include="alphamap.vs" />
-    <CopyFileToFolders Include="light.vs" />
-    <CopyFileToFolders Include="lightmap.ps" />
-    <CopyFileToFolders Include="lightmap.vs" />
-    <CopyFileToFolders Include="Multitexture.ps" />
-    <CopyFileToFolders Include="Multitexture.vs" />
-    <CopyFileToFolders Include="normalmap.ps" />
-    <CopyFileToFolders Include="normalmap.vs" />
-    <CopyFileToFolders Include="reflection.ps" />
-    <CopyFileToFolders Include="reflection.vs" />
-    <CopyFileToFolders Include="specmap.ps" />
-    <CopyFileToFolders Include="specmap.vs" />
-    <CopyFileToFolders Include="texture.ps" />
-    <CopyFileToFolders Include="texture.vs" />
-    <CopyFileToFolders Include="transparent.ps" />
-    <CopyFileToFolders Include="transparent.vs" />
-    <CopyFileToFolders Include="Color.ps" />
-    <CopyFileToFolders Include="translate.ps" />
-    <CopyFileToFolders Include="translate.vs" />
     <CopyFileToFolders Include="alpha01.tga">
       <Filter>Assets</Filter>
     </CopyFileToFolders>
@@ -429,6 +443,66 @@
     </CopyFileToFolders>
     <CopyFileToFolders Include="sprite04.tga">
       <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="alphamap.ps">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="alphamap.vs">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Color.ps">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="light.vs">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="lightmap.ps">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="lightmap.vs">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Multitexture.ps">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Multitexture.vs">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="normalmap.ps">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="normalmap.vs">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="reflection.ps">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="reflection.vs">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="specmap.ps">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="texture.ps">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="specmap.vs">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="texture.vs">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="translate.ps">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="translate.vs">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="transparent.ps">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="transparent.vs">
+      <Filter>shader</Filter>
     </CopyFileToFolders>
   </ItemGroup>
 </Project>

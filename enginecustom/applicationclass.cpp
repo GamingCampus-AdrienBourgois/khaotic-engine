@@ -21,6 +21,7 @@ ApplicationClass::ApplicationClass()
 	m_DisplayPlane = 0;
 	m_BathModel = 0;
 	m_WaterModel = 0;
+	m_WindowModel = 0;
 	m_Light = 0;
 	m_RefractionTexture = 0;
 	m_ReflectionTexture = 0;
@@ -297,6 +298,24 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 			return false;
 		}
 
+		// Set the file name of the window model.
+		strcpy_s(modelFilename, "cube.txt");
+
+		// Set the file name of the textures for the window model.
+		strcpy_s(textureFilename1, "glass01.tga");
+		strcpy_s(textureFilename2, "normal03.tga");
+
+		// Create and initialize the window model object.
+		m_WindowModel = new ModelClass;
+
+		result = m_WindowModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2, textureFilename3,
+			textureFilename4, textureFilename5, textureFilename6);
+		if (!result)
+		{
+			MessageBox(hwnd, L"Could not initialize the window model object.", L"Error", MB_OK);
+			return false;
+		}
+
 		// Create and initialize the refraction render to texture object.
 		m_RefractionTexture = new RenderTextureClass;
 
@@ -409,6 +428,14 @@ void ApplicationClass::Shutdown()
 		m_BathModel->Shutdown();
 		delete m_BathModel;
 		m_BathModel = 0;
+	}
+
+	// Release the window model object.
+	if (m_WindowModel)
+	{
+		m_WindowModel->Shutdown();
+		delete m_WindowModel;
+		m_WindowModel = 0;
 	}
 
 	// Release the frustum class object.
@@ -814,7 +841,10 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	XMFLOAT4 diffuseColor[4], lightPosition[4], getDirection[4], ambientColor[4];
 	int  modelCount, renderCount, i;
 	bool result, renderModel;
-	float blendAmount;
+	float blendAmount, refractionScale;
+
+	// Set the refraction scale for the glass shader.
+	refractionScale = 0.01f;
 
 	// Set the blending amount to 10%.
 	blendAmount = 0.1f;
@@ -1295,6 +1325,20 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	{
 		return false;
 	}
+
+	// Setup matrices.
+	rotateMatrix = XMMatrixRotationY(rotation);
+	translateMatrix = XMMatrixTranslation(-10.0f, 4.0f, -20.0f);
+	worldMatrix = XMMatrixMultiply(rotateMatrix, translateMatrix);
+
+	// Render the model using the transparent shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_ShaderManager->RenderGlassShader(m_Direct3D->GetDeviceContext(), m_WindowModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_WindowModel->GetTexture(0),
+		m_WindowModel->GetTexture(1), m_RenderTexture->GetShaderResourceView(), refractionScale);
+	{
+		return false;
+	}
 	
 	// Enable the Z buffer and disable alpha blending now that 2D rendering is complete.
 	m_Direct3D->TurnZBufferOn();
@@ -1333,6 +1377,7 @@ void ApplicationClass::GenerateTerrain()
 	char textureFilename4[128];
 	char textureFilename5[128];
 	char textureFilename6[128];
+	char textureFilename7[128];
 
 	XMMATRIX scaleMatrix;
 	float scaleX, scaleY, scaleZ;
@@ -1431,6 +1476,7 @@ void ApplicationClass::AddCube()
 	strcpy_s(textureFilename4, "alpha01.tga");
 	strcpy_s(textureFilename5, "light01.tga");
 	strcpy_s(textureFilename6, "moss01.tga");
+
 	static int cubeCount = 0;
 	float position = cubeCount * 2.0f;
 	Object* newCube = new Object();

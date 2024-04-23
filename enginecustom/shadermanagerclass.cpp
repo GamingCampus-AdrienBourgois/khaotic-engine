@@ -13,6 +13,7 @@ ShaderManagerClass::ShaderManagerClass()
     m_LightMapShader = 0;
     m_RefractionShader = 0;
     m_WaterShader = 0;
+    m_GlassShader = 0;
 }
 
 
@@ -129,6 +130,15 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
         return false;
     }
 
+    // Create and initialize the glass shader object.
+    m_GlassShader = new GlassShaderClass;
+
+    result = m_GlassShader->Initialize(device, hwnd);
+    if (!result)
+    {
+        return false;
+    }
+
     return true;
 }
 
@@ -220,6 +230,14 @@ void ShaderManagerClass::Shutdown()
         m_WaterShader->Shutdown();
         delete m_WaterShader;
         m_WaterShader = 0;
+    }
+
+    // Release the water shader object.
+    if (m_GlassShader)
+    {
+        m_GlassShader->Shutdown();
+        delete m_GlassShader;
+        m_GlassShader = 0;
     }
 
     return;
@@ -387,6 +405,23 @@ bool ShaderManagerClass::RenderWaterShader(ID3D11DeviceContext* deviceContext, i
 
     result = m_WaterShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, reflectionMatrix, reflectionTexture,
         refractionTexture, normalTexture, waterTranslation, reflectRefractScale);
+    if (!result)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ShaderManagerClass::RenderGlassShader(ID3D11DeviceContext* deviceContext,int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
+    ID3D11ShaderResourceView* reflectionMatrix, ID3D11ShaderResourceView* reflectionTexture, ID3D11ShaderResourceView* refractionTexture,
+    float refractionScale)
+{
+    bool result;
+
+
+    result = m_GlassShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, reflectionMatrix, reflectionTexture,
+        refractionTexture, refractionScale);
     if (!result)
     {
         return false;

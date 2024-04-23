@@ -25,6 +25,7 @@
     <ClCompile Include="Cameraclass.cpp" />
     <ClCompile Include="Colorshaderclass.cpp" />
     <ClCompile Include="d3dclass.cpp" />
+    <ClCompile Include="glassshaderclass.cpp" />
     <ClCompile Include="imguiManager.cpp" />
     <ClCompile Include="include\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="include\backends\imgui_impl_win32.cpp" />
@@ -150,6 +151,9 @@
       <FileType>Document</FileType>
     </CopyFileToFolders>
     <None Include="..\KhaoticDemo\water.ps" />
+    <None Include="glass.ps" />
+    <None Include="glass.vs" />
+    <None Include="glassshaderclass.h" />
     <None Include="packages.config" />
     <CopyFileToFolders Include="reflection.ps">
       <FileType>Document</FileType>
@@ -199,10 +203,14 @@
     <CopyFileToFolders Include="alpha01.tga" />
     <Image Include="dirt01.tga" />
     <CopyFileToFolders Include="font01.tga" />
+    <Image Include="glass01.tga" />
+    <Image Include="ice01.tga" />
+    <Image Include="icebump01.tga" />
     <Image Include="KhaoticIcon.ico" />
     <CopyFileToFolders Include="light01.tga" />
     <CopyFileToFolders Include="moss01.tga" />
     <CopyFileToFolders Include="normal01.tga" />
+    <Image Include="normal03.tga" />
     <Image Include="papier.tga" />
     <CopyFileToFolders Include="spec02.tga" />
     <CopyFileToFolders Include="sprite01.tga" />

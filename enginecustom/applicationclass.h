@@ -99,7 +99,7 @@ private :
 
 	D3DClass* m_Direct3D;
 	IDXGISwapChain* m_swapChain;
-	ModelClass* m_Model,* m_GroundModel, * m_WallModel, * m_BathModel, * m_WaterModel;
+	ModelClass* m_Model,* m_GroundModel, * m_WallModel, * m_BathModel, * m_WaterModel, * m_WindowModel;
 	ModelListClass* m_ModelList;
 
 	// ------------------------------------- //
