@@ -13,6 +13,7 @@ ShaderManagerClass::ShaderManagerClass()
     m_LightMapShader = 0;
     m_RefractionShader = 0;
     m_WaterShader = 0;
+    m_ReflectionShader = 0;
 }
 
 
@@ -387,6 +388,21 @@ bool ShaderManagerClass::RenderWaterShader(ID3D11DeviceContext* deviceContext, i
 
     result = m_WaterShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, reflectionMatrix, reflectionTexture,
         refractionTexture, normalTexture, waterTranslation, reflectRefractScale);
+    if (!result)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ShaderManagerClass::RenderReflectionShader(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, ID3D11ShaderResourceView* reflectionTexture, XMMATRIX reflectionMatrix)
+{
+    bool result;
+
+
+    // Set the shader parameters that it will use for rendering.
+    result = m_ReflectionShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture, reflectionTexture, reflectionMatrix);
     if (!result)
     {
         return false;

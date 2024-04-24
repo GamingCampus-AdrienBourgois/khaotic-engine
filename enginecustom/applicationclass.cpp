@@ -267,6 +267,21 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		m_ModelList = new ModelListClass;
 		m_ModelList->Initialize(25);
 
+		// Set the file names of the wall model.
+		strcpy_s(modelFilename, "wall.txt");
+		strcpy_s(textureFilename1, "wall01.tga");
+
+		// Create and initialize the wall model object.
+		m_WallModel = new ModelClass;
+
+		result = m_WallModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2, textureFilename3, textureFilename4,
+			textureFilename5, textureFilename6);
+		if (!result)
+		{
+			MessageBox(hwnd, L"Could not initialize the wall model object.", L"Error", MB_OK);
+			return false;
+		}
+
 		// Set the file names of the bath model.
 		strcpy_s(modelFilename, "bath.txt");
 		strcpy_s(textureFilename1, "marble01.tga");
@@ -409,6 +424,14 @@ void ApplicationClass::Shutdown()
 		m_BathModel->Shutdown();
 		delete m_BathModel;
 		m_BathModel = 0;
+	}
+
+	// Release the wall model object.
+	if (m_WallModel)
+	{
+		m_WallModel->Shutdown();
+		delete m_WallModel;
+		m_WallModel = 0;
 	}
 
 	// Release the frustum class object.
@@ -704,6 +727,7 @@ bool ApplicationClass::RenderRefractionToTexture()
 {
 	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
 	XMFLOAT4 clipPlane;
+	XMFLOAT4 diffuseColor[4], lightPosition[4], getDirection[4], ambientColor[4];
 	bool result;
 
 	// Setup a clipping plane based on the height of the water to clip everything above it.
@@ -720,6 +744,24 @@ bool ApplicationClass::RenderRefractionToTexture()
 	m_Direct3D->GetWorldMatrix(worldMatrix);
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
+
+
+	// Translate to where the wall model will be rendered.
+	worldMatrix = XMMatrixTranslation(0.0f, 6.0f, 8.0f);
+
+	// Put the wall model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_WallModel->Render(m_Direct3D->GetDeviceContext());
+
+	// Render the wall model using the light shader.
+	result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0), diffuseColor, lightPosition, ambientColor);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Reset the world matrix.
+	m_Direct3D->GetWorldMatrix(worldMatrix);
+
 
 	// Translate to where the bath model will be rendered.
 	worldMatrix = XMMatrixTranslation(0.0f, -10.0f, 0.0f);
@@ -857,8 +899,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
 	// Render the model using the light shader.
-	result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
-		diffuseColor, lightPosition, ambientColor);
+	result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0), diffuseColor, lightPosition, ambientColor);
 
 	for (auto cube : m_cubes)
 	{
@@ -1295,6 +1336,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	{
 		return false;
 	}
+
 	
 	// Enable the Z buffer and disable alpha blending now that 2D rendering is complete.
 	m_Direct3D->TurnZBufferOn();
