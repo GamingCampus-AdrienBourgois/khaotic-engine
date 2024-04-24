@@ -35,29 +35,32 @@ void Physics::ApplyGravity(Object* object, float dragValue, float frameTime)
         return;
     }
 
-    // Calculate the acceleration caused by gravity
-    XMVECTOR gravityAcceleration = m_gravity / object->GetMass();
+    if (!object->GetGrounded()) // Verify if the object is grounded
+    {
+        // Calculate the acceleration caused by gravity
+        XMVECTOR gravityAcceleration = m_gravity / object->GetMass();
 
-    // Add the gravity acceleration to the object's current acceleration
-    object->SetAcceleration(object->GetAcceleration() + gravityAcceleration);
+        // Add the gravity acceleration to the object's current acceleration
+        object->SetAcceleration(object->GetAcceleration() + gravityAcceleration);
 
-    // Calculate the acceleration caused by drag
-    XMVECTOR dragAcceleration = -object->GetVelocity() * dragValue / object->GetMass();
+        // Calculate the acceleration caused by drag
+        XMVECTOR dragAcceleration = -object->GetVelocity() * dragValue / object->GetMass();
 
-    // Add the drag acceleration to the object's current acceleration
-    object->SetAcceleration(object->GetAcceleration() + dragAcceleration);
+        // Add the drag acceleration to the object's current acceleration
+        object->SetAcceleration(object->GetAcceleration() + dragAcceleration);
 
-    // Get the object velocity
-    XMVECTOR velocity = object->GetVelocity();
+        // Get the object velocity
+        XMVECTOR velocity = object->GetVelocity();
 
-    // Update the velocity with the object's acceleration
-    velocity += object->GetAcceleration() * frameTime;
+        // Update the velocity with the object's acceleration
+        velocity += object->GetAcceleration() * frameTime;
 
-    // Set the new velocity
-    object->SetVelocity(velocity);
+        // Set the new velocity
+        object->SetVelocity(velocity);
+    }
 }
 
-void Physics::ApplyForce(Object* object, XMVECTOR force)
+void Physics::AddForce(Object* object, XMVECTOR force)
 {
 	if (object == nullptr) // Verify if the object is not null
 	{
@@ -77,30 +80,33 @@ void Physics::ApplyForce(Object* object, XMVECTOR force)
 bool Physics::IsColliding(Object* object1, Object* object2)
 {
 
-    if (object1 == nullptr || object2 == nullptr) // Verify if the objects are not null
+    std::string type1 = object1->GetName();
+    std::string type2 = object2->GetName();
+
+    if (type1 == "cube" && type2 == "cube")
     {
-		return false;
-	}
+        return CubesOverlap(object1, object2);
+    }
 
-    // Get the positions of the two objects
-    XMVECTOR position1 = object1->GetPosition();
-    XMVECTOR position2 = object2->GetPosition();
+    // Add more collision checks for other types of objects here...
 
-    // Get the scale of the two objects (assuming the scale represents the size of the cube)
-    XMVECTOR scale1 = object1->GetScale();
-    XMVECTOR scale2 = object2->GetScale();
+    return false;
+}
 
-    // Calculate the min and max coordinates of the two cubes
-    XMVECTOR min1 = position1 - scale1 / 2.0f;
-    XMVECTOR max1 = position1 + scale1 / 2.0f;
-    XMVECTOR min2 = position2 - scale2 / 2.0f;
-    XMVECTOR max2 = position2 + scale2 / 2.0f;
+bool Physics::CubesOverlap(Object* cube1, Object* cube2)
+{
+    XMVECTOR position1 = cube1->GetPosition();
+    XMVECTOR position2 = cube2->GetPosition();
 
-    // Check if the two cubes overlap on all three axes
-    bool overlapX = max1.m128_f32[0] > min2.m128_f32[0] && min1.m128_f32[0] < max2.m128_f32[0];
-    bool overlapY = max1.m128_f32[1] > min2.m128_f32[1] && min1.m128_f32[1] < max2.m128_f32[1];
-    bool overlapZ = max1.m128_f32[2] > min2.m128_f32[2] && min1.m128_f32[2] < max2.m128_f32[2];
+    XMVECTOR scale1 = cube1->GetScale();
+    XMVECTOR scale2 = cube2->GetScale();
 
-    // If the cubes overlap on all three axes, they are colliding
-    return overlapX && overlapY && overlapZ;
+    XMVECTOR min1 = position1 - scale1;
+    XMVECTOR max1 = position1 + scale1;
+    XMVECTOR min2 = position2 - scale2;
+    XMVECTOR max2 = position2 + scale2;
+
+    return (min1.m128_f32[0] <= max2.m128_f32[0] && max1.m128_f32[0] >= min2.m128_f32[0] &&
+        min1.m128_f32[1] <= max2.m128_f32[1] && max1.m128_f32[1] >= min2.m128_f32[1] &&
+        min1.m128_f32[2] <= max2.m128_f32[2] && max1.m128_f32[2] >= min2.m128_f32[2]);
 }

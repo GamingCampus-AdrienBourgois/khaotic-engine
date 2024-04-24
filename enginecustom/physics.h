@@ -13,8 +13,9 @@ public:
     XMVECTOR GetGravity() const; // Get the gravity value
     void SetGravity(XMVECTOR gravity); // Define the gravity value
     void ApplyGravity(Object*, float, float); // Apply gravity to an object
-    void ApplyForce(Object*, XMVECTOR);
+    void AddForce(Object*, XMVECTOR);
     bool IsColliding(Object*, Object*);
+    bool CubesOverlap(Object*, Object*);
 
 private:
     XMVECTOR m_gravity;

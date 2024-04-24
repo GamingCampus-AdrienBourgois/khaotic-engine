@@ -173,6 +173,11 @@ void Object::SetVelocity(XMVECTOR velocity)
 	m_velocity = velocity;
 }
 
+void Object::AddVelocity(float frameTime)
+{
+	m_velocity += m_acceleration * frameTime;
+}
+
 XMVECTOR Object::GetVelocity() const
 {
 	return m_velocity;

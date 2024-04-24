@@ -742,9 +742,19 @@ bool ApplicationClass::Frame(InputClass* Input)
 			// Reset acceleration for the new frame
 			object->SetAcceleration(XMVectorZero());
 
+			object->SetGrounded(false);
+
+			for (auto& chunk : m_terrainChunk)
+			{
+				if (m_Physics->IsColliding(object, chunk))
+				{
+					object->SetVelocity(XMVectorSetY(object->GetVelocity(), 0.0f));
+					object->SetAcceleration(XMVectorSetY(object->GetAcceleration(), 0.0f));
+					object->SetGrounded(true);
+				}
+			}
+
 			// Apply forces
-
-
 			float forceX = 0, forceY = 0, forceZ = 0, forceW = 0;
 
 			if (keyLeft)
@@ -759,44 +769,23 @@ bool ApplicationClass::Frame(InputClass* Input)
 			{
 				forceY = 40.0f;
 			}
-			if (keyDown)
+			if (keyDown && !object->GetGrounded())
 			{
 				forceY = -40.0f;
 			}
 
-			bool isGrounded = object->GetGrounded();
+			XMVECTOR force = XMVectorSet(forceX, forceY, forceZ, forceW);
+			m_Physics->AddForce(object, force);
 
-			for (auto& chunk : m_terrainChunk)
-			{
-				if (m_Physics->IsColliding(object, chunk))
-				{
-					isGrounded = true;
-				}
-			}
+			// Update velocity based on acceleration
+			object->AddVelocity(frameTime);
 
-			if (!isGrounded)
-			{
-				XMVECTOR force = XMVectorSet(forceX, forceY, forceZ, forceW);
-				m_Physics->ApplyForce(object, force);
-
-				// Update velocity based on acceleration
-				XMVECTOR velocity = object->GetVelocity();
-				velocity = velocity + object->GetAcceleration() * frameTime;
-				object->SetVelocity(velocity);
-
-				// Update position based on velocity
-				XMVECTOR position = object->GetPosition();
-				position = position + velocity * frameTime;
-				object->SetPosition(position);
-
-				m_Physics->ApplyGravity(object, 1.0f, frameTime);
-			}
-			else
-			{
-				object->SetVelocity(XMVectorZero());
-			}
-
-
+			// Update position based on velocity
+			XMVECTOR position = object->GetPosition();
+			position = position + object->GetVelocity() * frameTime;
+			object->SetPosition(position);
+			
+			m_Physics->ApplyGravity(object, 1.0f, frameTime);
 
 			// Check if the object has fallen below a certain position
 			if (XMVectorGetY(object->GetPosition()) < -30.0f)
@@ -940,7 +929,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 		}
 	}
 
-	for (auto object : m_object)
+	for (auto& object : m_object)
 	{
 		scaleMatrix = object->GetScaleMatrix();
 		if (object->m_demoSpinning)
@@ -965,7 +954,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z)
 	}
 
 	// Render terrain
-	for (auto chunk : m_terrainChunk)
+	for (auto& chunk : m_terrainChunk)
 	{
 
 		scaleMatrix = chunk->GetScaleMatrix();
@@ -1282,7 +1271,7 @@ void ApplicationClass::GenerateTerrain()
 	scaleMatrix = XMMatrixScaling(scaleX, scaleY, scaleZ);
 
 	// Set the file name of the model.
-	strcpy_s(modelFilename, "plane.txt");
+	strcpy_s(modelFilename, "cube.txt");
 	strcpy_s(textureFilename, "stone01.tga");
 	strcpy_s(textureFilename2, "moss01.tga");
 	strcpy_s(textureFilename3, "alpha01.tga");
@@ -1297,7 +1286,9 @@ void ApplicationClass::GenerateTerrain()
 
 			newTerrain->SetScaleMatrix(scaleMatrix);
 
-			newTerrain->SetTranslateMatrix(XMMatrixTranslation(i / 2 * (scaleX * 2), -5.0f, j * (scaleZ * 2)));
+			newTerrain->SetTranslateMatrix(XMMatrixTranslation(i / 2 * (scaleX * 2), -10.0f, j * (scaleZ * 2)));
+
+			newTerrain->SetName("cube");
 
 			m_terrainChunk.push_back(newTerrain);
 
@@ -1329,7 +1320,7 @@ void ApplicationClass::AddKobject(WCHAR* filepath)
 	newObject->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2, textureFilename3);
 	newObject->SetMass(1.0f);
 
-	newObject->SetTranslateMatrix(XMMatrixTranslation(0.0f, 10.0f, 0.0f));
+	newObject->SetTranslateMatrix(XMMatrixTranslation(0.0f, 50.0f, 0.0f));
 	newObject->SetName(filename);
 
 	m_object.push_back(newObject);

@@ -28,6 +28,7 @@ public:
 	XMVECTOR GetScale();
 
 	void SetVelocity(XMVECTOR);
+	void AddVelocity(float);
 	XMVECTOR GetVelocity() const;
 	void SetAcceleration(XMVECTOR);
 	XMVECTOR GetAcceleration() const;
