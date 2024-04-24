@@ -19,7 +19,13 @@ Pré-requis pour le moteur:
 
 ```bash
   cd tools/build
+```
+
+```bash
   bootstrap vc143
+```
+
+```bash
   .\b2
 ```
 
