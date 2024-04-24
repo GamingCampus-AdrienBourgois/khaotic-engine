@@ -22,7 +22,7 @@ Pré-requis pour le moteur:
 ```
 
 ```bash
-  bootstrap vc143
+  bootstrap.bat
 ```
 
 ```bash
