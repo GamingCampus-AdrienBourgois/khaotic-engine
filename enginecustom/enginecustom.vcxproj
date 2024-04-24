@@ -145,6 +145,8 @@
     <CopyFileToFolders Include="normalmap.vs">
       <FileType>Document</FileType>
     </CopyFileToFolders>
+    <None Include="..\ChatClient\ChatClient.sln" />
+    <None Include="..\ChatServer\Chat Server.sln" />
     <None Include="packages.config" />
     <CopyFileToFolders Include="reflection.ps">
       <FileType>Document</FileType>

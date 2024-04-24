@@ -31,6 +31,9 @@
     <Filter Include="Assets">
       <UniqueIdentifier>{2978535b-193d-4876-83be-1c3c4470db62}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Chat">
+      <UniqueIdentifier>{21b975ca-8ebe-43c1-957e-8e0c4a30cbc0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -316,6 +319,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="..\ChatServer\Chat Server.sln">
+      <Filter>Chat</Filter>
+    </None>
+    <None Include="..\ChatClient\ChatClient.sln">
+      <Filter>Chat</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="sphere.txt">
