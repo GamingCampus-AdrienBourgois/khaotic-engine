@@ -87,8 +87,10 @@ bool Physics::IsColliding(Object* object1, Object* object2)
     {
         return CubesOverlap(object1, object2);
     }
-
-    // Add more collision checks for other types of objects here...
+    if (type1 == "sphere" && type2 == "sphere")
+    {
+		return SpheresOverlap(object1, object2);
+	}
 
     return false;
 }
@@ -109,4 +111,24 @@ bool Physics::CubesOverlap(Object* cube1, Object* cube2)
     return (min1.m128_f32[0] <= max2.m128_f32[0] && max1.m128_f32[0] >= min2.m128_f32[0] &&
         min1.m128_f32[1] <= max2.m128_f32[1] && max1.m128_f32[1] >= min2.m128_f32[1] &&
         min1.m128_f32[2] <= max2.m128_f32[2] && max1.m128_f32[2] >= min2.m128_f32[2]);
+}
+
+bool Physics::SpheresOverlap(Object* sphere1, Object* sphere2)
+{
+    XMVECTOR position1 = sphere1->GetPosition();
+    XMVECTOR position2 = sphere2->GetPosition();
+
+    XMVECTOR scale1 = sphere1->GetScale();
+    XMVECTOR scale2 = sphere2->GetScale();
+
+    float distance = sqrt(
+        (position1.m128_f32[0] - position2.m128_f32[0]) * (position1.m128_f32[0] - position2.m128_f32[0]) +
+        (position1.m128_f32[1] - position2.m128_f32[1]) * (position1.m128_f32[1] - position2.m128_f32[1]) +
+        (position1.m128_f32[2] - position2.m128_f32[2]) * (position1.m128_f32[2] - position2.m128_f32[2])
+    );
+
+    float radius1 = XMVectorGetX(XMVector3Length(scale1));
+    float radius2 = XMVectorGetX(XMVector3Length(scale2) / 2);
+
+    return distance < radius1 + radius2;
 }

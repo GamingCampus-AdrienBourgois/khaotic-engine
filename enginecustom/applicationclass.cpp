@@ -748,8 +748,14 @@ bool ApplicationClass::Frame(InputClass* Input)
 			{
 				if (m_Physics->IsColliding(object, chunk))
 				{
+
+					// Stop vertical movement, like gravity
 					object->SetVelocity(XMVectorSetY(object->GetVelocity(), 0.0f));
 					object->SetAcceleration(XMVectorSetY(object->GetAcceleration(), 0.0f));
+
+					//// Stop movement in any direction
+					//object->SetVelocity(XMVectorZero());
+					//object->SetAcceleration(XMVectorZero());
 					object->SetGrounded(true);
 				}
 			}
@@ -1265,21 +1271,21 @@ void ApplicationClass::GenerateTerrain()
 	int scaleX, scaleY, scaleZ;
 
 	scaleX = 10.0f;
-	scaleY = 1.0f;
+	scaleY = 10.0f;
 	scaleZ = 10.0f;
 
 	scaleMatrix = XMMatrixScaling(scaleX, scaleY, scaleZ);
 
 	// Set the file name of the model.
-	strcpy_s(modelFilename, "cube.txt");
+	strcpy_s(modelFilename, "sphere.txt");
 	strcpy_s(textureFilename, "stone01.tga");
 	strcpy_s(textureFilename2, "moss01.tga");
 	strcpy_s(textureFilename3, "alpha01.tga");
 
 	// for loop to generate terrain chunks for a 10x10 grid
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 1; i++)
 	{
-		for (int j = 0; j < 10; j++)
+		for (int j = 0; j < 1; j++)
 		{
 			Object* newTerrain = new Object();
 			newTerrain->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2, textureFilename3);
@@ -1288,7 +1294,7 @@ void ApplicationClass::GenerateTerrain()
 
 			newTerrain->SetTranslateMatrix(XMMatrixTranslation(i / 2 * (scaleX * 2), -10.0f, j * (scaleZ * 2)));
 
-			newTerrain->SetName("cube");
+			newTerrain->SetName("sphere");
 
 			m_terrainChunk.push_back(newTerrain);
 

@@ -2,6 +2,7 @@
 #define _PHYSICS_H_
 
 #include "object.h"
+#include "math.h"
 
 class Physics : public Object
 {
@@ -16,6 +17,7 @@ public:
     void AddForce(Object*, XMVECTOR);
     bool IsColliding(Object*, Object*);
     bool CubesOverlap(Object*, Object*);
+    bool SpheresOverlap(Object*, Object*);
 
 private:
     XMVECTOR m_gravity;
