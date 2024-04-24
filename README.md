@@ -26,12 +26,12 @@ Pré-requis pour le moteur:
 ```
 
 ```bash
-  .\b2
+  .\b2 --with-python
 ```
 
-- Une fois fait importer les dossiers "boost" et "libs" présent dans le dossier boost_x_xx_x dans le moteur.
-- Placer "boost" dans le dossier "enginecustom/include" du moteur.
-- Plaer "libs" dans le dossier "enginecustom/libs/boost_lib"
+- Une fois fait importer contenu du dossier boost_x_xx_x dans le moteur.
+- Placer le contenu dans le dossier "enginecustom/include/boost" du moteur.
+- Placer "stage" dans le dossier "enginecustom/libs"
 - Vous pouvez ouvrir visual studio est lancer le moteur
 
 ----
