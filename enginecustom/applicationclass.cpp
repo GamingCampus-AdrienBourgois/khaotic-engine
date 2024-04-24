@@ -299,7 +299,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		}
 
 		// Set the file name of the window model.
-		strcpy_s(modelFilename, "cube.txt");
+		strcpy_s(modelFilename, "square.txt");
 
 		// Set the file name of the textures for the window model.
 		strcpy_s(textureFilename1, "glass01.tga");
@@ -820,8 +820,7 @@ bool ApplicationClass::RenderSceneToTexture(float rotation)
 	// Render the model using the texture shader.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
-	result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-		m_Model->GetTexture(1));
+	result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0));
 	if (!result)
 	{
 		return false;
@@ -964,6 +963,31 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 			logger.Log("Could not render the terrain model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
+	}
+
+	// Rotate the world matrix by the rotation value so that the cube will spin.
+	worldMatrix = XMMatrixRotationY(rotation);
+
+	// Render the cube model using the texture shader.
+	m_Model->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0));
+	if (!result)
+	{
+		return false;
+	}
+
+	// Translate to back where the window model will be rendered.
+	worldMatrix = XMMatrixTranslation(0.0f, 0.0f, -1.5f);
+
+	// Render the window model using the glass shader.
+	m_WindowModel->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_GlassShader->Render(m_Direct3D->GetDeviceContext(), m_WindowModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_WindowModel->GetTexture(0),
+		m_WindowModel->GetTexture(0), m_RenderTexture->GetShaderResourceView(), refractionScale);
+	if (!result)
+	{
+		return false;
 	}
 
 	// Setup matrices - Top display plane.

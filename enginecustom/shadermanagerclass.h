@@ -16,6 +16,7 @@
 #include "refractionshaderclass.h"
 #include "watershaderclass.h"
 #include "glassshaderclass.h"
+#include "reflectionshaderclass.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -46,6 +47,8 @@ public:
         ID3D11ShaderResourceView*, ID3D11ShaderResourceView*, float, float);
     bool RenderGlassShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*,
         ID3D11ShaderResourceView*, ID3D11ShaderResourceView*, float);
+    bool RenderReflectionShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, ID3D11ShaderResourceView*, XMMATRIX);
+    
 private:
     TextureShaderClass* m_TextureShader;
     NormalMapShaderClass* m_NormalMapShader;
@@ -59,6 +62,7 @@ private:
     RefractionShaderClass* m_RefractionShader;
     WaterShaderClass* m_WaterShader;
     GlassShaderClass* m_GlassShader;
+    ReflectionShaderClass* m_ReflectionShader;
 };
 
 #endif

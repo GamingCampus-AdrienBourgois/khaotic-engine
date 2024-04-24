@@ -28,6 +28,8 @@
 #include "frustumclass.h"
 #include "rendertextureclass.h"
 #include "displayplaneclass.h"
+#include "glassshaderclass.h"
+#include "textureclass.h"
 
 
 /////////////
@@ -137,6 +139,8 @@ private :
 	// ----------------------------------- //
 
 	ShaderManagerClass* m_ShaderManager;
+	GlassShaderClass* m_GlassShader;
+	TextureShaderClass* m_TextureShader;
 	FontShaderClass* m_FontShader;
 	BitmapClass* m_Bitmap;
 	SpriteClass* m_Sprite;
