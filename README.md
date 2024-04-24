@@ -96,7 +96,7 @@ ImGui is used to allow interaction between the user and the objects in the scene
 [![Demo Video](https://img.youtube.com/vi/qCOCTyB_97c/0.jpg)](https://www.youtube.com/watch?v=qCOCTyB_97c)
 
 
-## Bug Report
+## Bug Report :
 
 Vous pouvez signalez les problèmes en ouvrant un ticket dans [Issues](https://github.com/GamingCampus-AdrienBourgois/khaotic-engine/issues)
 
