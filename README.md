@@ -12,7 +12,7 @@ This **DirectX11** based engine uses **ImGui** with an abstraction layer to enab
 
 ## Installation
 
-Pré-requis pour le moteur:
+Pré-requis pour le moteur : python 3.12 et Boost
 
 - Télécharger la librairie Boost v.1_85_0 (Pour utilier python avec le c++)
 - Ouvrez un terminal, placer vous dans le dossier boost que vous venez d'extraire et entrez ces commandes bash pour build Boost
