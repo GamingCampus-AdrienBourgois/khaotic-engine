@@ -1,5 +1,6 @@
 #pragma once
 #include "modelclass.h"
+#include <Python.h>
 
 class Object : public ModelClass
 {
@@ -38,6 +39,11 @@ public:
 	std::string GetName();
 	void SetName(std::string name);
 
+	// SCRIPTING FUNCTIONS // 
+	std::string GetScriptName() const { return m_scriptName; }
+	void SetScriptName(const std::string scriptName);
+	void ExecuteScript();
+
 public :
 	bool m_demoSpinning = false;
 
@@ -49,5 +55,6 @@ private:
 	XMMATRIX m_worldMatrix;
 
 	std::string m_name;
+	std::string m_scriptName;
 
 };

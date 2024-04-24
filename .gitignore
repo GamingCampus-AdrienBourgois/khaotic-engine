@@ -5,6 +5,10 @@
 # Prerequisites
 *.d
 
+# Exertal Lib
+/enginecustom/include/boost*
+/enginecustom/libs/boost_lib*
+
 # Compiled Object files
 *.slo
 *.lo

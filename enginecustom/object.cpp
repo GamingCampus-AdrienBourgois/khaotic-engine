@@ -151,6 +151,7 @@ void Object::Update()
 	UpdateTranslateMatrix();
 	UpdateRotateMatrix();
 	UpdateScaleMatrix();
+	ExecuteScript();
 }
 
 std::string Object::GetName()
@@ -161,4 +162,35 @@ std::string Object::GetName()
 void Object::SetName(std::string name)
 {
 	m_name = name;
+}
+
+void Object::ExecuteScript()
+{
+
+	if (!m_scriptName.empty())
+	{
+		Py_Initialize();
+		FILE* file;
+		fopen_s(&file, m_scriptName.c_str(), "r");
+		if (file != nullptr)
+		{
+			PyRun_SimpleFile(file, m_scriptName.c_str());
+			fclose(file);
+		}
+		else
+		{
+			Logger::Get().Log("Failed to open script file: " + m_scriptName, __FILE__, __LINE__, Logger::LogLevel::Scripting_Error);
+		}
+		Py_Finalize();
+	}
+	else
+	{
+		Logger::Get().Log("No script name set", __FILE__, __LINE__, Logger::LogLevel::Scripting_Error);
+	}
+}
+
+void Object::SetScriptName(const std::string scriptName)
+{
+	Logger::Get().Log("Script name set to: " + scriptName, __FILE__, __LINE__, Logger::LogLevel::Scripting);
+	m_scriptName = scriptName;
 }

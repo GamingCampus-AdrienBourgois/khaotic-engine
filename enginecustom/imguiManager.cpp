@@ -238,6 +238,36 @@ void imguiManager::WidgetObjectWindow(ApplicationClass* app)
 			// Demo spinning
 			std::string demoLabel = "Demo spinning##" + std::to_string(index);
 			ImGui::Checkbox(demoLabel.c_str(), &object->m_demoSpinning);
+
+			ImGui::Separator();
+
+			// Scripting
+			std::string scriptLabel = "Script##" + std::to_string(index);
+			if (ImGui::Button(scriptLabel.c_str()))
+			{
+				// Open file dialog
+				OPENFILENAME ofn;
+				WCHAR szFile[260];
+				ZeroMemory(&ofn, sizeof(ofn));
+				ofn.lStructSize = sizeof(ofn);
+				ofn.hwndOwner = NULL;
+				ofn.lpstrFile = szFile;
+				ofn.lpstrFile[0] = '\0';
+				ofn.nMaxFile = sizeof(szFile);
+				ofn.lpstrFilter = L"Python\0*.py\0";
+				ofn.nFilterIndex = 1;
+				ofn.lpstrFileTitle = NULL;
+				ofn.nMaxFileTitle = 0;
+				ofn.lpstrInitialDir = NULL;
+				ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+				if (GetOpenFileName(&ofn))
+				{
+					std::wstring ws(ofn.lpstrFile);
+					std::string str(ws.begin(), ws.end());
+					object->SetScriptName(str);
+				}
+			}
 		}
 		index++;
 	}

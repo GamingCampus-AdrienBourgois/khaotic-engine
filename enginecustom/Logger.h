@@ -34,6 +34,7 @@ public:
         Audio,
         Network,
         Scripting,
+        Scripting_Error,
         AI,
         Resource,
         Memory,
@@ -112,6 +113,9 @@ public:
             case LogLevel::Scripting:
                 levelStr = "SCRIPTING";
                 break;
+            case LogLevel::Scripting_Error:
+                levelStr = "SCRIPTING_ERROR";
+				break;
             case LogLevel::AI:
                 levelStr = "AI";
 				break;
