@@ -268,6 +268,15 @@ void imguiManager::WidgetObjectWindow(ApplicationClass* app)
 					object->SetScriptName(str);
 				}
 			}
+
+			ImGui::Separator();
+
+			// Execute script
+			std::string executeLabel = "Execute##" + std::to_string(index);
+			if (ImGui::Button(executeLabel.c_str()))
+			{
+				object->ExecutePythonScript(object->GetScriptName());
+			}
 		}
 		index++;
 	}
