@@ -48,8 +48,8 @@ This **DirectX11** based engine uses **ImGui** with an abstraction layer to enab
  - **Texture Translation** 
  - **Transparency**
  - **Water**
- -- **Refraction**
- -- *Reflection (cassé / broken)*
+   - **Refraction**
+   - *Reflection (cassé / broken)*
  - *Glace (cassé / broken)*
  - *Verre (cassé / broken)*
  
