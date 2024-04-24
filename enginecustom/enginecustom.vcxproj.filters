@@ -411,5 +411,8 @@
     <CopyFileToFolders Include="sprite04.tga">
       <Filter>Assets</Filter>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="libs\python\python312.dll">
+      <Filter>Fichiers de ressources</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

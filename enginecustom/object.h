@@ -1,6 +1,7 @@
 #pragma once
 #include "modelclass.h"
 #include <Python.h>
+#include "boost\python.hpp"
 
 class Object : public ModelClass
 {
@@ -42,7 +43,7 @@ public:
 	// SCRIPTING FUNCTIONS // 
 	std::string GetScriptName() const { return m_scriptName; }
 	void SetScriptName(const std::string scriptName);
-	void ExecuteScript();
+	void ExecutePythonScript(const std::string& scriptName);
 
 public :
 	bool m_demoSpinning = false;
