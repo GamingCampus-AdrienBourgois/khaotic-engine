@@ -2,7 +2,7 @@
 
 Khaotic Engine est un moteur de rendu fait en **C++** réalisé par une petite équipe dans le but d'apprendre à utiliser les API de rendu (OpenGL,DirectX 11/12 et Vulkan).
 
-Ce moteur est basé sur **DirectX11** utilise **ImGui** avec une couche d'abstraction pour permetre son usage avec d'autres API.
+Ce moteur est basé sur **DirectX11** utilise **ImGui** et **Boost** avec une couche d'abstraction pour permetre son usage avec d'autres API.
 
 ---
 
@@ -10,16 +10,23 @@ Khaotic Engine is a rendering engine made in **C++** by a small team with the ai
 
 This **DirectX11** based engine uses **ImGui** with an abstraction layer to enable its use with other APIs.
 
-
 ## Installation
 
-**Par la solution + Debogueur :**
+Pré-requis pour le moteur:
 
- 1.  Télécharger la Release Beta
- 2.  Dezip le Zip
- 3.  Ouvrir le fichier en .sln
- 4. Mettre le débogueur en "Release"
- 5.  Lancer le déboguage
+- Télécharger la librairie Boost v.1_85_0 (Pour utilier python avec le c++)
+- Ouvrez un terminal, placer vous dans le dossier boost que vous venez d'extraire et entrez ces commandes bash pour build Boost
+
+```bash
+  cd tools/build
+  bootstrap vc143
+  .\b2
+```
+
+- Une fois fait importer les dossiers "boost" et "libs" présent dans le dossier boost_x_xx_x dans le moteur.
+- Placer "boost" dans le dossier "enginecustom/include" du moteur.
+- Plaer "libs" dans le dossier "enginecustom/libs/boost_lib"
+- Vous pouvez ouvrir visual studio est lancer le moteur
 
 ----
 
