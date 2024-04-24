@@ -122,7 +122,7 @@ void TCPServer::run() {
 
 					SOCKET client = accept(listeningSocket, nullptr, nullptr);		//Accept incoming connection & identify it as a new client. 
 					FD_SET(client, &master);		//Add new connection to list of sockets.  
-					std::string welcomeMsg = "Welcome to Amine's Chat.\n";			//Notify client that he entered the chat. 
+					std::string welcomeMsg = "Welcome to Khaotic's Chat.\n";			//Notify client that he entered the chat. 
 					send(client, welcomeMsg.c_str(), welcomeMsg.size() + 1, 0);
 					std::cout << "New user joined the chat." << std::endl;			//Log connection on server side. 
 
