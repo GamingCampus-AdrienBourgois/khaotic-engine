@@ -18,7 +18,7 @@ Pré-requis pour le moteur:
 - Ouvrez un terminal, placer vous dans le dossier boost que vous venez d'extraire et entrez ces commandes bash pour build Boost
 
 ```bash
-  cd tools/build
+  cd chemin/du/dossier/boost
 ```
 
 ```bash
