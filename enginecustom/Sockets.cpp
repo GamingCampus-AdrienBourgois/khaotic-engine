@@ -31,5 +31,6 @@ namespace Sockets
 #else
 		close(s);
 #endif
+		return 0;
 	}
 }
