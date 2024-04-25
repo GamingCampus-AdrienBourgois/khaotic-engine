@@ -157,7 +157,7 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="normalmapshaderclass.cpp">
-      <Filter>Assets</Filter>
+      <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
