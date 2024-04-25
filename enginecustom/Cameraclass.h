@@ -30,10 +30,10 @@ public:
 
 
 	void Render();
-	XMMATRIX GetViewMatrix(XMMATRIX& viewMatrix);
+	XMMATRIX GetViewMatrix(XMMATRIX& viewMatrix) const;
 
 	void RenderReflection(float);
-	void GetReflectionViewMatrix(XMMATRIX&);
+	void GetReflectionViewMatrix(XMMATRIX&) const;
 
 private:
 	float m_positionX, m_positionY, m_positionZ;

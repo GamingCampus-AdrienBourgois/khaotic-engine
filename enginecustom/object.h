@@ -17,15 +17,25 @@ public:
 	void SetRotation(XMVECTOR rotation);
 	void SetScale(XMVECTOR scale);
 
-	XMMATRIX GetScaleMatrix();
-	XMMATRIX GetRotateMatrix();
-	XMMATRIX GetTranslateMatrix();
-	XMMATRIX GetSRMatrix();
-	XMMATRIX GetWorldMatrix();
+	XMMATRIX GetScaleMatrix() const;
+	XMMATRIX GetRotateMatrix() const;
+	XMMATRIX GetTranslateMatrix() const;
+	XMMATRIX GetSRMatrix() const;
+	XMMATRIX GetWorldMatrix() const;
 
 	XMVECTOR GetPosition();
 	XMVECTOR GetRotation();
 	XMVECTOR GetScale();
+
+	void SetVelocity(XMVECTOR);
+	void AddVelocity(float);
+	XMVECTOR GetVelocity() const;
+	void SetAcceleration(XMVECTOR);
+	XMVECTOR GetAcceleration() const;
+	void SetMass(float);
+	float GetMass() const;
+	void SetGrounded(bool);
+	bool IsGrounded() const;
 
 	void UpdateWorldMatrix();
 	void UpdateSRMatrix();
@@ -37,9 +47,14 @@ public:
 
 	std::string GetName();
 	void SetName(std::string name);
+	int SetId(int id);
+	int GetId() const;
 
 public :
 	bool m_demoSpinning = false;
+	XMVECTOR m_previousPosition;
+	XMVECTOR m_velocity;
+	int m_id;
 
 private:
 	XMMATRIX m_scaleMatrix;
@@ -47,6 +62,10 @@ private:
 	XMMATRIX m_translateMatrix;
 	XMMATRIX m_srMatrix;
 	XMMATRIX m_worldMatrix;
+
+	XMVECTOR m_acceleration;
+	float m_mass;
+	bool m_isGrounded;
 
 	std::string m_name;
 

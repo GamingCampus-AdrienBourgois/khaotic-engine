@@ -10,6 +10,11 @@ PositionClass::PositionClass()
     m_positionZ = 0.0f;
     m_leftTurnSpeed = 0.0f;
     m_rightTurnSpeed = 0.0f;
+    m_horizontalTurnSpeed = 0.0f;
+    m_verticalTurnSpeed = 0.0f;
+    m_verticalTurnSpeed = 0.0f;
+    m_cameraSpeed = 4.0f;
+    m_speed = m_cameraSpeed;
 }
 
 
@@ -28,14 +33,14 @@ void PositionClass::SetFrameTime(float time)
     return;
 }
 
-void PositionClass::GetRotation(float& y, float& x)
+void PositionClass::GetRotation(float& y, float& x) const
 {
     y = m_rotationY;
     x = m_rotationX;
     return;
 }
 
-void PositionClass::GetPosition(float& x, float& y, float& z)
+void PositionClass::GetPosition(float& x, float& y, float& z) const
 {
     x = m_positionX;
     y = m_positionY;
@@ -108,11 +113,10 @@ void PositionClass::TurnRight(bool keydown)
     return;
 }
 
-void PositionClass::TurnMouse(int deltaX, int deltaY, bool rightMouseDown)
+void PositionClass::TurnMouse(float deltaX, float deltaY, float sensitivity, bool rightMouseDown)
 {
-    float speed = 0.1f;
     // The turning speed is proportional to the horizontal mouse movement
-    m_horizontalTurnSpeed = deltaX * speed;
+    m_horizontalTurnSpeed = deltaX * sensitivity;
 
     if (rightMouseDown)
     {
@@ -128,7 +132,7 @@ void PositionClass::TurnMouse(int deltaX, int deltaY, bool rightMouseDown)
         }
 
         // The turning speed is proportional to the vertical mouse movement
-        m_verticalTurnSpeed = deltaY * speed;
+        m_verticalTurnSpeed = deltaY * sensitivity;
 
         // Update the rotation using the turning speed
         m_rotationX += m_verticalTurnSpeed;
@@ -144,19 +148,53 @@ void PositionClass::TurnMouse(int deltaX, int deltaY, bool rightMouseDown)
     return;
 }
 
-void PositionClass::MoveCamera(bool forward, bool backward, bool left, bool right, bool up, bool down)
+void PositionClass::MoveCamera(bool forward, bool backward, bool left, bool right, bool up, bool down, bool scrollUp, bool scrollDown, bool rightClick)
 {
-    float radiansY, radiansX;
-    float speed;
+    float radiansY, radiansX, speed;
 
-    // Set the speed of the camera.
-    speed = 2.0f * m_frameTime;
+    // Set the speed of the camera if the right click is down.
+    if (scrollUp && rightClick)
+    {
+        m_cameraSpeed *= 1.1f;
+    }
+    if (scrollDown && rightClick)
+    {
+        m_cameraSpeed *= 0.9f;
+
+        if (m_cameraSpeed < 0.25f) // Minimum speed.
+        {
+			m_cameraSpeed = 0.25f;
+		}
+	}
 
     // Convert degrees to radians.
     radiansY = m_rotationY * 0.0174532925f;
     radiansX = m_rotationX * 0.0174532925f;
 
-    // Update the position.
+    //////////////////////////
+    // Update the position. //
+    //////////////////////////
+
+    // Moves the camera forward on a greater scale than the arrows.
+    if (scrollUp && !rightClick)
+    {
+        speed = m_speed * 20 * m_frameTime;
+        m_positionX += sinf(radiansY) * cosf(radiansX) * speed;
+        m_positionZ += cosf(radiansY) * cosf(radiansX) * speed;
+        m_positionY -= sinf(radiansX) * speed;
+    }
+
+    // Moves the camera backward on a greater scale than the arrows.
+    if (scrollDown && !rightClick)
+    {
+        speed = m_speed * 20 * m_frameTime;
+        m_positionX -= sinf(radiansY) * cosf(radiansX) * speed;
+        m_positionZ -= cosf(radiansY) * cosf(radiansX) * speed;
+        m_positionY += sinf(radiansX) * speed;
+	}
+
+    // Set the speed of the camera.
+    speed = m_cameraSpeed * m_frameTime;
 
     // If moving forward, the position moves in the direction of the camera and accordingly to its angle.
     if (forward)

@@ -24,6 +24,7 @@ ApplicationClass::ApplicationClass() : m_ShouldQuit(false)
 	m_Light = 0;
 	m_RefractionTexture = 0;
 	m_ReflectionTexture = 0;
+	m_Physics = 0;
 }
 
 
@@ -360,6 +361,8 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 	Logger::Get().Log("Application class initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
+	m_Physics = new Physics;
+
 	return true;
 }
 
@@ -410,6 +413,12 @@ void ApplicationClass::Shutdown()
 		m_BathModel->Shutdown();
 		delete m_BathModel;
 		m_BathModel = 0;
+	}
+	// Release the physics object.
+	if (m_Physics)
+	{
+		delete m_Physics;
+		m_Physics = 0;
 	}
 
 	// Release the frustum class object.
@@ -588,11 +597,10 @@ void ApplicationClass::Shutdown()
 	Logger::Get().Log("Application class shut down", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 }
 
-
 bool ApplicationClass::Frame(InputClass* Input)
 {
 	int mouseX, mouseY, currentMouseX, currentMouseY;
-	bool result, leftMouseDown, rightMouseDown, keyDown, buttonQ, buttonD, buttonZ, buttonS, buttonA, buttonE;
+	bool result, leftMouseDown, rightMouseDown, keyLeft, keyRight, keyUp, keyDown, buttonQ, buttonD, buttonZ, buttonS, buttonA, buttonE, scrollUp, scrollDown;
 	float rotationY, rotationX, positionX, positionY, positionZ;
 	static float textureTranslation = 0.0f;
 
@@ -601,9 +609,9 @@ bool ApplicationClass::Frame(InputClass* Input)
 	static int lastMouseX = 0, lastMouseY = 0;
 
 	static float rotation = 360.0f;
-	static float x = 0.f;
-	static float y = 0.f;
-	static float z = -8.f;
+	static float x = 0.0f;
+	static float y = 3.0f;
+	static float z = 0.0f;
 
 	// Update the system stats.
 	m_Timer->Frame();
@@ -639,16 +647,19 @@ bool ApplicationClass::Frame(InputClass* Input)
 	m_Position->SetFrameTime(m_Timer->GetTime());
 
 	// Check if the left or right arrow key has been pressed, if so rotate the camera accordingly.
-	keyDown = Input->IsLeftArrowPressed();
-	m_Position->TurnLeft(keyDown);
+	//keyDown = Input->IsLeftArrowPressed();
+	//m_Position->TurnLeft(keyDown);
 
-	keyDown = Input->IsRightArrowPressed();
-	m_Position->TurnRight(keyDown);
+	//keyDown = Input->IsRightArrowPressed();
+	//m_Position->TurnRight(keyDown);
 
-	m_Position->TurnMouse(deltaX, deltaY, rightMouseDown);
+	m_Position->TurnMouse(deltaX, deltaY, 0.1f, rightMouseDown);
 
 	// Get the current view point rotation.
 	m_Position->GetRotation(rotationY, rotationX);
+
+	scrollUp = Input->IsScrollUp();
+	scrollDown = Input->IsScrollDown();
 
 	// Check if the a(q), d, w(z), s, q(a), e have been pressed, if so move the camera accordingly.
 	buttonQ = Input->IsAPressed();
@@ -657,7 +668,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	buttonS = Input->IsSPressed();
 	buttonA = Input->IsQPressed();
 	buttonE = Input->IsEPressed();
-	m_Position->MoveCamera(buttonZ, buttonS, buttonQ, buttonD, buttonE, buttonA);
+	m_Position->MoveCamera(buttonZ, buttonS, buttonQ, buttonD, buttonE, buttonA, scrollUp, scrollDown, rightMouseDown);
 	m_Position->GetPosition(positionX, positionY, positionZ);
 
 	// Set the postion and rotation of the camera.
@@ -682,7 +693,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	}
 
 	// Update the rotation variable each frame.
-	rotation -= 0.0174532925f * speed;
+	rotation -= 0.0174532925f * m_speed;
 	if (rotation < 0.0f)
 	{
 		rotation += 360.0f;
@@ -708,6 +719,104 @@ bool ApplicationClass::Frame(InputClass* Input)
 	{
 		return false;
 	}
+	//// Update the x position variable each frame.
+	//x -= 0.0174532925f * 0.6f;
+
+	//y -= 0.0174532925f * 0.2f;
+
+	//// Update the z position variable each frame.
+	//z -= 0.0174532925f * 0.2f;
+
+	keyLeft = Input->IsLeftArrowPressed();
+	keyRight = Input->IsRightArrowPressed();
+	keyUp = Input->IsUpArrowPressed();
+	keyDown = Input->IsDownArrowPressed();
+
+	for (auto& object : m_object)
+	{
+		if (object != nullptr) // Check if the object is not null
+		{
+			// Reset acceleration for the new frame
+			object->SetAcceleration(XMVectorZero());
+
+			object->SetGrounded(false);
+
+			for (auto& chunk : m_terrainChunk)
+			{
+				if (m_Physics->IsColliding(object, chunk))
+				{
+
+					// Stop vertical movement, like gravity
+					object->SetVelocity(XMVectorSetY(object->GetVelocity(), 0.0f));
+					object->SetAcceleration(XMVectorSetY(object->GetAcceleration(), 0.0f));
+
+					//// Stop movement in any direction
+					//object->SetVelocity(XMVectorZero());
+					//object->SetAcceleration(XMVectorZero());
+					object->SetGrounded(true);
+				}
+			}
+
+			for (auto& object2 : m_object)
+			{
+				if (object->GetId() != object2->GetId() && object2 != nullptr)
+				{
+					if (m_Physics->IsColliding(object, object2))
+					{
+						// Stop movement in any direction
+						object->SetVelocity(XMVectorZero());
+						object->SetAcceleration(XMVectorZero());
+					}
+				}
+
+			}
+
+			// Apply forces
+			float forceX = 0, forceY = 0, forceZ = 0, forceW = 0;
+
+			if (keyLeft)
+			{
+				forceX = -10.0f;
+			}
+			if (keyRight)
+			{
+				forceX = 10.0f;
+			}
+			if (keyUp)
+			{
+				forceY = 40.0f;
+			}
+			if (keyDown && !object->IsGrounded())
+			{
+				forceY = -40.0f;
+			}
+
+			XMVECTOR force = XMVectorSet(forceX, forceY, forceZ, forceW);
+			m_Physics->AddForce(object, force);
+
+			// Update velocity based on acceleration
+			object->AddVelocity(frameTime);
+
+			// Update position based on velocity
+			XMVECTOR position = object->GetPosition();
+			position = position + object->GetVelocity() * frameTime;
+			object->SetPosition(position);
+			
+			m_Physics->ApplyGravity(object, 1.0f, frameTime);
+
+			// Check if the object has fallen below a certain position
+			if (XMVectorGetY(object->GetPosition()) < -30.0f)
+			{
+				XMVECTOR currentPosition = object->GetPosition(); // Obtain the current position of the object
+				object->SetPosition(XMVectorSetY(currentPosition, 50.0f)); // Define the new position of the object
+			}
+
+			object->m_previousPosition = object->GetPosition();
+		}
+	}
+
+
+	
 
 	// Render the scene to a render texture.
 	result = RenderSceneToTexture(rotation);
@@ -946,7 +1055,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		}
 	}
 
-	for (auto object : m_object)
+	for (auto& object : m_object)
 	{
 		scaleMatrix = object->GetScaleMatrix();
 		if (object->m_demoSpinning)
@@ -980,7 +1089,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	}
 
 	// Render terrain
-	for (auto chunk : m_terrainChunk)
+	for (auto& chunk : m_terrainChunk)
 	{
 
 		scaleMatrix = chunk->GetScaleMatrix();
@@ -1401,6 +1510,9 @@ void ApplicationClass::GenerateTerrain()
 	Filename.push_back("light01.tga");
 	Filename.push_back("moss01.tga");
 
+	std::filesystem::path p(modelFilename);
+	std::string filenameWithoutExtension = p.stem().string();
+
 	// for loop to generate terrain chunks for a 10x10 grid
 	for (int i = 0; i < 10; i++)
 	{
@@ -1411,7 +1523,9 @@ void ApplicationClass::GenerateTerrain()
 
 			newTerrain->SetScaleMatrix(scaleMatrix);
 
-			newTerrain->SetTranslateMatrix(XMMatrixTranslation(i / 2 * (scaleX * 2), -5.0f, j * (scaleZ * 2)));
+			newTerrain->SetTranslateMatrix(XMMatrixTranslation(i / 2 * (scaleX * 2), -10.0f, j * (scaleZ * 2)));
+
+			newTerrain->SetName(filenameWithoutExtension);
 
 			m_terrainChunk.push_back(newTerrain);
 
@@ -1445,9 +1559,12 @@ void ApplicationClass::AddKobject(WCHAR* filepath)
 
 	Object* newObject = new Object();
 	newObject->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, Filename);
-
-	newObject->SetTranslateMatrix(XMMatrixTranslation(0.0f, 0.0f, 0.0f));
+	newObject->SetMass(1.0f);
+	newObject->SetTranslateMatrix(XMMatrixTranslation(0.0f, 50.0f, 0.0f));
 	newObject->SetName(filename);
+	newObject->SetId(m_ObjectId);
+
+	m_ObjectId++;
 
 	m_object.push_back(newObject);
 }

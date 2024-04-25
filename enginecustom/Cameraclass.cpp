@@ -105,7 +105,7 @@ void CameraClass::Render()
 	return;
 }
 
-XMMATRIX CameraClass::GetViewMatrix(XMMATRIX& viewMatrix)
+XMMATRIX CameraClass::GetViewMatrix(XMMATRIX& viewMatrix) const
 {
 	viewMatrix = m_viewMatrix;
 	return viewMatrix;
@@ -164,7 +164,7 @@ void CameraClass::RenderReflection(float height)
 	return;
 }
 
-void CameraClass::GetReflectionViewMatrix(XMMATRIX& reflectionViewMatrix)
+void CameraClass::GetReflectionViewMatrix(XMMATRIX& reflectionViewMatrix) const
 {
 	reflectionViewMatrix = m_reflectionViewMatrix;
 	return;

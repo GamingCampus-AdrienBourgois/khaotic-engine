@@ -50,6 +50,7 @@
     <ClCompile Include="normalmapshaderclass.cpp" />
     <ClCompile Include="refractionshaderclass.cpp" />
     <ClCompile Include="shadermanagerclass.cpp" />
+    <ClCompile Include="physics.cpp" />
     <ClCompile Include="positionclass.cpp" />
     <ClCompile Include="reflectionshaderclass.cpp" />
     <ClCompile Include="rendertextureclass.cpp" />
@@ -97,6 +98,7 @@
     <ClInclude Include="normalmapshaderclass.h" />
     <ClInclude Include="refractionshaderclass.h" />
     <ClInclude Include="shadermanagerclass.h" />
+    <ClInclude Include="physics.h" />
     <ClInclude Include="positionclass.h" />
     <ClInclude Include="reflectionshaderclass.h" />
     <ClInclude Include="rendertextureclass.h" />
