@@ -1022,6 +1022,41 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		}
 	}
 
+	// Translate to where the bath model will be rendered.
+	worldMatrix = XMMatrixTranslation(0.0f, -10.0f, 0.0f);
+
+	// Put the bath model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_BathModel->Render(m_Direct3D->GetDeviceContext());
+
+	// Render the bath model using the light shader.
+	result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), m_BathModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_BathModel->GetTexture(0));
+	if (!result)
+	{
+		return false;
+	}
+
+	// Reset the world matrix.
+	m_Direct3D->GetWorldMatrix(worldMatrix);
+
+	// Get the camera reflection view matrix.
+	m_Camera->GetReflectionViewMatrix(reflectionMatrix);
+
+	// Translate to where the water model will be rendered.
+	worldMatrix = XMMatrixTranslation(0.0f, m_waterHeight, 0.0f);
+
+	// Put the water model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_WaterModel->Render(m_Direct3D->GetDeviceContext());
+
+	// Render the water model using the water shader.
+	result = m_ShaderManager->RenderWaterShader(m_Direct3D->GetDeviceContext(), m_WaterModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, reflectionMatrix,
+		m_ReflectionTexture->GetShaderResourceView(), m_RefractionTexture->GetShaderResourceView(), m_WaterModel->GetTexture(0),
+		m_waterTranslation, 0.01f);
+	if (!result)
+	{
+		return false;
+	}
+
 	// Setup matrices - Top display plane.
 	worldMatrix = XMMatrixTranslation(0.0f, 1.5f, 0.0f);
 
@@ -1201,42 +1236,6 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 
 		// Create the light position array from the four light positions.
 		lightPosition[i] = m_Lights[i]->GetPosition();
-	}
-
-	// Translate to where the bath model will be rendered.
-	worldMatrix = XMMatrixTranslation(0.0f, -10.0f, 0.0f);
-
-	// Put the bath model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	m_BathModel->Render(m_Direct3D->GetDeviceContext());
-
-	// Render the bath model using the light shader.
-	result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), m_BathModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-		m_BathModel->GetTexture(0));
-	if (!result)
-	{
-		return false;
-	}
-
-	// Reset the world matrix.
-	m_Direct3D->GetWorldMatrix(worldMatrix);
-
-	// Get the camera reflection view matrix.
-	m_Camera->GetReflectionViewMatrix(reflectionMatrix);
-
-	// Translate to where the water model will be rendered.
-	worldMatrix = XMMatrixTranslation(0.0f, m_waterHeight, 0.0f);
-
-	// Put the water model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	m_WaterModel->Render(m_Direct3D->GetDeviceContext());
-
-	// Render the water model using the water shader.
-	result = m_ShaderManager->RenderWaterShader(m_Direct3D->GetDeviceContext(), m_WaterModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, reflectionMatrix,
-		m_ReflectionTexture->GetShaderResourceView(), m_RefractionTexture->GetShaderResourceView(), m_WaterModel->GetTexture(0),
-		m_waterTranslation, 0.01f);
-
-	if (!result)
-	{
-		return false;
 	}
 
 	// Setup matrices.
