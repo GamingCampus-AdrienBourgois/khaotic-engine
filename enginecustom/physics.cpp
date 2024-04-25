@@ -83,6 +83,10 @@ bool Physics::IsColliding(Object* object1, Object* object2)
     std::string type1 = object1->GetName();
     std::string type2 = object2->GetName();
 
+    // Treat "plane" objects as "cube"
+    if (type1 == "plane") type1 = "cube";
+    if (type2 == "plane") type2 = "cube";
+
     if (type1 == "cube" && type2 == "cube")
     {
         return CubesOverlap(object1, object2);
