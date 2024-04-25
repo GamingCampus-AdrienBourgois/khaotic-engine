@@ -26,6 +26,9 @@
 #include "frustumclass.h"
 #include "rendertextureclass.h"
 #include "displayplaneclass.h"
+#include "translateshaderclass.h"
+#include "reflectionshaderclass.h"
+#include "physics.h"
 
 
 /////////////
@@ -55,8 +58,8 @@ public:
 	int GetScreenWidth() const;
 	int GetScreenHeight() const;
 
-	float GetSpeed() const { return speed; };
-	void SetSpeed(float speed) { this->speed = speed; };
+	float GetSpeed() const { return m_speed; };
+	void SetSpeed(float speed) { this->m_speed = speed; };
 
 	void AddCube();
 	void DeleteKobject(int index);
@@ -119,8 +122,9 @@ private :
 	Object* m_SelectedObject;
 	std::vector<Object*> m_cubes;
 	std::vector<Object*> m_terrainChunk;
-	float speed = 0.1f; // speed for the demo spinning object
+	float m_speed = 0.1f; // speed for the demo spinning object
 	std::vector<Object*> m_object;
+	int m_ObjectId = 0;
 
 	// ----------------------------------- //
 	// ------------- LIGHTS -------------- //
@@ -162,6 +166,9 @@ private :
 	// ------------------------------------------------- //
 
 	bool m_ShouldQuit;
+	Physics* m_Physics;
+	float m_gravity;
+	XMVECTOR m_previousPosition;
 };
 
 #endif

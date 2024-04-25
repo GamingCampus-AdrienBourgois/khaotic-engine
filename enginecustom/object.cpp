@@ -7,6 +7,12 @@ Object::Object() : ModelClass()
 	m_translateMatrix = XMMatrixIdentity();
 	m_srMatrix = XMMatrixIdentity();
 	m_worldMatrix = XMMatrixIdentity();
+	m_previousPosition = XMVectorZero();
+	m_velocity = XMVectorZero();
+	m_acceleration = XMVectorZero();
+	m_mass = NULL;
+	m_isGrounded = false;
+	m_id = NULL;
 }
 
 Object::~Object()
@@ -38,27 +44,27 @@ void Object::SetWorldMatrix(XMMATRIX worldMatrix)
 	m_worldMatrix = worldMatrix;
 }
 
-XMMATRIX Object::GetScaleMatrix()
+XMMATRIX Object::GetScaleMatrix() const
 {
 	return m_scaleMatrix;
 }
 
-XMMATRIX Object::GetRotateMatrix()
+XMMATRIX Object::GetRotateMatrix() const
 {
 	return m_rotateMatrix;
 }
 
-XMMATRIX Object::GetTranslateMatrix()
+XMMATRIX Object::GetTranslateMatrix() const
 {
 	return m_translateMatrix;
 }
 
-XMMATRIX Object::GetSRMatrix()
+XMMATRIX Object::GetSRMatrix() const
 {
 	return m_srMatrix;
 }
 
-XMMATRIX Object::GetWorldMatrix()
+XMMATRIX Object::GetWorldMatrix() const
 {
 	return m_worldMatrix;
 }
@@ -162,3 +168,59 @@ void Object::SetName(std::string name)
 {
 	m_name = name;
 }
+
+void Object::SetVelocity(XMVECTOR velocity)
+{
+	m_velocity = velocity;
+}
+
+void Object::AddVelocity(float frameTime)
+{
+	m_velocity += m_acceleration * frameTime;
+}
+
+XMVECTOR Object::GetVelocity() const
+{
+	return m_velocity;
+}
+
+void Object::SetAcceleration(XMVECTOR acceleration)
+{
+	m_acceleration = acceleration;
+}
+
+XMVECTOR Object::GetAcceleration() const
+{
+	return m_acceleration;
+}
+
+void Object::SetMass(float mass)
+{
+	m_mass = mass;
+}
+
+float Object::GetMass() const
+{
+	return m_mass;
+}
+
+void Object::SetGrounded(bool isGrounded)
+{
+	m_isGrounded = isGrounded;
+}
+
+bool Object::IsGrounded() const
+{
+	return m_isGrounded;
+}
+
+int Object::SetId(int id)
+{
+	return m_id = id;
+}
+
+int Object::GetId() const
+{
+	return m_id;
+}
+
