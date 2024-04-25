@@ -91,9 +91,24 @@ bool Physics::IsColliding(Object* object1, Object* object2)
     {
 		return SpheresOverlap(object1, object2);
 	}
+    if (type1 == "cube" && type2 == "sphere" || (type1 == "sphere" && type2 == "cube"))
+    {
+        if (type1 == "cube")
+        {
+            return SphereCubeOverlap(object1, object2);
+        } 
+        else if (type1 == "sphere")
+        {
+            return SphereCubeOverlap(object2, object1);
+        }
+    }
 
     return false;
 }
+
+/////////////////////////////////////////
+// AABB method for collision detection //
+/////////////////////////////////////////
 
 bool Physics::CubesOverlap(Object* cube1, Object* cube2)
 {
@@ -118,8 +133,8 @@ bool Physics::SpheresOverlap(Object* sphere1, Object* sphere2)
     XMVECTOR position1 = sphere1->GetPosition();
     XMVECTOR position2 = sphere2->GetPosition();
 
-    XMVECTOR scale1 = sphere1->GetScale();
-    XMVECTOR scale2 = sphere2->GetScale();
+    XMVECTOR scale1 = sphere1->GetScale() / 2;
+    XMVECTOR scale2 = sphere2->GetScale() / 2;
 
     float distance = sqrt(
         (position1.m128_f32[0] - position2.m128_f32[0]) * (position1.m128_f32[0] - position2.m128_f32[0]) +
@@ -128,7 +143,36 @@ bool Physics::SpheresOverlap(Object* sphere1, Object* sphere2)
     );
 
     float radius1 = XMVectorGetX(XMVector3Length(scale1));
-    float radius2 = XMVectorGetX(XMVector3Length(scale2) / 2);
+    float radius2 = XMVectorGetX(XMVector3Length(scale2));
 
     return distance < radius1 + radius2;
 }
+
+bool Physics::SphereCubeOverlap(Object* cube, Object* sphere)
+{
+    XMVECTOR position1 = cube->GetPosition();
+    XMVECTOR position2 = sphere->GetPosition();
+
+    XMVECTOR scale1 = cube->GetScale();
+    XMVECTOR scale2 = sphere->GetScale() / 2;
+
+    XMVECTOR min1 = position1 - scale1;
+    XMVECTOR max1 = position1 + scale1;
+
+    // Get box closest point to sphere center by clamping
+    float x = max(min1.m128_f32[0], min(position2.m128_f32[0], max1.m128_f32[0]));
+    float y = max(min1.m128_f32[1], min(position2.m128_f32[1], max1.m128_f32[1]));
+    float z = max(min1.m128_f32[2], min(position2.m128_f32[2], max1.m128_f32[2]));
+
+    // This is the same as SpheresOverlap
+    float distance = sqrt(
+        (x - position2.m128_f32[0]) * (x - position2.m128_f32[0]) +
+        (y - position2.m128_f32[1]) * (y - position2.m128_f32[1]) +
+        (z - position2.m128_f32[2]) * (z - position2.m128_f32[2])
+    );
+
+    float radius = XMVectorGetX(XMVector3Length(scale2));
+
+    return distance < radius;
+}
+

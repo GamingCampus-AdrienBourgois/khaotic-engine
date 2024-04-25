@@ -18,6 +18,7 @@ public:
     bool IsColliding(Object*, Object*);
     bool CubesOverlap(Object*, Object*);
     bool SpheresOverlap(Object*, Object*);
+    bool SphereCubeOverlap(Object*, Object*);
 
 private:
     XMVECTOR m_gravity;

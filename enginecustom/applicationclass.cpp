@@ -1282,10 +1282,13 @@ void ApplicationClass::GenerateTerrain()
 	strcpy_s(textureFilename2, "moss01.tga");
 	strcpy_s(textureFilename3, "alpha01.tga");
 
+	std::filesystem::path p(modelFilename);
+	std::string filenameWithoutExtension = p.stem().string();
+
 	// for loop to generate terrain chunks for a 10x10 grid
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < 10; i++)
 	{
-		for (int j = 0; j < 1; j++)
+		for (int j = 0; j < 10; j++)
 		{
 			Object* newTerrain = new Object();
 			newTerrain->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2, textureFilename3);
@@ -1294,7 +1297,7 @@ void ApplicationClass::GenerateTerrain()
 
 			newTerrain->SetTranslateMatrix(XMMatrixTranslation(i / 2 * (scaleX * 2), -10.0f, j * (scaleZ * 2)));
 
-			newTerrain->SetName("sphere");
+			newTerrain->SetName(filenameWithoutExtension);
 
 			m_terrainChunk.push_back(newTerrain);
 
