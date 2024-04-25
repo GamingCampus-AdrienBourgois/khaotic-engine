@@ -1,5 +1,9 @@
 #include "modelclass.h"
 
+#include "assimp/Importer.hpp"
+#include "assimp/scene.h"
+#include "assimp/postprocess.h"
+
 ModelClass::ModelClass() :
     m_vertexBuffer(nullptr),
     m_indexBuffer(nullptr),
@@ -90,6 +94,8 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 
     // Implementation of buffer initialization
     // ...
+
+    return true;
 }
 
 void ModelClass::ShutdownBuffers()
@@ -111,6 +117,8 @@ bool ModelClass::LoadTextures(ID3D11Device* device, ID3D11DeviceContext* deviceC
 
     // Implementation of texture loading
     // ...
+
+    return true;
 }
 
 void ModelClass::ReleaseTextures()

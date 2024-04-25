@@ -22,7 +22,7 @@ public:
         char* appdata = nullptr;
         size_t len;
         _dupenv_s(&appdata, &len, "APPDATA");
-        if (appdata == 0 ||appdata == nullptr)
+        if (appdata == nullptr)
         {
             m_appdataPath = "log.log";
 		}

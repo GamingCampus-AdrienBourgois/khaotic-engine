@@ -7,11 +7,18 @@
 #include "Logger.h"
 #include <d3d11.h>
 #include <directxmath.h>
+
+#ifdef min
+#undef min
+#endif
+
+#ifdef max
+#undef max
+#endif
+
 #include <vector>
 #include <string>
-#include <assimp/scene.h>
-#include <assimp/Importer.hpp>
-#include <assimp/postprocess.h>
+
 using namespace DirectX;
 using namespace std;
 
