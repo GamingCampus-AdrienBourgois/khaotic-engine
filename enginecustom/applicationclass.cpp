@@ -269,13 +269,12 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 		// Set the file names of the bath model.
 		strcpy_s(modelFilename, "bath.txt");
-		strcpy_s(textureFilename1, "marble01.tga");
+		Filename.push_back("marble01.tga");
 
 		// Create and initialize the bath model object.
 		m_BathModel = new ModelClass;
 
-		result = m_BathModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2, textureFilename3, textureFilename4,
-			textureFilename5, textureFilename6);
+		result = m_BathModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, Filename);
 		if (!result)
 		{
 			MessageBox(hwnd, L"Could not initialize the bath model object.", L"Error", MB_OK);
@@ -284,13 +283,12 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 		// Set the file names of the water model.
 		strcpy_s(modelFilename, "water.txt");
-		strcpy_s(textureFilename1, "water01.tga");
+		Filename.push_back("water01.tga");
 
 		// Create and initialize the water model object.
 		m_WaterModel = new ModelClass;
 
-		result = m_WaterModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2, textureFilename3, textureFilename4,
-			textureFilename5, textureFilename6);
+		result = m_WaterModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, Filename);
 		if (!result)
 		{
 			MessageBox(hwnd, L"Could not initialize the water model object.", L"Error", MB_OK);
