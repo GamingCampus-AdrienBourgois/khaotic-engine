@@ -1523,7 +1523,7 @@ void ApplicationClass::GenerateTerrain()
 
 			newTerrain->SetScaleMatrix(scaleMatrix);
 
-			newTerrain->SetTranslateMatrix(XMMatrixTranslation(i / 2 * (scaleX * 2), -10.0f, j * (scaleZ * 2)));
+			newTerrain->SetTranslateMatrix(XMMatrixTranslation(i / 2 * (scaleX * 2), -12.0f, j * (scaleZ * 2)));
 
 			newTerrain->SetName(filenameWithoutExtension);
 
