@@ -40,7 +40,7 @@ ApplicationClass::~ApplicationClass()
 bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 
-	Logger::Get().Log("Initializing application class", __FILE__, __LINE__);
+	Logger::Get().Log("Initializing application class", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	try 
 	{
@@ -202,7 +202,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 		// Set the number of lights we will use.
 		m_numLights = 4;
-
 		// Create and initialize the light objects array.
 		m_Lights.resize(m_numLights);
 
@@ -214,31 +213,29 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		m_Lights[0]->SetSpecularPower(16.0f);
 		m_Lights[0]->SetPosition(10.0f, 7.0f, -5.0f);
 
-		// Manually set the color and position of each light.
 		m_Lights[1] = new LightClass;
 		m_Lights[1]->SetDiffuseColor(1.0f, 0.0f, 0.0f, 1.0f);  // Red
-		m_Lights[1]->SetDirection(0.0f, 0.0f, 1.0f);
+		m_Lights[1]->SetDirection(0.0f, 0.0f, -1.0f);
 		m_Lights[1]->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 		m_Lights[1]->SetSpecularColor(1.0f, 0.0f, 0.0f, 1.0f);
 		m_Lights[1]->SetSpecularPower(16.0f);
-		m_Lights[1]->SetPosition(10.0f, 7.0f, -5.0f);
+		m_Lights[1]->SetPosition(-10.0f, 7.0f, -5.0f);
 
 		m_Lights[2] = new LightClass;
 		m_Lights[2]->SetDiffuseColor(0.0f, 1.0f, 0.0f, 1.0f);  // Green
-		m_Lights[2]->SetDirection(0.0f, 0.0f, 1.0f);
+		m_Lights[2]->SetDirection(0.0f, 0.0f, -1.0f);
 		m_Lights[2]->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 		m_Lights[2]->SetSpecularColor(0.0f, 1.0f, 0.0f, 1.0f);
 		m_Lights[2]->SetSpecularPower(16.0f);
-		m_Lights[2]->SetPosition(10.0f, 7.0f, -5.0f);
+		m_Lights[2]->SetPosition(10.0f, 7.0f, 5.0f);
 
 		m_Lights[3] = new LightClass;
 		m_Lights[3]->SetDiffuseColor(0.0f, 0.0f, 1.0f, 1.0f);  // Blue
-		m_Lights[3]->SetDirection(0.0f, 0.0f, 1.0f);
+		m_Lights[3]->SetDirection(0.0f, 0.0f, -1.0f);
 		m_Lights[3]->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 		m_Lights[3]->SetSpecularColor(0.0f, 0.0f, 1.0f, 1.0f);
 		m_Lights[3]->SetSpecularPower(16.0f);
-		m_Lights[3]->SetPosition(10.0f, 7.0f, -5.0f);
-
+		m_Lights[3]->SetPosition(-10.0f, 7.0f, 5.0f);
 
 		// Create and initialize the normal map shader object.
 		m_ShaderManager = new ShaderManagerClass;
@@ -361,7 +358,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		Logger::Get().Log(std::string("Exception caught during initialization: ") + e.what(), __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
-	Logger::Get().Log("Application class initialized", __FILE__, __LINE__);
+	Logger::Get().Log("Application class initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	return true;
 }
@@ -369,18 +366,18 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 void ApplicationClass::Shutdown()
 {
-	Logger::Get().Log("Shutting down application class", __FILE__, __LINE__);
+	Logger::Get().Log("Shutting down application class", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 	// Release the shader manager object.
 	if (m_ShaderManager)
 	{
-		Logger::Get().Log("Releasing the shader manager object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the shader manager object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		m_ShaderManager->Shutdown();
 		delete m_ShaderManager;
 		m_ShaderManager = 0;
 
-		Logger::Get().Log("Shader manager object released", __FILE__, __LINE__);
+		Logger::Get().Log("Shader manager object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the reflection render texture object.
@@ -418,65 +415,65 @@ void ApplicationClass::Shutdown()
 	// Release the frustum class object.
 	if (m_Frustum)
 	{
-		Logger::Get().Log("Releasing the frustum class object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the frustum class object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		delete m_Frustum;
 		m_Frustum = 0;
 
-		Logger::Get().Log("Frustum class object released", __FILE__, __LINE__);
+		Logger::Get().Log("Frustum class object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the display plane object.
 	if (m_DisplayPlane)
 	{
-		Logger::Get().Log("Releasing the display plane object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the display plane object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		m_DisplayPlane->Shutdown();
 		delete m_DisplayPlane;
 		m_DisplayPlane = 0;
 
-		Logger::Get().Log("Display plane object released", __FILE__, __LINE__);
+		Logger::Get().Log("Display plane object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the position object.
 	if (m_Position)
 	{
-		Logger::Get().Log("Releasing the position object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the position object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		delete m_Position;
 		m_Position = 0;
 
-		Logger::Get().Log("Position object released", __FILE__, __LINE__);
+		Logger::Get().Log("Position object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the model list object.
 	if (m_ModelList)
 	{
-		Logger::Get().Log("Releasing the model list object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the model list object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		m_ModelList->Shutdown();
 		delete m_ModelList;
 		m_ModelList = 0;
 
-		Logger::Get().Log("Model list object released", __FILE__, __LINE__);
+		Logger::Get().Log("Model list object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the text objects for the render count string.
 	if (m_RenderCountString)
 	{
-		Logger::Get().Log("Releasing the render count string object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the render count string object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		m_RenderCountString->Shutdown();
 		delete m_RenderCountString;
 		m_RenderCountString = 0;
 
-		Logger::Get().Log("Render count string object released", __FILE__, __LINE__);
+		Logger::Get().Log("Render count string object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the text objects for the mouse strings.
 	if (m_MouseStrings)
 	{
-		Logger::Get().Log("Releasing the mouse strings", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the mouse strings", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		m_MouseStrings[0].Shutdown();
 		m_MouseStrings[1].Shutdown();
@@ -485,108 +482,110 @@ void ApplicationClass::Shutdown()
 		delete[] m_MouseStrings;
 		m_MouseStrings = 0;
 
-		Logger::Get().Log("Mouse strings released", __FILE__, __LINE__);
+		Logger::Get().Log("Mouse strings released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the text object for the fps string.
 	if (m_FpsString)
 	{
-		Logger::Get().Log("Releasing the fps string object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the fps string object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		m_FpsString->Shutdown();
 		delete m_FpsString;
 		m_FpsString = 0;
 
-		Logger::Get().Log("Fps string object released", __FILE__, __LINE__);
+		Logger::Get().Log("Fps string object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the fps object.
 	if (m_Fps)
 	{
-		Logger::Get().Log("Releasing the fps object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the fps object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		delete m_Fps;
 		m_Fps = 0;
 
-		Logger::Get().Log("Fps object released", __FILE__, __LINE__);
+		Logger::Get().Log("Fps object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the font object.
 	if (m_Font)
 	{
-		Logger::Get().Log("Releasing the font object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the font object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		m_Font->Shutdown();
 		delete m_Font;
 		m_Font = 0;
 
-		Logger::Get().Log("Font object released", __FILE__, __LINE__);
+		Logger::Get().Log("Font object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the font shader object.
 	if (m_FontShader)
 	{
-		Logger::Get().Log("Releasing the font shader object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the font shader object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		m_FontShader->Shutdown();
 		delete m_FontShader;
 		m_FontShader = 0;
 
-		Logger::Get().Log("Font shader object released", __FILE__, __LINE__);
+		Logger::Get().Log("Font shader object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the timer object.
 	if (m_Timer)
 	{
-		Logger::Get().Log("Releasing the timer object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the timer object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		delete m_Timer;
 		m_Timer = 0;
 
-		Logger::Get().Log("Timer object released", __FILE__, __LINE__);
+		Logger::Get().Log("Timer object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the sprite object.
 	if (m_Sprite)
 	{
-		Logger::Get().Log("Releasing the sprite object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the sprite object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		m_Sprite->Shutdown();
 		delete m_Sprite;
 		m_Sprite = 0;
 
-		Logger::Get().Log("Sprite object released", __FILE__, __LINE__);
+		Logger::Get().Log("Sprite object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	for (auto light : m_Lights)
 	{
-		Logger::Get().Log("Releasing the light object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the light object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 		if (light)
 		{
 			delete light;
 			light = 0;
 		}
-		Logger::Get().Log("Light object released", __FILE__, __LINE__);
+		Logger::Get().Log("Light object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the light object.
 	if (m_Light)
 	{
-		Logger::Get().Log("Releasing the light object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the light object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 		delete m_Light;
 		m_Light = 0;
-		Logger::Get().Log("Light object released", __FILE__, __LINE__);
+		Logger::Get().Log("Light object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the model object.
 	if (m_Model)
 	{
-		Logger::Get().Log("Releasing the model object", __FILE__, __LINE__);
+		Logger::Get().Log("Releasing the model object", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 		m_Model->Shutdown();
 		delete m_Model;
 		m_Model = 0;
-		Logger::Get().Log("Model object released", __FILE__, __LINE__);
+		Logger::Get().Log("Model object released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
+
+	Logger::Get().Log("Application class shut down", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 }
 
 
@@ -615,7 +614,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	// Check if the user pressed escape and wants to exit the application.
 	if (Input->IsEscapePressed())
 	{
-		Logger::Get().Log("User pressed escape, exiting application", __FILE__, __LINE__);
+		Logger::Get().Log("User pressed escape, exiting application", __FILE__, __LINE__, Logger::LogLevel::Input);
 		m_ShouldQuit = true;
 	}
 
@@ -848,7 +847,7 @@ bool ApplicationClass::RenderSceneToTexture(float rotation)
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
 	result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-		m_Model->GetTexture(1));
+		m_Model->GetTexture(0));
 	if (!result)
 	{
 		return false;
@@ -872,9 +871,6 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 
 	// Set the blending amount to 10%.
 	blendAmount = 0.1f;
-
-	// Clear the buffers to begin the scene.
-	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
 	// Generate the view matrix based on the camera's position.
 	m_Camera->Render();
@@ -933,8 +929,16 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 
 		cube->Render(m_Direct3D->GetDeviceContext());
 
-		result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
-			diffuseColor, lightPosition, ambientColor);
+		// render the texture using the texture shader.
+		result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), cube->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, cube->GetTexture(0));
+		if (!result)
+		{
+			Logger::Get().Log("Could not render the cube model using the texture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+			return false;
+		}
+
+		result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, cube->GetTexture(0),
+			diffuseColor, lightPosition,ambientColor);
 		if (!result)
 		{
 			Logger::Get().Log("Could not render the cube model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);
@@ -956,6 +960,14 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
 		object->Render(m_Direct3D->GetDeviceContext());
+
+		// render the texture using the texture shader.
+		result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), object->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, object->GetTexture(0));
+		if (!result)
+		{
+			Logger::Get().Log("Could not render the cube model using the texture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+			return false;
+		}
 
 		result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
 			diffuseColor, lightPosition, ambientColor);
@@ -988,6 +1000,41 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 			Logger::Get().Log("Could not render the terrain model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
+	}
+
+	// Translate to where the bath model will be rendered.
+	worldMatrix = XMMatrixTranslation(0.0f, -10.0f, 0.0f);
+
+	// Put the bath model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_BathModel->Render(m_Direct3D->GetDeviceContext());
+
+	// Render the bath model using the light shader.
+	result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), m_BathModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_BathModel->GetTexture(0));
+	if (!result)
+	{
+		return false;
+	}
+
+	// Reset the world matrix.
+	m_Direct3D->GetWorldMatrix(worldMatrix);
+
+	// Get the camera reflection view matrix.
+	m_Camera->GetReflectionViewMatrix(reflectionMatrix);
+
+	// Translate to where the water model will be rendered.
+	worldMatrix = XMMatrixTranslation(0.0f, m_waterHeight, 0.0f);
+
+	// Put the water model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_WaterModel->Render(m_Direct3D->GetDeviceContext());
+
+	// Render the water model using the water shader.
+	result = m_ShaderManager->RenderWaterShader(m_Direct3D->GetDeviceContext(), m_WaterModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, reflectionMatrix,
+		m_ReflectionTexture->GetShaderResourceView(), m_RefractionTexture->GetShaderResourceView(), m_WaterModel->GetTexture(0),
+		m_waterTranslation, 0.01f);
+	if (!result)
+	{
+		return false;
 	}
 
 	// Setup matrices - Top display plane.
@@ -1163,42 +1210,6 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		lightPosition[i] = m_Lights[i]->GetPosition();
 	}
 
-	// Translate to where the bath model will be rendered.
-	worldMatrix = XMMatrixTranslation(0.0f, -10.0f, 0.0f);
-
-	// Put the bath model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	m_BathModel->Render(m_Direct3D->GetDeviceContext());
-
-	// Render the bath model using the light shader.
-	result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), m_BathModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-		m_BathModel->GetTexture(0));
-	if (!result)
-	{
-		return false;
-	}
-
-	// Reset the world matrix.
-	m_Direct3D->GetWorldMatrix(worldMatrix);
-
-	// Get the camera reflection view matrix.
-	m_Camera->GetReflectionViewMatrix(reflectionMatrix);
-
-	// Translate to where the water model will be rendered.
-	worldMatrix = XMMatrixTranslation(0.0f, m_waterHeight, 0.0f);
-
-	// Put the water model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	m_WaterModel->Render(m_Direct3D->GetDeviceContext());
-
-	// Render the water model using the water shader.
-	result = m_ShaderManager->RenderWaterShader(m_Direct3D->GetDeviceContext(), m_WaterModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, reflectionMatrix,
-		m_ReflectionTexture->GetShaderResourceView(), m_RefractionTexture->GetShaderResourceView(), m_WaterModel->GetTexture(0),
-		m_waterTranslation, 0.01f);
-
-	if (!result)
-	{
-		return false;
-	}
-
 	// Setup matrices.
 	rotateMatrix = XMMatrixRotationY(rotation);
 	translateMatrix = XMMatrixTranslation(-5.0f, 1.0f, -20.0f);
@@ -1344,9 +1355,6 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	// Enable the Z buffer and disable alpha blending now that 2D rendering is complete.
 	m_Direct3D->TurnZBufferOn();
 	m_Direct3D->DisableAlphaBlending();
-
-	// Present the rendered scene to the screen.
-	m_Direct3D->EndScene();
 
 	return true;
 }
@@ -1684,21 +1692,4 @@ void ApplicationClass::SetLightPosition(int index, XMVECTOR position)
 
 	//set the position
 	m_Lights[index]->SetPosition(lightPosition.x, lightPosition.y, lightPosition.z);
-}
-
-void ApplicationClass::DeleteLight(int index)
-{
-	Logger::Get().Log("Deleting light", __FILE__, __LINE__);
-
-	if (index < 0 || index >= m_Lights.size())
-	{
-		// Index out of bounds
-		return;
-	}
-
-	// Delete the light object
-	delete m_Lights[index];
-
-	// Remove the light from the vector
-	m_Lights.erase(m_Lights.begin() + index);
 }

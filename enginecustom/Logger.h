@@ -24,7 +24,20 @@ public:
     {
 		Info,
 		Warning,
-		Error
+		Error,
+        Shutdown,
+        Initialize,
+        Update,
+        Render,
+        Input,
+        Physics,
+        Audio,
+        Network,
+        Scripting,
+        AI,
+        Resource,
+        Memory,
+        Debug
 	};
 
     Logger() 
@@ -72,6 +85,46 @@ public:
             case LogLevel::Info:
                 levelStr = "INFO";
 				break;
+            case LogLevel::Shutdown:
+				levelStr = "SHUTDOWN";
+				break;
+            case LogLevel::Initialize:
+				levelStr = "INITIALIZE";
+				break;
+            case LogLevel::Update:
+                levelStr = "UPDATE";
+                break;
+            case LogLevel::Render:
+                levelStr = "RENDER";
+                break;
+            case LogLevel::Input:
+                levelStr = "INPUT";
+				break;
+            case LogLevel::Physics:
+				levelStr = "PHYSICS";
+				break;
+			case LogLevel::Audio:
+                levelStr = "AUDIO";
+                break;
+            case LogLevel::Network:
+                levelStr = "NETWORK";
+				break;
+            case LogLevel::Scripting:
+                levelStr = "SCRIPTING";
+                break;
+            case LogLevel::AI:
+                levelStr = "AI";
+				break;
+            case LogLevel::Resource:
+				levelStr = "RESOURCE";
+				break;
+            case LogLevel::Memory:
+				levelStr = "MEMORY";
+				break;
+			case LogLevel::Debug:
+				levelStr = "DEBUG";
+				break;
+
         }
 
         std::stringstream ss;

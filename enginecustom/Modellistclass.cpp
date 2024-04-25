@@ -19,6 +19,7 @@ ModelListClass::~ModelListClass()
 
 void ModelListClass::Initialize(int numModels)
 {
+
     int i;
 
     // Store the number of models.

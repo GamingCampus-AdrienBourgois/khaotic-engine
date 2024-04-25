@@ -9,7 +9,6 @@
 // GLOBALS //
 /////////////
 const int NUM_LIGHTS = 4;
-
 //////////////
 // INCLUDES //
 //////////////
@@ -88,7 +87,6 @@ private:
     ID3D11Buffer* m_lightBuffer;
     ID3D11Buffer* m_lightColorBuffer;
     ID3D11Buffer* m_lightPositionBuffer;
-
 };
 
 #endif

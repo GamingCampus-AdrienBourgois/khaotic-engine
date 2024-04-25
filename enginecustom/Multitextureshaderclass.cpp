@@ -26,7 +26,7 @@ MultiTextureShaderClass::~MultiTextureShaderClass()
 
 bool MultiTextureShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
-    Logger::Get().Log("Initializing MultiTextureShaderClass", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing MultiTextureShaderClass", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     bool result;
     wchar_t vsFilename[128];
@@ -56,6 +56,8 @@ bool MultiTextureShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
         Logger::Get().Log("Failed to initialize the vertex and pixel shaders", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
+
+    Logger::Get().Log("MultiTextureShaderClass initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     return true;
 }
@@ -90,7 +92,7 @@ bool MultiTextureShaderClass::Render(ID3D11DeviceContext* deviceContext, int ind
 
 bool MultiTextureShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
-    Logger::Get().Log("Initializing the shader", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing the shader", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     HRESULT result;
     ID3D10Blob* errorMessage;
@@ -244,14 +246,14 @@ bool MultiTextureShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, 
         return false;
     }
 
-    Logger::Get().Log("Shader initialized", __FILE__, __LINE__);
+    Logger::Get().Log("Shader initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     return true;
 }
 
 void MultiTextureShaderClass::ShutdownShader()
 {
-    Logger::Get().Log("Shutting down the shader", __FILE__, __LINE__);
+    Logger::Get().Log("Shutting down the shader", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     // Release the sampler state.
     if (m_sampleState)
@@ -288,7 +290,7 @@ void MultiTextureShaderClass::ShutdownShader()
         m_vertexShader = 0;
     }
 
-    Logger::Get().Log("Shader shut down", __FILE__, __LINE__);
+    Logger::Get().Log("Shader shut down", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     return;
 }

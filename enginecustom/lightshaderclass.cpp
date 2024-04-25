@@ -30,7 +30,7 @@ LightShaderClass::~LightShaderClass()
 
 bool LightShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
-    Logger::Get().Log("Initializing LightShaderClass", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing LightShaderClass", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     wchar_t vsFilename[128];
     wchar_t psFilename[128];
@@ -60,7 +60,7 @@ bool LightShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
         return false;
     }
 
-    Logger::Get().Log("LightShaderClass initialized", __FILE__, __LINE__);
+    Logger::Get().Log("LightShaderClass initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     return true;
 }
@@ -97,6 +97,8 @@ bool LightShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount
 
 bool LightShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
+    Logger::Get().Log("Initializing shader", __FILE__, __LINE__, Logger::LogLevel::Initialize);
+
     HRESULT result;
     ID3D10Blob* errorMessage;
     ID3D10Blob* vertexShaderBuffer;
@@ -301,7 +303,7 @@ bool LightShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
         return false;
     }
 
-    Logger::Get().Log("Shader initialized", __FILE__, __LINE__);
+    Logger::Get().Log("Shader initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     return true;
 }
@@ -309,7 +311,7 @@ bool LightShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
 
 void LightShaderClass::ShutdownShader()
 {
-    Logger::Get().Log("Shutting down LightShaderClass", __FILE__, __LINE__);
+    Logger::Get().Log("Shutting down LightShaderClass", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     // Release the light constant buffers.
     if (m_lightColorBuffer)
@@ -373,7 +375,7 @@ void LightShaderClass::ShutdownShader()
         m_vertexShader = 0;
     }
 
-    Logger::Get().Log("LightShaderClass shut down", __FILE__, __LINE__);
+    Logger::Get().Log("LightShaderClass shut down", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     return;
 }
@@ -475,10 +477,10 @@ bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
     dataPtr2 = (LightPositionBufferType*)mappedResource.pData;
 
     // Copy the light position variables into the constant buffer.
-    dataPtr2->lightPosition[0] = lightPosition[0];
-    dataPtr2->lightPosition[1] = lightPosition[1];
-    dataPtr2->lightPosition[2] = lightPosition[2];
-    dataPtr2->lightPosition[3] = lightPosition[3];
+    for (int i = 0; i < NUM_LIGHTS; i++)
+	{
+		dataPtr2->lightPosition[i] = lightPosition[i];
+	}
 
     // Unlock the constant buffer.
     deviceContext->Unmap(m_lightPositionBuffer, 0);
@@ -504,10 +506,10 @@ bool LightShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
     dataPtr3 = (LightColorBufferType*)mappedResource.pData;
 
     // Copy the light color variables into the constant buffer.
-    dataPtr3->diffuseColor[0] = diffuseColor[0];
-    dataPtr3->diffuseColor[1] = diffuseColor[1];
-    dataPtr3->diffuseColor[2] = diffuseColor[2];
-    dataPtr3->diffuseColor[3] = diffuseColor[3];
+    for (int i = 0; i < NUM_LIGHTS; i++)
+    {
+        dataPtr3->diffuseColor[i] = diffuseColor[i];
+	}
 
     // Unlock the constant buffer.
     deviceContext->Unmap(m_lightColorBuffer, 0);

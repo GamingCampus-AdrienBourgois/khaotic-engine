@@ -24,7 +24,7 @@ FontShaderClass::~FontShaderClass()
 
 bool FontShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
-    Logger::Get().Log("Initializing FontShaderClass", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing FontShaderClass", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     bool result;
     wchar_t vsFilename[128];
@@ -55,7 +55,7 @@ bool FontShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
         return false;
     }
     
-    Logger::Get().Log("FontShaderClass initialized", __FILE__, __LINE__);
+    Logger::Get().Log("FontShaderClass initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     return true;
 }
@@ -90,7 +90,7 @@ bool FontShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount,
 
 bool FontShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
-    Logger::Get().Log("Initializing shader", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing shader", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     HRESULT result;
     ID3D10Blob* errorMessage;
@@ -253,14 +253,14 @@ bool FontShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* v
         return false;
     }
 
-    Logger::Get().Log("Shader initialized", __FILE__, __LINE__);
+    Logger::Get().Log("Shader initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     return true;
 }
 
 void FontShaderClass::ShutdownShader()
 {
-    Logger::Get().Log("Shutting down shader", __FILE__, __LINE__);
+    Logger::Get().Log("Shutting down shader", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     // Release the pixel constant buffer.
     if (m_pixelBuffer)
@@ -304,7 +304,7 @@ void FontShaderClass::ShutdownShader()
         m_vertexShader = 0;
     }
 
-    Logger::Get().Log("Shader shut down", __FILE__, __LINE__);
+    Logger::Get().Log("Shader shut down", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     return;
 }

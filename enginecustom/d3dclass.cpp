@@ -32,7 +32,7 @@ D3DClass::~D3DClass()
 
 bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear)
 {
-	Logger::Get().Log("Initializing D3Dclass", __FILE__, __LINE__);
+	Logger::Get().Log("Initializing D3Dclass", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	HRESULT result;
 	IDXGIFactory* factory;
@@ -433,7 +433,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 void D3DClass::Shutdown()
 {
 
-	Logger::Get().Log("Shutting down D3Dclass", __FILE__, __LINE__);
+	Logger::Get().Log("Shutting down D3Dclass", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 	// Before shutting down set to windowed mode or when you release the swap chain it will throw an exception.
 	if (m_swapChain)
@@ -507,7 +507,7 @@ void D3DClass::Shutdown()
 		m_swapChain = 0;
 	}
 
-	Logger::Get().Log("D3Dclass shutdown", __FILE__, __LINE__);
+	Logger::Get().Log("D3Dclass shutdown", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 	return;
 }

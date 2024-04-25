@@ -24,7 +24,7 @@ TranslateShaderClass::~TranslateShaderClass()
 
 bool TranslateShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
-    Logger::Get().Log("Initilaizing TranslateShaderClass", __FILE__, __LINE__);
+    Logger::Get().Log("Initilaizing TranslateShaderClass", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     bool result;
     wchar_t vsFilename[128];
@@ -55,7 +55,7 @@ bool TranslateShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
         return false;
     }
 
-    Logger::Get().Log("TranslateShaderClass initialized", __FILE__, __LINE__);
+    Logger::Get().Log("TranslateShaderClass initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     return true;
 }
@@ -92,7 +92,7 @@ bool TranslateShaderClass::Render(ID3D11DeviceContext * deviceContext, int index
 
 bool TranslateShaderClass::InitializeShader(ID3D11Device * device, HWND hwnd, WCHAR * vsFilename, WCHAR * psFilename)
 {
-    Logger::Get().Log("Initializing translate shader", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing translate shader", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     HRESULT result;
     ID3D10Blob* errorMessage;
@@ -255,7 +255,7 @@ bool TranslateShaderClass::InitializeShader(ID3D11Device * device, HWND hwnd, WC
         return false;
     }
 
-    Logger::Get().Log("Translate shader initialized", __FILE__, __LINE__);
+    Logger::Get().Log("Translate shader initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     return true;
 }
@@ -263,7 +263,7 @@ bool TranslateShaderClass::InitializeShader(ID3D11Device * device, HWND hwnd, WC
 
 void TranslateShaderClass::ShutdownShader()
 {
-    Logger::Get().Log("Shutting down translate shader", __FILE__, __LINE__);
+    Logger::Get().Log("Shutting down translate shader", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     // Release the texture translation constant buffer.
     if (m_translateBuffer)
@@ -307,7 +307,7 @@ void TranslateShaderClass::ShutdownShader()
         m_vertexShader = 0;
     }
 
-    Logger::Get().Log("Translate shader shut down", __FILE__, __LINE__);  
+    Logger::Get().Log("Translate shader shut down", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     return;
 }

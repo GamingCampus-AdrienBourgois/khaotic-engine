@@ -25,7 +25,7 @@ bool SystemClass::Initialize()
 	int screenWidth, screenHeight;
 	bool result;
 
-	Logger::Get().Log("Initializing system class", __FILE__, __LINE__);
+	Logger::Get().Log("Initializing system class", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	try
 	{
@@ -81,50 +81,50 @@ bool SystemClass::Initialize()
 		return false;
 	}
 
-	Logger::Get().Log("System class initialized", __FILE__, __LINE__);
+	Logger::Get().Log("System class initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	return true;
 }
 
 void SystemClass::Shutdown()
 {
-	Logger::Get().Log("Shutting down system class", __FILE__, __LINE__);
+	Logger::Get().Log("Shutting down system class", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 	std::lock_guard<std::mutex> guard(renderMutex);
 
 	// Shutdown imgui
 	if (m_imguiManager)
 	{
-		Logger::Get().Log("Shutting down imgui manager", __FILE__, __LINE__);
+		Logger::Get().Log("Shutting down imgui manager", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		m_imguiManager->Shutdown();
 		delete m_imguiManager;
 		m_imguiManager = 0;
 
-		Logger::Get().Log("Imgui manager shut down", __FILE__, __LINE__);
+		Logger::Get().Log("Imgui manager shut down", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the application class object.
 	if (m_Application)
 	{
-		Logger::Get().Log("Shutting down application", __FILE__, __LINE__);
+		Logger::Get().Log("Shutting down application", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		m_Application->Shutdown();
 		delete m_Application;
 		m_Application = 0;
 
-		Logger::Get().Log("Application shut down", __FILE__, __LINE__);
+		Logger::Get().Log("Application shut down", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 	// Release the input object.
 	if (m_Input)
 	{
-		Logger::Get().Log("Shutting down input", __FILE__, __LINE__);
+		Logger::Get().Log("Shutting down input", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 		delete m_Input;
 		m_Input = 0;
 
-		Logger::Get().Log("Input shut down", __FILE__, __LINE__);
+		Logger::Get().Log("Input shut down", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	}
 
 
@@ -132,7 +132,7 @@ void SystemClass::Shutdown()
 	// Shutdown the window.
 	ShutdownWindows();
 
-	Logger::Get().Log("System class shut down", __FILE__, __LINE__);
+	Logger::Get().Log("System class shut down", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 	return;
 }
@@ -189,6 +189,8 @@ void SystemClass::Run()
 
 bool SystemClass::Frame()
 {
+	// Clear the buffers to begin the scene.
+	m_Application->GetDirect3D()->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
 	std::lock_guard<std::mutex> guard(renderMutex);
 	bool result;
@@ -201,6 +203,14 @@ bool SystemClass::Frame()
 		return false;
 	}
 
+	// Do the frame processing for the application class object.
+	result = m_Application->Frame(m_Input);
+	if (!result)
+	{
+		Logger::Get().Log("Failed to process application frame", __FILE__, __LINE__, Logger::LogLevel::Error);
+		return false;
+	}
+
 	// Render ImGui 
 	result = m_imguiManager->ImGuiWidgetRenderer(m_Application);
 	if (!result)
@@ -209,13 +219,7 @@ bool SystemClass::Frame()
 		return false;
 	}
 
-	// Do the frame processing for the application class object.
-	result = m_Application->Frame(m_Input);
-	if (!result)
-	{
-		Logger::Get().Log("Failed to process application frame", __FILE__, __LINE__, Logger::LogLevel::Error);
-		return false;
-	}
+	m_Application->GetDirect3D()->EndScene();
 
 	return true;
 }
@@ -324,7 +328,7 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	DEVMODE dmScreenSettings;
 	int posX, posY;
 
-	Logger::Get().Log("Initializing windows", __FILE__, __LINE__);
+	Logger::Get().Log("Initializing windows", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 	// Get an external pointer to this object.	
 	ApplicationHandle = this;
 
@@ -404,10 +408,7 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 
 void SystemClass::ShutdownWindows()
 {
-
-	Logger::Get().Log("Shutting down windows", __FILE__, __LINE__);
-
-	Logger::Get().Log("Shutting down the windows", __FILE__, __LINE__);
+	Logger::Get().Log("Shutting down the windows", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	// Show the mouse cursor.
 	ShowCursor(true);
 

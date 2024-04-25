@@ -13,26 +13,31 @@ imguiManager::~imguiManager()
 
 bool imguiManager::Initialize(HWND hwnd, ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
-	Logger::Get().Log("Initializing imgui", __FILE__, __LINE__);
+	Logger::Get().Log("Initializing imgui", __FILE__, __LINE__, Logger::LogLevel::Initialize);
+
+	m_device = device;
+	m_deviceContext = deviceContext;
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	io = &ImGui::GetIO();
 
 	ImGui_ImplWin32_Init(hwnd);
-	ImGui_ImplDX11_Init(device, deviceContext);
+	ImGui_ImplDX11_Init(m_device, m_deviceContext); 
 	ImGui::StyleColorsDark();
 
-	Logger::Get().Log("imgui initialized", __FILE__, __LINE__);
+	Logger::Get().Log("imgui initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	return true;
 }
 
 void imguiManager::Shutdown()
 {
+	Logger::Get().Log("Shutting down imgui", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
+	Logger::Get().Log("imgui shutdown", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 }
 
 void imguiManager::Render()
@@ -88,7 +93,7 @@ void imguiManager::WidgetAddObject(ApplicationClass* app)
 			ofn.lpstrFile = szFile;
 			ofn.lpstrFile[0] = '\0';
 			ofn.nMaxFile = sizeof(szFile);
-			ofn.lpstrFilter = L"OBJ\0*.obj\0TXT\0*.txt\0KOBJ\0*.kobj";
+			ofn.lpstrFilter = L"TXT\0*.txt\0KOBJ\0*.kobj\0*OBJ\0*.obj";
 			ofn.nFilterIndex = 1;
 			ofn.lpstrFileTitle = NULL;
 			ofn.nMaxFileTitle = 0;
@@ -110,7 +115,6 @@ void imguiManager::WidgetObjectWindow(ApplicationClass* app)
 {
 	ImGui::Begin("Objects", &showObjectWindow);
 	int index = 0;
-	int count = 0;
 	for (auto& object : app->GetKobjects())
 	{
 		std::string headerName = object->GetName() + " " + std::to_string(index);
@@ -145,17 +149,80 @@ void imguiManager::WidgetObjectWindow(ApplicationClass* app)
 			ImGui::Separator();
 
 			// Texture
-			std::string textureLabel = "Texture##" + std::to_string(index);
-			ID3D11ShaderResourceView* texture = object->GetTexture(0);
-			if (texture != nullptr)
+			// add all texture category names to a vector
+			std::vector<std::string> textureCategories = { "Diffuse", "Normal", "Specular", "Alpha", "Light", "Change Me" };
+
+
+			for (int count = 0; count < 6; count++)
 			{
-				if (ImGui::ImageButton((ImTextureID)texture, ImVec2(64, 64)))
+				std::string textureLabel = "Texture##" + std::to_string(index);
+				ID3D11ShaderResourceView* texture = object->GetTexture(count);
+				if (texture != nullptr)
 				{
-					count++;
-					
+					// Set the cursor position
+					ImGui::SetCursorPosX(count * (64 + 20) + 10); // 64 is the width of the image, 10 is the spacing
+
+					// Display the texture name
+					std::string textureName = textureCategories[count];
+					ImGui::Text(textureName.c_str());
+
+					if(count < 5)
+					{
+						ImGui::SameLine();
+					}
 				}
 			}
-			ImGui::Text("Texture count: %d", count);
+
+			// Display all images
+			for (int count = 0; count < 6; count++)
+			{
+				std::string textureLabel = "Texture##" + std::to_string(index);
+				ID3D11ShaderResourceView* texture = object->GetTexture(count);
+				if (texture != nullptr)
+				{
+					// Set the cursor position
+					ImGui::SetCursorPosX(count * (64 + 20) + 10); // 64 is the width of the image, 10 is the spacing
+
+					if (ImGui::ImageButton((ImTextureID)texture, ImVec2(64, 64)))
+					{
+						// Open file dialog
+						OPENFILENAME ofn;
+						WCHAR szFile[260];
+						ZeroMemory(&ofn, sizeof(ofn));
+						ofn.lStructSize = sizeof(ofn);
+						ofn.hwndOwner = NULL;
+						ofn.lpstrFile = szFile;
+						ofn.lpstrFile[0] = '\0';
+						ofn.nMaxFile = sizeof(szFile);
+						ofn.lpstrFilter = L"Texture\0*.tga\0";
+						ofn.nFilterIndex = 1;
+						ofn.lpstrFileTitle = NULL;
+						ofn.nMaxFileTitle = 0;
+						ofn.lpstrInitialDir = NULL;
+						ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+						if (GetOpenFileName(&ofn))
+						{
+							// Load the selected texture
+							object->ChangeTexture(m_device, m_deviceContext, ofn.lpstrFile, index);
+						}
+					}
+
+					if (ImGui::IsItemHovered())
+					{
+						ImGui::BeginTooltip();
+						ImGui::Image((ImTextureID)texture, ImVec2(256, 256));
+						ImGui::EndTooltip();
+					}
+
+					// If this is not the last texture, put the next button on the same line
+					if (count < 5)
+					{
+						ImGui::SameLine();
+					}
+				}
+			}
+
 
 			ImGui::Separator();
 
@@ -254,8 +321,6 @@ bool imguiManager::ImGuiWidgetRenderer(ApplicationClass* app)
 	//render imgui
 	Render();
 
-	app->GetDirect3D()->m_swapChain->Present(0, NULL);
-
 	return true;
 }
 
@@ -263,6 +328,7 @@ void imguiManager::WidgetLightWindow(ApplicationClass* app)
 {
 	ImGui::Begin("Light", &showLightWindow);
 	int index = 0;
+
 	for(auto& light : app->GetLights())
 	{
 		std::string headerName = "Light " + std::to_string(index);
@@ -284,15 +350,6 @@ void imguiManager::WidgetLightWindow(ApplicationClass* app)
 			if (ImGui::ColorEdit3(colLabel.c_str(), col))
 			{
 				app->SetLightColor(index, XMVectorSet(col[0], col[1], col[2], 0.0f));
-			}
-
-			ImGui::Separator();
-
-			// Delete button
-			std::string deleteLabel = "Delete##" + std::to_string(index);
-			if (ImGui::Button(deleteLabel.c_str()))
-			{
-				app->DeleteLight(index);
 			}
 
 			ImGui::Separator();

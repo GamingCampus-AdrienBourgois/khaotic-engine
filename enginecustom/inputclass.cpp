@@ -20,7 +20,7 @@ InputClass::~InputClass()
 
 bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeight)
 {
-	Logger::Get().Log("Initializing input class", __FILE__, __LINE__);
+	Logger::Get().Log("Initializing input class", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	HRESULT result;
 	int i;
@@ -112,7 +112,7 @@ bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int
 		return false;
 	}
 
-	Logger::Get().Log("Input class initialized", __FILE__, __LINE__);
+	Logger::Get().Log("Input class initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	return true;
 }
@@ -123,6 +123,7 @@ bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int
 void InputClass::KeyDown(unsigned int input)
 {
 	// If a key is pressed then save that state in the key array.
+	Logger::Get().Log("Key down", __FILE__, __LINE__, Logger::LogLevel::Input);
 	m_keys[input] = true;
 	return;
 }
@@ -131,6 +132,7 @@ void InputClass::KeyDown(unsigned int input)
 void InputClass::KeyUp(unsigned int input)
 {
 	// If a key is released then clear that state in the key array.
+	Logger::Get().Log("Key up", __FILE__, __LINE__, Logger::LogLevel::Input);
 	m_keys[input] = false;
 	return;
 }
@@ -144,7 +146,7 @@ bool InputClass::IsKeyDown(unsigned int key)
 
 void InputClass::Shutdown()
 {
-	Logger::Get().Log("Shutting down input class", __FILE__, __LINE__);
+	Logger::Get().Log("Shutting down input class", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 	// Release the mouse.
 	if (m_mouse)
@@ -169,7 +171,7 @@ void InputClass::Shutdown()
 		m_directInput = 0;
 	}
 
-	Logger::Get().Log("Input class shut down", __FILE__, __LINE__);
+	Logger::Get().Log("Input class shut down", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 	return;
 }
@@ -280,6 +282,7 @@ bool InputClass::IsLeftArrowPressed()
 {
 	if (m_keyboardState[DIK_LEFT] & 0x80)
 	{
+		Logger::Get().Log("Left arrow pressed", __FILE__, __LINE__, Logger::LogLevel::Input);
 		return true;
 	}
 
@@ -291,6 +294,7 @@ bool InputClass::IsRightArrowPressed()
 {
 	if (m_keyboardState[DIK_RIGHT] & 0x80)
 	{
+		Logger::Get().Log("Right arrow pressed", __FILE__, __LINE__, Logger::LogLevel::Input);
 		return true;
 	}
 
@@ -306,6 +310,7 @@ bool InputClass::IsAPressed()
 	// Touche A sur QWERTY, Q sur AZERTY
 	if (m_keyboardState[DIK_A] & 0x80)
 	{
+		Logger::Get().Log("A pressed", __FILE__, __LINE__, Logger::LogLevel::Input);
 		return true;
 	}
 
@@ -316,6 +321,7 @@ bool InputClass::IsDPressed()
 {
 	if (m_keyboardState[DIK_D] & 0x80)
 	{
+		Logger::Get().Log("D pressed", __FILE__, __LINE__, Logger::LogLevel::Input);
 		return true;
 	}
 
@@ -327,6 +333,7 @@ bool InputClass::IsWPressed()
 	// Touche W sur QWERTY, Z sur AZERTY
 	if (m_keyboardState[DIK_W] & 0x80)
 	{
+		Logger::Get().Log("W pressed", __FILE__, __LINE__, Logger::LogLevel::Input);
 		return true;
 	}
 
@@ -337,6 +344,7 @@ bool InputClass::IsSPressed()
 {
 	if (m_keyboardState[DIK_S] & 0x80)
 	{
+		Logger::Get().Log("S pressed", __FILE__, __LINE__, Logger::LogLevel::Input);
 		return true;
 	}
 
@@ -348,6 +356,7 @@ bool InputClass::IsQPressed()
 	// Touche Q sur QWERTY, A sur AZERTY
 	if (m_keyboardState[DIK_Q] & 0x80)
 	{
+		Logger::Get().Log("Q pressed", __FILE__, __LINE__, Logger::LogLevel::Input);
 		return true;
 	}
 
@@ -358,6 +367,7 @@ bool InputClass::IsEPressed()
 {
 	if (m_keyboardState[DIK_E] & 0x80)
 	{
+		Logger::Get().Log("E pressed", __FILE__, __LINE__, Logger::LogLevel::Input);
 		return true;
 	}
 
@@ -376,6 +386,7 @@ bool InputClass::IsLeftMousePressed()
 	// Check the left mouse button state.
 	if (m_mouseState.rgbButtons[0] & 0x80)
 	{
+		Logger::Get().Log("Left mouse button pressed", __FILE__, __LINE__, Logger::LogLevel::Input);
 		return true;
 	}
 
@@ -387,6 +398,7 @@ bool InputClass::IsRightMousePressed()
 	// Check the left mouse button state.
 	if (m_mouseState.rgbButtons[1] & 0x80)
 	{
+		Logger::Get().Log("Right mouse button pressed", __FILE__, __LINE__, Logger::LogLevel::Input);
 		return true;
 	}
 

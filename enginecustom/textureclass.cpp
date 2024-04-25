@@ -19,7 +19,7 @@ TextureClass::~TextureClass()
 
 bool TextureClass::Initialize(ID3D11Device * device, ID3D11DeviceContext * deviceContext, std::string filename)
 {
-	Logger::Get().Log(("Iinitializing texture: %s", filename), __FILE__, __LINE__);
+	Logger::Get().Log(("Iinitializing texture: %s", filename), __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	bool result;
 	D3D11_TEXTURE2D_DESC textureDesc;
@@ -79,11 +79,15 @@ bool TextureClass::Initialize(ID3D11Device * device, ID3D11DeviceContext * devic
 	delete[] m_targaData;
 	m_targaData = 0;
 
+	Logger::Get().Log("Texture initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
+
 	return true;
 }
 
 void TextureClass::Shutdown()
 {
+
+	Logger::Get().Log("Shutting down texture", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	// Release the texture view resource.
 	if (m_textureView)
 	{
@@ -105,6 +109,8 @@ void TextureClass::Shutdown()
 		m_targaData = 0;
 	}
 
+	Logger::Get().Log("Texture shut down", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
+
 	return;
 }
 
@@ -115,6 +121,8 @@ ID3D11ShaderResourceView* TextureClass::GetTexture()
 
 bool TextureClass::LoadTarga(std::string filename)
 {
+
+	Logger::Get().Log(("Loading targa file: %s", filename), __FILE__, __LINE__);
 	int error, bpp, imageSize, index, i, j, k;
 	FILE* filePtr;
 	unsigned int count;
@@ -216,7 +224,7 @@ bool TextureClass::LoadTarga(std::string filename)
 	delete[] targaImage;
 	targaImage = 0;
 
-	Logger::Get().Log("Targa file loaded", __FILE__, __LINE__);
+	Logger::Get().Log(("targa file %s loaded", filename), __FILE__, __LINE__);
 
 	return true;
 }

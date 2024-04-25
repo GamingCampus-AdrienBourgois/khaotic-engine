@@ -23,7 +23,7 @@ AlphaMapShaderClass::~AlphaMapShaderClass()
 
 bool AlphaMapShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 {
-    Logger::Get().Log("Initializing AlphaMapShaderClass", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing AlphaMapShaderClass", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     bool result;
     wchar_t vsFilename[128];
@@ -77,6 +77,7 @@ bool AlphaMapShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCo
     result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture1, texture2, texture3);
     if (!result)
     {
+        Logger::Get().Log("Error setting shader parameters", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -89,7 +90,7 @@ bool AlphaMapShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCo
 
 bool AlphaMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
-    Logger::Get().Log("Initializing shader", __FILE__, __LINE__);
+    Logger::Get().Log("Initializing shader", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     HRESULT result;
     ID3D10Blob* errorMessage;
@@ -243,7 +244,7 @@ bool AlphaMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHA
         return false;
     }
 
-    Logger::Get().Log("Shader initialized", __FILE__, __LINE__);
+    Logger::Get().Log("Shader initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     return true;
 }
@@ -252,44 +253,54 @@ bool AlphaMapShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHA
 void AlphaMapShaderClass::ShutdownShader()
 {
 
-    Logger::Get().Log("Shutting down shader", __FILE__, __LINE__);
+    Logger::Get().Log("Shutting down shader", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     // Release the sampler state.
     if (m_sampleState)
     {
+        Logger::Get().Log("Releasing sampler state", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
         m_sampleState->Release();
         m_sampleState = 0;
+        Logger::Get().Log("Sampler state released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
     }
 
     // Release the matrix constant buffer.
     if (m_matrixBuffer)
     {
+        Logger::Get().Log("Releasing constant buffer", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
         m_matrixBuffer->Release();
         m_matrixBuffer = 0;
+        Logger::Get().Log("Constant buffer released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
     }
 
     // Release the layout.
     if (m_layout)
     {
+        Logger::Get().Log("Releasing layout", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
         m_layout->Release();
         m_layout = 0;
+        Logger::Get().Log("Layout released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
     }
 
     // Release the pixel shader.
     if (m_pixelShader)
     {
+        Logger::Get().Log("Releasing pixel shader", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
         m_pixelShader->Release();
         m_pixelShader = 0;
+        Logger::Get().Log("Pixel shader released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
     }
 
     // Release the vertex shader.
     if (m_vertexShader)
     {
+        Logger::Get().Log("Releasing vertex shader", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
         m_vertexShader->Release();
         m_vertexShader = 0;
+        Logger::Get().Log("Vertex shader released", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
     }
 
-    Logger::Get().Log("Shader shutdown complete", __FILE__, __LINE__);
+    Logger::Get().Log("Shader shutdown complete", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
     return;
 }

@@ -21,7 +21,7 @@ ModelClass::~ModelClass()
 
 bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* modelFilename, vector<string> filename)
 {
-	Logger::Get().Log("Initializing model class", __FILE__, __LINE__);
+	Logger::Get().Log("Initializing model class", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	bool result;
 
@@ -51,7 +51,7 @@ bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 		return false;
 	}
 
-	Logger::Get().Log("Model class initialized", __FILE__, __LINE__);
+	Logger::Get().Log("Model class initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	return true;
 }
@@ -94,7 +94,7 @@ ID3D11ShaderResourceView* ModelClass::GetTexture(int index)
 
 bool ModelClass::InitializeBuffers(ID3D11Device* device)
 {
-	Logger::Get().Log("Initializing buffers", __FILE__, __LINE__);
+	Logger::Get().Log("Initializing buffers", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	VertexType* vertices;
 	unsigned long* indices;
@@ -170,7 +170,7 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	delete[] indices;
 	indices = 0;
 
-	Logger::Get().Log("Buffers initialized", __FILE__, __LINE__);
+	Logger::Get().Log("Buffers initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
 	return true;
 }
@@ -178,6 +178,7 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 
 void ModelClass::ShutdownBuffers()
 {
+	Logger::Get().Log("Shutting down buffers", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 	// Release the index buffer.
 	if (m_indexBuffer)
 	{
@@ -191,6 +192,8 @@ void ModelClass::ShutdownBuffers()
 		m_vertexBuffer->Release();
 		m_vertexBuffer = 0;
 	}
+
+	Logger::Get().Log("Buffers shut down", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
 
 	return;
 }
@@ -399,7 +402,6 @@ void ModelClass::CalculateModelVectors()
 
 void ModelClass::CalculateTangentBinormal(TempVertexType vertex1, TempVertexType vertex2, TempVertexType vertex3, VectorType& tangent, VectorType& binormal)
 {
-	Logger::Get().Log("Calculating tangent and binormal", __FILE__, __LINE__);
 
 	float vector1[3], vector2[3];
 	float tuVector[2], tvVector[2];
@@ -451,8 +453,6 @@ void ModelClass::CalculateTangentBinormal(TempVertexType vertex1, TempVertexType
 	binormal.y = binormal.y / length;
 	binormal.z = binormal.z / length;
 
-	Logger::Get().Log("Tangent and binormal calculated", __FILE__, __LINE__);
-
 	return;
 }
 
@@ -469,4 +469,27 @@ void ModelClass::ReleaseModel()
 	Logger::Get().Log("Model released", __FILE__, __LINE__);
 
 	return;
+}
+
+bool ModelClass::ChangeTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::wstring filename, int index)
+{
+	bool result;
+
+	// convert wstring to string
+	std::string str(filename.begin(), filename.end());
+
+	// Release the old texture object.
+	m_Textures[index].Shutdown();
+
+	// Initialize the new texture object.
+	result = m_Textures[index].Initialize(device, deviceContext, str);
+	if (!result)
+	{
+		Logger::Get().Log("Failed to initialize texture", __FILE__, __LINE__, Logger::LogLevel::Error);
+		return false;
+	}
+
+	Logger::Get().Log("Texture changed", __FILE__, __LINE__);
+
+	return true;
 }
