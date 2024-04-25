@@ -628,13 +628,13 @@ bool ApplicationClass::Frame(InputClass* Input)
 
 	currentMouseX = mouseX;
 
-	int deltaX = currentMouseX - lastMouseX;  // Calculez le d�placement de la souris
-	lastMouseX = currentMouseX;  // Mettez � jour la derni�re position de la souris pour la prochaine image
+	int deltaX = currentMouseX - lastMouseX;  // Calculate the mouse movement.
+	lastMouseX = currentMouseX;  // Update the last mouse position for the next frame
 
 	currentMouseY = mouseY;
 
-	int deltaY = currentMouseY - lastMouseY;  // Calculez le d�placement de la souris
-	lastMouseY = currentMouseY;  // Mettez � jour la derni�re position de la souris pour la prochaine image
+	int deltaY = currentMouseY - lastMouseY;  // Calculate the mouse movement.
+	lastMouseY = currentMouseY;  // Update the last mouse position for the next frame
 
 	// Set the frame time for calculating the updated position.
 	m_Position->SetFrameTime(m_Timer->GetTime());
@@ -710,15 +710,6 @@ bool ApplicationClass::Frame(InputClass* Input)
 		return false;
 	}
 
-
-	//// Update the x position variable each frame.
-	//x -= 0.0174532925f * 0.6f;
-
-	//y -= 0.0174532925f * 0.2f;
-
-	//// Update the z position variable each frame.
-	//z -= 0.0174532925f * 0.2f;
-
 	// Render the scene to a render texture.
 	result = RenderSceneToTexture(rotation);
 	if (!result)
@@ -744,17 +735,6 @@ bool ApplicationClass::Frame(InputClass* Input)
 	{
 		textureTranslation -= 1.0f;
 	}
-
-	/////////////////////////////
-	// C en commentaire pcl kc //
-	/////////////////////////////
-
-	//// Render the graphics scene.
-	//result = Render(rotation, x, y, z, textureTranslation);
-	//if (!result)
-	//{
-	//	return false;
-	//}
 
 	return true;
 }
@@ -1161,14 +1141,6 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		Logger::Get().Log("Could not render the sprite using the texture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 		return false;
 	}
-
-	//scaleMatrix = XMMatrixScaling(0.75f, 0.75f, 0.75f);  // Build the scaling matrix.
-	//rotateMatrix = XMMatrixRotationY(rotation);  // Build the rotation matrix.
-	//translateMatrix = XMMatrixTranslation(x, y, z);  // Build the translation matrix.
-
-	//// Multiply the scale, rotation, and translation matrices together to create the final world transformation matrix.
-	//srMatrix = XMMatrixMultiply(scaleMatrix, rotateMatrix);
-	//worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
 	// Render the model using the multitexture shader.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
