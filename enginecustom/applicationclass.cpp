@@ -789,7 +789,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 			{
 				forceY = 40.0f;
 			}
-			if (keyDown && !object->GetGrounded())
+			if (keyDown && !object->IsGrounded())
 			{
 				forceY = -40.0f;
 			}

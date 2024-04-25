@@ -209,7 +209,7 @@ void Object::SetGrounded(bool isGrounded)
 	m_isGrounded = isGrounded;
 }
 
-bool Object::GetGrounded() const
+bool Object::IsGrounded() const
 {
 	return m_isGrounded;
 }

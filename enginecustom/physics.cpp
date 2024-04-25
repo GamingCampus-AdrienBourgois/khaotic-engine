@@ -35,7 +35,7 @@ void Physics::ApplyGravity(Object* object, float dragValue, float frameTime)
         return;
     }
 
-    if (!object->GetGrounded()) // Verify if the object is grounded
+    if (!object->IsGrounded()) // Verify if the object is grounded
     {
         // Calculate the acceleration caused by gravity
         XMVECTOR gravityAcceleration = m_gravity / object->GetMass();

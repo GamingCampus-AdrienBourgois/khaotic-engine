@@ -35,7 +35,7 @@ public:
 	void SetMass(float);
 	float GetMass() const;
 	void SetGrounded(bool);
-	bool GetGrounded() const;
+	bool IsGrounded() const;
 
 	void UpdateWorldMatrix();
 	void UpdateSRMatrix();
