@@ -12,6 +12,7 @@ Object::Object() : ModelClass()
 	m_acceleration = XMVectorZero();
 	m_mass = NULL;
 	m_isGrounded = false;
+	m_id = NULL;
 }
 
 Object::~Object()
@@ -211,5 +212,15 @@ void Object::SetGrounded(bool isGrounded)
 bool Object::GetGrounded() const
 {
 	return m_isGrounded;
+}
+
+int Object::SetId(int id)
+{
+	return m_id = id;
+}
+
+int Object::GetId() const
+{
+	return m_id;
 }
 

@@ -716,7 +716,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	}
 
 	// Update the rotation variable each frame.
-	rotation -= 0.0174532925f * speed;
+	rotation -= 0.0174532925f * m_speed;
 	if (rotation < 0.0f)
 	{
 		rotation += 360.0f;
@@ -758,6 +758,20 @@ bool ApplicationClass::Frame(InputClass* Input)
 					//object->SetAcceleration(XMVectorZero());
 					object->SetGrounded(true);
 				}
+			}
+
+			for (auto& object2 : m_object)
+			{
+				if (object->GetId() != object2->GetId() && object2 != nullptr)
+				{
+					if (m_Physics->IsColliding(object, object2))
+					{
+						// Stop movement in any direction
+						object->SetVelocity(XMVectorZero());
+						object->SetAcceleration(XMVectorZero());
+					}
+				}
+
 			}
 
 			// Apply forces
@@ -1328,9 +1342,11 @@ void ApplicationClass::AddKobject(WCHAR* filepath)
 	Object* newObject = new Object();
 	newObject->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename, textureFilename2, textureFilename3);
 	newObject->SetMass(1.0f);
-
 	newObject->SetTranslateMatrix(XMMatrixTranslation(0.0f, 50.0f, 0.0f));
 	newObject->SetName(filename);
+	newObject->SetId(m_ObjectId);
+
+	m_ObjectId++;
 
 	m_object.push_back(newObject);
 }

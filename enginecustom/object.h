@@ -47,11 +47,14 @@ public:
 
 	std::string GetName();
 	void SetName(std::string name);
+	int SetId(int id);
+	int GetId() const;
 
 public :
 	bool m_demoSpinning = false;
 	XMVECTOR m_previousPosition;
 	XMVECTOR m_velocity;
+	int m_id;
 
 private:
 	XMMATRIX m_scaleMatrix;
