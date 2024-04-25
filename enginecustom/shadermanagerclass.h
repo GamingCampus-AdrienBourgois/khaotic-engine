@@ -13,6 +13,10 @@
 #include "transparentshaderclass.h"
 #include "lightshaderclass.h"
 #include "lightmapshaderclass.h"
+#include "refractionshaderclass.h"
+#include "watershaderclass.h"
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // Class name: ShaderManagerClass
 ////////////////////////////////////////////////////////////////////////////////
@@ -33,9 +37,12 @@ public:
     bool RenderSpecMapShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, ID3D11ShaderResourceView*, ID3D11ShaderResourceView*,
         XMFLOAT3, XMFLOAT4, XMFLOAT3, XMFLOAT4, float);
     bool RenderTransparentShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, float);
-    bool RenderlightShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, XMFLOAT4[], XMFLOAT4[]);
+    bool RenderlightShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, XMFLOAT4[], XMFLOAT4[], XMFLOAT4[]);
     bool RenderlightMapShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, ID3D11ShaderResourceView*);
-
+    bool RenderRefractionShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*,
+        XMFLOAT3, XMFLOAT4[], XMFLOAT4[], XMFLOAT4[], XMFLOAT4);
+    bool RenderWaterShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*,
+        ID3D11ShaderResourceView*, ID3D11ShaderResourceView*, float, float);
 private:
     TextureShaderClass* m_TextureShader;
     NormalMapShaderClass* m_NormalMapShader;
@@ -47,6 +54,8 @@ private:
 
     LightShaderClass* m_LightShader;
     LightMapShaderClass* m_LightMapShader;
+    RefractionShaderClass* m_RefractionShader;
+    WaterShaderClass* m_WaterShader;
 };
 
 #endif

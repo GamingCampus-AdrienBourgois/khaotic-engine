@@ -2,7 +2,7 @@
 
 Khaotic Engine est un moteur de rendu fait en **C++** réalisé par une petite équipe dans le but d'apprendre à utiliser les API de rendu (OpenGL,DirectX 11/12 et Vulkan).
 
-Ce moteur est basé sur **DirectX11** utilise **ImGui** avec une couche d'abstraction pour permetre son usage avec d'autres API.
+Ce moteur est basé sur **DirectX11** utilise **ImGui** et **Boost** avec une couche d'abstraction pour permetre son usage avec d'autres API.
 
 ---
 
@@ -10,15 +10,14 @@ Khaotic Engine is a rendering engine made in **C++** by a small team with the ai
 
 This **DirectX11** based engine uses **ImGui** with an abstraction layer to enable its use with other APIs.
 
-
 ## Installation
 
-**Par la solution + Debogueur :**
+**Depuis la solution + Debugger**
 
- 1.  Télécharger la Release Beta
- 2.  Dezip le Zip
- 3.  Ouvrir le fichier en .sln
- 4.  Lancer le déboguage
+1. Télécharge la Beta
+2. Dézip le .zip
+3. Ouvre le fichier .sln
+4. Build en Release
 
 ----
 
@@ -27,7 +26,8 @@ This **DirectX11** based engine uses **ImGui** with an abstraction layer to enab
  1.  Download the Beta Release
  2.  Unzip the Zip file
  3.  Open the .sln file
- 4.  Launch the debugger
+ 4.  Set the debugger in "Release"
+ 5.  Launch the debugger
 
 
 
@@ -45,6 +45,9 @@ This **DirectX11** based engine uses **ImGui** with an abstraction layer to enab
  - **Clipping Planes** 
  - **Texture Translation** 
  - **Transparency**
+ - **Water**
+   - **Refraction**
+   - *Reflection (cassé / broken)*
  
 
 *Plus de shaders seront disponibles dans le futur*
@@ -70,7 +73,7 @@ La librairie ImGui est utilisée afin d'interragir avec les éléments du moteur
 - Modifier les propriétées des lumières (Position, Couleur RVB)
 
 ----
-*This part of the engine is still in developpement, other features will be added in the future*
+*This part of the engine is still in development, other features will be added in the future*
 
 ImGui is used to allow interaction between the user and the objects in the scene.
 
@@ -89,6 +92,13 @@ ImGui is used to allow interaction between the user and the objects in the scene
 [![Demo Video](https://img.youtube.com/vi/qCOCTyB_97c/0.jpg)](https://www.youtube.com/watch?v=qCOCTyB_97c)
 
 
+## Bug Report :
+
+Vous pouvez signalez les problèmes en ouvrant un ticket dans [Issues](https://github.com/GamingCampus-AdrienBourgois/khaotic-engine/issues)
+
+----
+You can report bugs with the program by creating a ticket in [Issues](https://github.com/GamingCampus-AdrienBourgois/khaotic-engine/issues)
+
 ## Engine Build by :
 
 [](https://github.com/GamingCampus-AdrienBourgois/khaotic-engine?tab=readme-ov-file#engine-build-by-)
@@ -101,6 +111,7 @@ ImGui is used to allow interaction between the user and the objects in the scene
 -   [@axelpicou](https://github.com/axelpicou)
 -   [@GolfOcean334](https://github.com/GolfOcean334)
 -  [@sutabasuto](https://github.com/sutabasuto)
+
 
 
 

@@ -11,6 +11,8 @@ ShaderManagerClass::ShaderManagerClass()
     m_TransparentShader = 0;
     m_LightShader = 0;
     m_LightMapShader = 0;
+    m_RefractionShader = 0;
+    m_WaterShader = 0;
 }
 
 
@@ -120,6 +122,24 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
         return false;
     }
 
+    // Create and initialize the refraction shader object.
+    m_RefractionShader = new RefractionShaderClass;
+
+    result = m_RefractionShader->Initialize(device, hwnd);
+    if (!result)
+    {
+        return false;
+    }
+
+    // Create and initialize the water shader object.
+    m_WaterShader = new WaterShaderClass;
+
+    result = m_WaterShader->Initialize(device, hwnd);
+    if (!result)
+    {
+        return false;
+    }
+
     Logger::Get().Log("ShaderManagerClass initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
     return true;
@@ -199,6 +219,22 @@ void ShaderManagerClass::Shutdown()
         m_LightMapShader->Shutdown();
         delete m_LightMapShader;
         m_LightMapShader = 0;
+    }
+
+    // Release the refraction shader object.
+    if (m_RefractionShader)
+    {
+        m_RefractionShader->Shutdown();
+        delete m_RefractionShader;
+        m_RefractionShader = 0;
+    }
+
+    // Release the water shader object.
+    if (m_WaterShader)
+    {
+        m_WaterShader->Shutdown();
+        delete m_WaterShader;
+        m_WaterShader = 0;
     }
 
     Logger::Get().Log("ShaderManagerClass shut down", __FILE__, __LINE__, Logger::LogLevel::Shutdown);
@@ -322,12 +358,12 @@ bool ShaderManagerClass::RenderTransparentShader(ID3D11DeviceContext* deviceCont
 }
 
 bool ShaderManagerClass::RenderlightShader(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
-    ID3D11ShaderResourceView* texture, XMFLOAT4 diffuseColor[], XMFLOAT4 lightPosition[])
+    ID3D11ShaderResourceView* texture, XMFLOAT4 diffuseColor[], XMFLOAT4 lightPosition[], XMFLOAT4 ambientColor[])
 {
     bool result;
 
 
-    result = m_LightShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture, diffuseColor, lightPosition);
+    result = m_LightShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture, diffuseColor, lightPosition, ambientColor);
     if (!result)
     {
         return false;
@@ -343,6 +379,38 @@ bool ShaderManagerClass::RenderlightMapShader(ID3D11DeviceContext* deviceContext
 
 
     result = m_LightMapShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture1, texture2);
+    if (!result)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ShaderManagerClass::RenderRefractionShader(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
+    ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 ambientColor[], XMFLOAT4 diffuseColor[], XMFLOAT4 lightPosition[], XMFLOAT4 clipPlane)
+{
+    bool result;
+
+
+    result = m_RefractionShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture, lightDirection, ambientColor, diffuseColor, lightPosition, clipPlane);
+    if (!result)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ShaderManagerClass::RenderWaterShader(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
+    XMMATRIX reflectionMatrix, ID3D11ShaderResourceView* reflectionTexture, ID3D11ShaderResourceView* refractionTexture,
+    ID3D11ShaderResourceView* normalTexture, float waterTranslation, float reflectRefractScale)
+{
+    bool result;
+
+
+    result = m_WaterShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, reflectionMatrix, reflectionTexture,
+        refractionTexture, normalTexture, waterTranslation, reflectRefractScale);
     if (!result)
     {
         return false;
