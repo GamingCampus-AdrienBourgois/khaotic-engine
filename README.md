@@ -12,27 +12,12 @@ This **DirectX11** based engine uses **ImGui** with an abstraction layer to enab
 
 ## Installation
 
-Pré-requis pour le moteur : python 3.12 et Boost
+**Depuis la solution + Debugger**
 
-- Télécharger la librairie Boost v.1_85_0 (Pour utilier python avec le c++)
-- Ouvrez un terminal, placer vous dans le dossier boost que vous venez d'extraire et entrez ces commandes bash pour build Boost
-
-```bash
-  cd chemin/du/dossier/boost/extrait
-```
-
-```bash
-  bootstrap.bat
-```
-
-```bash
-  .\b2 --with-python
-```
-
-- Une fois fait importer contenu du dossier boost_x_xx_x dans le moteur.
-- Placer le contenu dans le dossier "enginecustom/include/boost" du moteur.
-- Placer "stage" dans le dossier "enginecustom/libs"
-- Vous pouvez ouvrir visual studio est lancer le moteur
+1. Télécharge la Beta
+2. Dézip le .zip
+3. Ouvre le fichier .sln
+4. Build en Release
 
 ----
 
@@ -41,7 +26,7 @@ Pré-requis pour le moteur : python 3.12 et Boost
  1.  Download the Beta Release
  2.  Unzip the Zip file
  3.  Open the .sln file
- 4. Set the debugger in "Release"
+ 4.  Set the debugger in "Release"
  5.  Launch the debugger
 
 
