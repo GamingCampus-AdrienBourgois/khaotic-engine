@@ -8,12 +8,10 @@
 #include "d3dclass.h"
 #include "cameraclass.h"
 #include "object.h"
-#include "lightshaderclass.h"
 #include "lightclass.h"
 #include <vector>
 #include <filesystem>
 
-#include "lightmapshaderclass.h"
 #include "bitmapclass.h"
 #include "spriteclass.h"
 #include "timerclass.h"
@@ -28,8 +26,6 @@
 #include "frustumclass.h"
 #include "rendertextureclass.h"
 #include "displayplaneclass.h"
-#include "reflectionshaderclass.h"
-#include "systemclass.h"
 
 
 /////////////
@@ -90,6 +86,8 @@ private:
 	bool UpdateFps();
 	bool UpdateRenderCountString(int);
 	bool RenderSceneToTexture(float);
+	bool RenderRefractionToTexture();
+	bool RenderReflectionToTexture();
 
 private :
 
@@ -99,7 +97,7 @@ private :
 
 	D3DClass* m_Direct3D;
 	IDXGISwapChain* m_swapChain;
-	ModelClass* m_Model;
+	ModelClass* m_Model,* m_GroundModel, * m_WallModel, * m_BathModel, * m_WaterModel;
 	ModelListClass* m_ModelList;
 
 	// ------------------------------------- //
@@ -107,7 +105,7 @@ private :
 	// ------------------------------------- //
 
 	XMMATRIX m_baseViewMatrix;
-	RenderTextureClass* m_RenderTexture;
+	RenderTextureClass* m_RenderTexture, * m_RefractionTexture, * m_ReflectionTexture;
 	DisplayPlaneClass* m_DisplayPlane;
 	int m_screenWidth, m_screenHeight;
 	CameraClass* m_Camera;
@@ -138,10 +136,14 @@ private :
 
 	ShaderManagerClass* m_ShaderManager;
 	FontShaderClass* m_FontShader;
-	ReflectionShaderClass* m_ReflectionShader;
-
 	BitmapClass* m_Bitmap;
 	SpriteClass* m_Sprite;
+
+	// ----------------------------------- //
+	// ------------ VARIABLES ------------ //
+	// ----------------------------------- //
+
+	float m_waterHeight, m_waterTranslation;
 
 	// ------------------------------------------------- //
 	// ------------- FPS AND INFO ON SCREEN ------------ //

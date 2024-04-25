@@ -19,7 +19,11 @@ ApplicationClass::ApplicationClass() : m_ShouldQuit(false)
 	m_Position = 0;
 	m_Frustum = 0;
 	m_DisplayPlane = 0;
-	m_ReflectionShader = 0;
+	m_BathModel = 0;
+	m_WaterModel = 0;
+	m_Light = 0;
+	m_RefractionTexture = 0;
+	m_ReflectionTexture = 0;
 }
 
 
@@ -192,6 +196,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 		m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 		m_Light->SetDirection(0.0f, 0.0f, -1.0f);
+		m_Light->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 		m_Light->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
 		m_Light->SetSpecularPower(16.0f);
 
@@ -204,6 +209,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		m_Lights[0] = new LightClass;
 		m_Lights[0]->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);  // White
 		m_Lights[0]->SetDirection(0.0f, 0.0f, -1.0f);
+		m_Lights[0]->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 		m_Lights[0]->SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
 		m_Lights[0]->SetSpecularPower(16.0f);
 		m_Lights[0]->SetPosition(10.0f, 7.0f, -5.0f);
@@ -212,6 +218,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		m_Lights[1] = new LightClass;
 		m_Lights[1]->SetDiffuseColor(1.0f, 0.0f, 0.0f, 1.0f);  // Red
 		m_Lights[1]->SetDirection(0.0f, 0.0f, 1.0f);
+		m_Lights[1]->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 		m_Lights[1]->SetSpecularColor(1.0f, 0.0f, 0.0f, 1.0f);
 		m_Lights[1]->SetSpecularPower(16.0f);
 		m_Lights[1]->SetPosition(10.0f, 7.0f, -5.0f);
@@ -219,6 +226,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		m_Lights[2] = new LightClass;
 		m_Lights[2]->SetDiffuseColor(0.0f, 1.0f, 0.0f, 1.0f);  // Green
 		m_Lights[2]->SetDirection(0.0f, 0.0f, 1.0f);
+		m_Lights[2]->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 		m_Lights[2]->SetSpecularColor(0.0f, 1.0f, 0.0f, 1.0f);
 		m_Lights[2]->SetSpecularPower(16.0f);
 		m_Lights[2]->SetPosition(10.0f, 7.0f, -5.0f);
@@ -226,6 +234,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		m_Lights[3] = new LightClass;
 		m_Lights[3]->SetDiffuseColor(0.0f, 0.0f, 1.0f, 1.0f);  // Blue
 		m_Lights[3]->SetDirection(0.0f, 0.0f, 1.0f);
+		m_Lights[3]->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 		m_Lights[3]->SetSpecularColor(0.0f, 0.0f, 1.0f, 1.0f);
 		m_Lights[3]->SetSpecularPower(16.0f);
 		m_Lights[3]->SetPosition(10.0f, 7.0f, -5.0f);
@@ -257,6 +266,62 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		// Create and initialize the model list object.
 		m_ModelList = new ModelListClass;
 		m_ModelList->Initialize(25);
+
+		// Set the file names of the bath model.
+		strcpy_s(modelFilename, "bath.txt");
+		strcpy_s(textureFilename1, "marble01.tga");
+
+		// Create and initialize the bath model object.
+		m_BathModel = new ModelClass;
+
+		result = m_BathModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2, textureFilename3, textureFilename4,
+			textureFilename5, textureFilename6);
+		if (!result)
+		{
+			MessageBox(hwnd, L"Could not initialize the bath model object.", L"Error", MB_OK);
+			return false;
+		}
+
+		// Set the file names of the water model.
+		strcpy_s(modelFilename, "water.txt");
+		strcpy_s(textureFilename1, "water01.tga");
+
+		// Create and initialize the water model object.
+		m_WaterModel = new ModelClass;
+
+		result = m_WaterModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename1, textureFilename2, textureFilename3, textureFilename4,
+			textureFilename5, textureFilename6);
+		if (!result)
+		{
+			MessageBox(hwnd, L"Could not initialize the water model object.", L"Error", MB_OK);
+			return false;
+		}
+
+		// Create and initialize the refraction render to texture object.
+		m_RefractionTexture = new RenderTextureClass;
+
+		result = m_RefractionTexture->Initialize(m_Direct3D->GetDevice(), screenWidth, screenHeight, SCREEN_DEPTH, SCREEN_NEAR, 1);
+		if (!result)
+		{
+			MessageBox(hwnd, L"Could not initialize the refraction render texture object.", L"Error", MB_OK);
+			return false;
+		}
+
+		// Create and initialize the reflection render to texture object.
+		m_ReflectionTexture = new RenderTextureClass;
+
+		result = m_ReflectionTexture->Initialize(m_Direct3D->GetDevice(), screenWidth, screenHeight, SCREEN_DEPTH, SCREEN_NEAR, 1);
+		if (!result)
+		{
+			MessageBox(hwnd, L"Could not initialize the reflection render texture object.", L"Error", MB_OK);
+			return false;
+		}
+
+		// Set the height of the water.
+		m_waterHeight = -9.25f;
+
+		// Initialize the position of the water.
+		m_waterTranslation = 100.0f;
 
 		// Create and initialize the timer object.
 		m_Timer = new TimerClass;
@@ -318,6 +383,38 @@ void ApplicationClass::Shutdown()
 		m_ShaderManager = 0;
 
 		Logger::Get().Log("Shader manager object released", __FILE__, __LINE__);
+	}
+
+	// Release the reflection render texture object.
+	if (m_ReflectionTexture)
+	{
+		m_ReflectionTexture->Shutdown();
+		delete m_ReflectionTexture;
+		m_ReflectionTexture = 0;
+	}
+
+	// Release the refraction render texture object.
+	if (m_RefractionTexture)
+	{
+		m_RefractionTexture->Shutdown();
+		delete m_RefractionTexture;
+		m_RefractionTexture = 0;
+	}
+
+	// Release the water model object.
+	if (m_WaterModel)
+	{
+		m_WaterModel->Shutdown();
+		delete m_WaterModel;
+		m_WaterModel = 0;
+	}
+
+	// Release the bath model object.
+	if (m_BathModel)
+	{
+		m_BathModel->Shutdown();
+		delete m_BathModel;
+		m_BathModel = 0;
 	}
 
 	// Release the frustum class object.
@@ -594,6 +691,28 @@ bool ApplicationClass::Frame(InputClass* Input)
 		rotation += 360.0f;
 	}
 
+	// Update the position of the water to simulate motion.
+	m_waterTranslation += 0.001f;
+	if (m_waterTranslation > 1.0f)
+	{
+		m_waterTranslation -= 1.0f;
+	}
+
+	// Render the refraction of the scene to a texture.
+	result = RenderRefractionToTexture();
+	if (!result)
+	{
+		return false;
+	}
+
+	// Render the reflection of the scene to a texture.
+	result = RenderReflectionToTexture();
+	if (!result)
+	{
+		return false;
+	}
+
+
 	//// Update the x position variable each frame.
 	//x -= 0.0174532925f * 0.6f;
 
@@ -642,6 +761,91 @@ bool ApplicationClass::Frame(InputClass* Input)
 	return true;
 }
 
+bool ApplicationClass::RenderRefractionToTexture()
+{
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
+	XMFLOAT4 diffuseColor[4], lightPosition[4], ambientColor[4];
+	XMFLOAT4 clipPlane;
+	int i;
+	bool result;
+
+	// Setup a clipping plane based on the height of the water to clip everything above it.
+	clipPlane = XMFLOAT4(0.0f, -1.0f, 0.0f, m_waterHeight + 0.1f);
+
+	// Set the render target to be the refraction render to texture and clear it.
+	m_RefractionTexture->SetRenderTarget(m_Direct3D->GetDeviceContext());
+	m_RefractionTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), 0.0f, 0.0f, 0.0f, 1.0f);
+
+	// Generate the view matrix based on the camera's position.
+	m_Camera->Render();
+
+	// Get the world, view, and projection matrices from the camera and d3d objects.
+	m_Direct3D->GetWorldMatrix(worldMatrix);
+	m_Camera->GetViewMatrix(viewMatrix);
+	m_Direct3D->GetProjectionMatrix(projectionMatrix);
+
+	// Get the light properties.
+	for (i = 0; i < m_numLights; i++)
+	{
+		// Create the diffuse color array from the four light colors.
+		diffuseColor[i] = m_Lights[i]->GetDiffuseColor();
+
+		// Create the light position array from the four light positions.
+		lightPosition[i] = m_Lights[i]->GetPosition();
+
+		// Create the light position array from the four light positions.
+		ambientColor[i] = m_Lights[i]->GetAmbientColor();
+	}
+
+	// Translate to where the bath model will be rendered.
+	worldMatrix = XMMatrixTranslation(0.0f, -10.0f, 0.0f);
+
+	// Render the bath model using the refraction shader.
+	m_BathModel->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_ShaderManager->RenderRefractionShader(m_Direct3D->GetDeviceContext(), m_BathModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, 
+		m_BathModel->GetTexture(0), m_Lights[0]->GetDirection(), ambientColor, diffuseColor, lightPosition, clipPlane);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Reset the render target back to the original back buffer and not the render to texture anymore.  And reset the viewport back to the original.
+	m_Direct3D->SetBackBufferRenderTarget();
+	m_Direct3D->ResetViewport();
+
+	return true;
+}
+
+bool ApplicationClass::RenderReflectionToTexture()
+{
+	XMMATRIX worldMatrix, reflectionViewMatrix, projectionMatrix;
+	XMFLOAT4 diffuseColor[4], getDirection[4], ambientColor[4];
+	bool result;
+
+
+	// Set the render target to be the reflection render to texture and clear it.
+	m_ReflectionTexture->SetRenderTarget(m_Direct3D->GetDeviceContext());
+	m_ReflectionTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), 0.0f, 0.0f, 0.0f, 1.0f);
+
+	// Use the camera to render the reflection and create a reflection view matrix.
+	m_Camera->RenderReflection(m_waterHeight);
+
+	// Get the camera reflection view matrix instead of the normal view matrix.
+	m_Camera->GetReflectionViewMatrix(reflectionViewMatrix);
+
+	// Get the world and projection matrices from the d3d object.
+	m_Direct3D->GetWorldMatrix(worldMatrix);
+	m_Direct3D->GetProjectionMatrix(projectionMatrix);
+
+
+	// Reset the render target back to the original back buffer and not the render to texture anymore.  And reset the viewport back to the original.
+	m_Direct3D->SetBackBufferRenderTarget();
+	m_Direct3D->ResetViewport();
+
+	return true;
+}
+
 bool ApplicationClass::RenderSceneToTexture(float rotation)
 {
 	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
@@ -681,9 +885,9 @@ bool ApplicationClass::RenderSceneToTexture(float rotation)
 
 bool ApplicationClass::Render(float rotation, float x, float y, float z, float textureTranslation)
 {
-	XMMATRIX worldMatrix, viewMatrix, orthoMatrix, projectionMatrix, rotateMatrix, translateMatrix, scaleMatrix, srMatrix;
+	XMMATRIX worldMatrix, viewMatrix, orthoMatrix, projectionMatrix, rotateMatrix, translateMatrix, scaleMatrix, srMatrix, reflectionMatrix;
 	float positionX, positionY, positionZ, radius;
-	XMFLOAT4 diffuseColor[4], lightPosition[4];
+	XMFLOAT4 diffuseColor[4], lightPosition[4], getDirection[4], ambientColor[4];
 	int  modelCount, renderCount, i;
 	bool result, renderModel;
 	float blendAmount;
@@ -712,6 +916,9 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 
 		// Create the light position array from the four light positions.
 		lightPosition[i] = m_Lights[i]->GetPosition();
+
+		// Create the light position array from the four light positions.
+		ambientColor[i] = m_Lights[i]->GetPosition();
 	}
 
 	scaleMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);  // Build the scaling matrix.
@@ -727,7 +934,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 
 	// Render the model using the light shader.
 	result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
-		diffuseColor, lightPosition);
+		diffuseColor, lightPosition, ambientColor);
 
 	for (auto cube : m_cubes)
 	{
@@ -749,7 +956,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		cube->Render(m_Direct3D->GetDeviceContext());
 
 		result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
-			diffuseColor, lightPosition);
+			diffuseColor, lightPosition, ambientColor);
 		if (!result)
 		{
 			Logger::Get().Log("Could not render the cube model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);
@@ -773,7 +980,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		object->Render(m_Direct3D->GetDeviceContext());
 
 		result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
-			diffuseColor, lightPosition);
+			diffuseColor, lightPosition, ambientColor);
 
 		if (!result)
 		{
@@ -796,7 +1003,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		chunk->Render(m_Direct3D->GetDeviceContext());
 
 		result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), chunk->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, chunk->GetTexture(5),
-			diffuseColor, lightPosition);
+			diffuseColor, lightPosition, ambientColor);
 			
 		if (!result)
 		{
@@ -878,7 +1085,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 			m_Model->Render(m_Direct3D->GetDeviceContext());
 
 			result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
-				diffuseColor, lightPosition);
+				diffuseColor, lightPosition, ambientColor);
 			if (!result)
 			{
 				Logger::Get().Log("Could not render the model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);
@@ -986,14 +1193,41 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		lightPosition[i] = m_Lights[i]->GetPosition();
 	}
 
+	// Translate to where the bath model will be rendered.
+	worldMatrix = XMMatrixTranslation(0.0f, -10.0f, 0.0f);
 
+	// Put the bath model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_BathModel->Render(m_Direct3D->GetDeviceContext());
 
-	// Render the model using the multitexture shader.
-	//result = m_MultiTextureShader->Render(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-	//	m_Model->GetTexture(0), m_Model->GetTexture(1));
+	// Render the bath model using the light shader.
+	result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), m_BathModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+		m_BathModel->GetTexture(0));
+	if (!result)
+	{
+		return false;
+	}
 
-	//// Render the model using the multitexture shader.
-	//m_Model->Render(m_Direct3D->GetDeviceContext());
+	// Reset the world matrix.
+	m_Direct3D->GetWorldMatrix(worldMatrix);
+
+	// Get the camera reflection view matrix.
+	m_Camera->GetReflectionViewMatrix(reflectionMatrix);
+
+	// Translate to where the water model will be rendered.
+	worldMatrix = XMMatrixTranslation(0.0f, m_waterHeight, 0.0f);
+
+	// Put the water model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	m_WaterModel->Render(m_Direct3D->GetDeviceContext());
+
+	// Render the water model using the water shader.
+	result = m_ShaderManager->RenderWaterShader(m_Direct3D->GetDeviceContext(), m_WaterModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, reflectionMatrix,
+		m_ReflectionTexture->GetShaderResourceView(), m_RefractionTexture->GetShaderResourceView(), m_WaterModel->GetTexture(0),
+		m_waterTranslation, 0.01f);
+
+	if (!result)
+	{
+		return false;
+	}
 
 	// Setup matrices.
 	rotateMatrix = XMMatrixRotationY(rotation);
@@ -1117,7 +1351,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	// Render the model using the transparent shader.
 	m_Model->Render(m_Direct3D->GetDeviceContext());
 
-	result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0), diffuseColor, lightPosition);
+	result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0), diffuseColor, lightPosition, ambientColor);
 	if (!result)
 	{
 		return false;
