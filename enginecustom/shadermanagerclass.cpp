@@ -364,12 +364,12 @@ bool ShaderManagerClass::RenderlightMapShader(ID3D11DeviceContext* deviceContext
 }
 
 bool ShaderManagerClass::RenderRefractionShader(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
-    ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 ambientColor, XMFLOAT4 diffuseColor, XMFLOAT4 clipPlane)
+    ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 ambientColor[], XMFLOAT4 diffuseColor[], XMFLOAT4 lightPosition[], XMFLOAT4 clipPlane)
 {
     bool result;
 
 
-    result = m_RefractionShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture, lightDirection, ambientColor, diffuseColor, clipPlane);
+    result = m_RefractionShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture, lightDirection, ambientColor, diffuseColor, lightPosition, clipPlane);
     if (!result)
     {
         return false;

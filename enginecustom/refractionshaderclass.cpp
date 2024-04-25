@@ -64,13 +64,13 @@ void RefractionShaderClass::Shutdown()
 }
 
 bool RefractionShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
-    ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 ambientColor, XMFLOAT4 diffuseColor, XMFLOAT4 clipPlane)
+    ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 ambientColor[], XMFLOAT4 diffuseColor[], XMFLOAT4 lightPosition[], XMFLOAT4 clipPlane)
 {
     bool result;
 
 
     // Set the shader parameters that it will use for rendering.
-    result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, lightDirection, ambientColor, diffuseColor, clipPlane);
+    result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, lightDirection, ambientColor, diffuseColor, lightPosition, clipPlane);
     if (!result)
     {
         return false;
@@ -361,7 +361,7 @@ void RefractionShaderClass::OutputShaderErrorMessage(ID3D10Blob* errorMessage, H
 
 
 bool RefractionShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
-    ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 ambientColor, XMFLOAT4 diffuseColor, XMFLOAT4 clipPlane)
+    ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 ambientColor[], XMFLOAT4 diffuseColor[], XMFLOAT4 lightPosition[], XMFLOAT4 clipPlane)
 {
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -436,8 +436,9 @@ bool RefractionShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceConte
     dataPtr3 = (LightBufferType*)mappedResource.pData;
 
     // Copy the lighting variables into the constant buffer.
-    dataPtr3->ambientColor = ambientColor;
-    dataPtr3->diffuseColor = diffuseColor;
+    dataPtr3->ambientColor = ambientColor[0];
+    dataPtr3->diffuseColor = diffuseColor[0];
+    dataPtr3->lightPosition = lightPosition[0];
     dataPtr3->lightDirection = lightDirection;
 
     // Unlock the constant buffer.

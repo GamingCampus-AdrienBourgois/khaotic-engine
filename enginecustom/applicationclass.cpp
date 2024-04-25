@@ -703,7 +703,9 @@ bool ApplicationClass::Frame(InputClass* Input)
 bool ApplicationClass::RenderRefractionToTexture()
 {
 	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
+	XMFLOAT4 diffuseColor[4], lightPosition[4], ambientColor[4];
 	XMFLOAT4 clipPlane;
+	int i;
 	bool result;
 
 	// Setup a clipping plane based on the height of the water to clip everything above it.
@@ -721,6 +723,19 @@ bool ApplicationClass::RenderRefractionToTexture()
 	m_Camera->GetViewMatrix(viewMatrix);
 	m_Direct3D->GetProjectionMatrix(projectionMatrix);
 
+	// Get the light properties.
+	for (i = 0; i < m_numLights; i++)
+	{
+		// Create the diffuse color array from the four light colors.
+		diffuseColor[i] = m_Lights[i]->GetDiffuseColor();
+
+		// Create the light position array from the four light positions.
+		lightPosition[i] = m_Lights[i]->GetPosition();
+
+		// Create the light position array from the four light positions.
+		ambientColor[i] = m_Lights[i]->GetAmbientColor();
+	}
+
 	// Translate to where the bath model will be rendered.
 	worldMatrix = XMMatrixTranslation(0.0f, -10.0f, 0.0f);
 
@@ -728,7 +743,7 @@ bool ApplicationClass::RenderRefractionToTexture()
 	m_BathModel->Render(m_Direct3D->GetDeviceContext());
 
 	result = m_ShaderManager->RenderRefractionShader(m_Direct3D->GetDeviceContext(), m_BathModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, 
-		m_BathModel->GetTexture(0), m_Lights[0]->GetDirection(), m_Lights[0]->GetAmbientColor(), m_Lights[0]->GetDiffuseColor(), clipPlane);
+		m_BathModel->GetTexture(0), m_Lights[0]->GetDirection(), ambientColor, diffuseColor, lightPosition, clipPlane);
 	if (!result)
 	{
 		return false;
@@ -1147,12 +1162,11 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	result = m_ShaderManager->RenderWaterShader(m_Direct3D->GetDeviceContext(), m_WaterModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, reflectionMatrix,
 		m_ReflectionTexture->GetShaderResourceView(), m_RefractionTexture->GetShaderResourceView(), m_WaterModel->GetTexture(0),
 		m_waterTranslation, 0.01f);
+
 	if (!result)
 	{
 		return false;
 	}
-
-	
 
 	// Setup matrices.
 	rotateMatrix = XMMatrixRotationY(rotation);
