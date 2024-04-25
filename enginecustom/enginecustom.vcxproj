@@ -55,6 +55,8 @@
     <ClCompile Include="specmapshaderclass.cpp" />
     <ClCompile Include="Spriteclass.cpp" />
     <ClCompile Include="Systemclass.cpp" />
+    <ClCompile Include="TCPClient.cpp" />
+    <ClCompile Include="TCPServer.cpp" />
     <ClCompile Include="textclass.cpp" />
     <ClCompile Include="textureclass.cpp" />
     <ClCompile Include="textureshaderclass.cpp" />
@@ -101,6 +103,8 @@
     <ClInclude Include="specmapshaderclass.h" />
     <ClInclude Include="Spriteclass.h" />
     <ClInclude Include="systemclass.h" />
+    <ClInclude Include="TCPClient.h" />
+    <ClInclude Include="TCPServer.h" />
     <ClInclude Include="textclass.h" />
     <ClInclude Include="textureclass.h" />
     <ClInclude Include="textureshaderclass.h" />
