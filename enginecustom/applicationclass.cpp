@@ -1271,13 +1271,13 @@ void ApplicationClass::GenerateTerrain()
 	int scaleX, scaleY, scaleZ;
 
 	scaleX = 10.0f;
-	scaleY = 10.0f;
+	scaleY = 1.0f;
 	scaleZ = 10.0f;
 
 	scaleMatrix = XMMatrixScaling(scaleX, scaleY, scaleZ);
 
 	// Set the file name of the model.
-	strcpy_s(modelFilename, "sphere.txt");
+	strcpy_s(modelFilename, "cube.txt");
 	strcpy_s(textureFilename, "stone01.tga");
 	strcpy_s(textureFilename2, "moss01.tga");
 	strcpy_s(textureFilename3, "alpha01.tga");
