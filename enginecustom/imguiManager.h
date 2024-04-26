@@ -31,6 +31,7 @@ public:
 	void WidgetObjectWindow(ApplicationClass* app);
 	void WidgetTerrainWindow(ApplicationClass* app);
 	void WidgetLightWindow(ApplicationClass* app);
+	void WidgetShaderSelection(ApplicationClass* app);
 
 	bool ImGuiWidgetRenderer(ApplicationClass* app);
 
