@@ -14,9 +14,9 @@ This **DirectX11** based engine uses **ImGui** with an abstraction layer to enab
 
 **Depuis la solution + Debugger**
 
-1. Télécharge la Beta
+1. Télécharger la Beta
 2. Dézip le .zip
-3. Ouvre le fichier .sln
+3. Ouvrir le fichier .sln
 4. Build en Release
 
 ----
@@ -62,7 +62,7 @@ This **DirectX11** based engine uses **ImGui** with an abstraction layer to enab
 
 *Cette partie du moteur est encore en développement, d'autres fonctionnalitées seront ajoutées dans le futur*
 
-La librairie ImGui est utilisée afin d'interragir avec les éléments du moteur comme les objets.
+La librairie ImGui est utilisée afin d'intéragir avec les éléments du moteur comme les objets.
 
 ### Fonctionnalitées:
 - Importer des objets 3D sous format **.obj**
