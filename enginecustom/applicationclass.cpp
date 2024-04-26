@@ -283,7 +283,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		// Set the file names of the water model.
 		strcpy_s(modelFilename, "water.txt");
 		// replace first element with the new filename
-		Filename[0] = "water01.tga";
+		Filename[1] = "water01.tga";
 
 		// Create and initialize the water model object.
 		m_WaterModel = new ModelClass;

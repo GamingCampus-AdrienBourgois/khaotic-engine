@@ -11,6 +11,9 @@
 *.o
 *.obj
 
+# Don't ignore 3d model in OBJ
+!enginecustom/3dAssetsObj/*
+
 # Precompiled Headers
 *.gch
 *.pch
