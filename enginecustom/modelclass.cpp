@@ -273,6 +273,123 @@ bool ModelClass::LoadModel(char* filename)
 {
 	Logger::Get().Log("Loading model: "  + std::string(filename), __FILE__, __LINE__);
 
+	std::string fileStr(filename);
+	std::string extension = fileStr.substr(fileStr.find_last_of(".") + 1);
+
+	if (extension == "obj")
+	{
+		// Load .obj file
+		return LoadObjModel(filename);
+	}
+	else if (extension == "txt")
+	{
+		// Load .txt file
+		return LoadTxtModel(filename);
+	}
+	else
+	{
+		Logger::Get().Log("Unsupported file format", __FILE__, __LINE__, Logger::LogLevel::Error);
+		return false;
+	}
+}
+
+bool ModelClass::LoadObjModel(char* filename)
+{
+	Logger::Get().Log("Loading model", __FILE__, __LINE__);
+
+	std::string line;
+	std::ifstream fin(filename);
+
+	// If it could not open the file then exit.
+	if (!fin)
+	{
+		Logger::Get().Log("Failed to open model file", __FILE__, __LINE__, Logger::LogLevel::Error);
+		return false;
+	}
+
+	std::vector<XMFLOAT3> temp_positions;
+	std::vector<XMFLOAT2> temp_texcoords;
+	std::vector<XMFLOAT3> temp_normals;
+	std::vector<ModelType> temp_model;
+
+	// Read the file line by line.
+	while (std::getline(fin, line))
+	{
+		std::istringstream iss(line);
+		std::string type;
+		iss >> type;
+
+		if (type == "v")  // Vertex position
+		{
+			XMFLOAT3 pos;
+			iss >> pos.x >> pos.y >> pos.z;
+			temp_positions.push_back(pos);
+		}
+		else if (type == "vt")  // Texture coordinate
+		{
+			XMFLOAT2 tex;
+			iss >> tex.x >> tex.y;
+			temp_texcoords.push_back(tex);
+		}
+		else if (type == "vn")  // Vertex normal
+		{
+			XMFLOAT3 norm;
+			iss >> norm.x >> norm.y >> norm.z;
+			temp_normals.push_back(norm);
+		}
+		else if (type == "f")  // Face
+		{
+			int posIndex[3], texIndex[3], normIndex[3];
+			char slash;  // To skip the slashes '/' in the .obj file format
+			for (int i = 0; i < 3; i++)  // Each face in .obj format has 3 vertices
+			{
+				iss >> posIndex[i] >> slash >> texIndex[i] >> slash >> normIndex[i];
+
+				// Handle negative indices
+				if (posIndex[i] < 0) posIndex[i] += temp_positions.size() + 1;
+				if (texIndex[i] < 0) texIndex[i] += temp_texcoords.size() + 1;
+				if (normIndex[i] < 0) normIndex[i] += temp_normals.size() + 1;
+			}
+
+			// .obj indices start from 1, not 0
+			for (int i = 0; i < 3; i++)
+			{
+				ModelType vertex;
+				vertex.x = temp_positions[posIndex[i] - 1].x;
+				vertex.y = temp_positions[posIndex[i] - 1].y;
+				vertex.z = temp_positions[posIndex[i] - 1].z;
+				vertex.tu = temp_texcoords[texIndex[i] - 1].x;
+				vertex.tv = temp_texcoords[texIndex[i] - 1].y;
+				vertex.nx = temp_normals[normIndex[i] - 1].x;
+				vertex.ny = temp_normals[normIndex[i] - 1].y;
+				vertex.nz = temp_normals[normIndex[i] - 1].z;
+				temp_model.push_back(vertex);
+			}
+		}
+	}
+
+	m_vertexCount = temp_model.size();
+	m_indexCount = temp_model.size();
+
+	// Create the model using the vertex count that was read in.
+	m_model = new ModelType[m_vertexCount];
+	for (int i = 0; i < m_vertexCount; i++)
+	{
+		m_model[i] = temp_model[i];
+	}
+
+	fin.close();
+
+	Logger::Get().Log("Model loaded", __FILE__, __LINE__);
+
+	return true;
+}
+
+
+bool ModelClass::LoadTxtModel(char* filename)
+{
+	Logger::Get().Log("Loading model", __FILE__, __LINE__);
+
 	ifstream fin;
 	char input;
 	int i;

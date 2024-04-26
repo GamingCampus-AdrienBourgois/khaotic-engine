@@ -98,6 +98,8 @@ private:
 	void ReleaseTextures();
 
 	bool LoadModel(char*);
+	bool LoadObjModel(char*);
+	bool LoadTxtModel(char*);
 	void ReleaseModel();
 
 	void CalculateModelVectors();
