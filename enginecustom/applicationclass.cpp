@@ -46,7 +46,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	try 
 	{
 		char mouseString1[32], mouseString2[32], mouseString3[32];
-		char modelFilename[128], renderString[32];
+		char modelFilename[128], textureFilename1[128], renderString[32];
 		char bitmapFilename[128];
 		char spriteFilename[128];
 		char fpsString[32];
@@ -267,7 +267,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 		// Set the file names of the bath model.
 		strcpy_s(modelFilename, "bath.txt");
-		Filename.push_back("marble01.tga");
+		Filename.push_back("spec02.tga");
 
 		// Create and initialize the bath model object.
 		m_BathModel = new ModelClass;
@@ -1046,8 +1046,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 			return false;
 		}
 
-		result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, cube->GetTexture(0),
-			diffuseColor, lightPosition,ambientColor);
+		result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, cube->GetTexture(0), diffuseColor, lightPosition, ambientColor);
 		if (!result)
 		{
 			Logger::Get().Log("Could not render the cube model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);

@@ -150,7 +150,7 @@ void imguiManager::WidgetObjectWindow(ApplicationClass* app)
 
 			// Texture
 			// add all texture category names to a vector
-			std::vector<std::string> textureCategories = { "Diffuse", "Normal", "Specular", "Alpha", "Light", "Change Me" };
+			std::vector<std::string> textureCategories = { "Texture", "Normal", "Specular", "Alpha", "Light", "Change Me" };
 
 
 			for (int count = 0; count < 6; count++)
