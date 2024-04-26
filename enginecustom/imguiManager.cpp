@@ -5,6 +5,7 @@
 imguiManager::imguiManager()
 {
 	io = nullptr;
+	int m_selectedShaderIndex;
 }
 
 imguiManager::~imguiManager()
@@ -356,6 +357,24 @@ void imguiManager::WidgetLightWindow(ApplicationClass* app)
 		}
 		index++;
 	};
+
+	ImGui::End();
+}
+
+void imguiManager::WidgetShaderSelection(ApplicationClass* app)
+{
+	ImGui::Begin("Shader Selection");
+
+	ImGui::Text("Select Shader for Objects:");
+
+	for (int i = 0; i < app->GetShaderCount(); ++i)
+	{
+		if (ImGui::RadioButton(app->GetShaderName(i).c_str(), &m_selectedShaderIndex, i))
+		{
+			// When a shader is selected, update the shader index for all objects
+			app->SetSelectedShaderIndexForAllObjects(i);
+		}
+	}
 
 	ImGui::End();
 }
