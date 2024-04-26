@@ -271,7 +271,7 @@ void ModelClass::ReleaseTextures()
 
 bool ModelClass::LoadModel(char* filename)
 {
-	Logger::Get().Log("Loading model", __FILE__, __LINE__);
+	Logger::Get().Log("Loading model: "  + std::string(filename), __FILE__, __LINE__);
 
 	ifstream fin;
 	char input;
@@ -324,7 +324,7 @@ bool ModelClass::LoadModel(char* filename)
 	// Close the model file.
 	fin.close();
 
-	Logger::Get().Log("Model loaded", __FILE__, __LINE__);
+	Logger::Get().Log("Model loaded "+ std::string(filename), __FILE__, __LINE__);
 
 	return true;
 }
@@ -489,7 +489,7 @@ bool ModelClass::ChangeTexture(ID3D11Device* device, ID3D11DeviceContext* device
 		return false;
 	}
 
-	Logger::Get().Log("Texture changed", __FILE__, __LINE__);
+	Logger::Get().Log("Texture changed", __FILE__, __LINE__, Logger::LogLevel::Debug);
 
 	return true;
 }

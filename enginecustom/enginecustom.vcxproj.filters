@@ -319,9 +319,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="wall.tga">
-      <Filter>assets</Filter>
-    </Image>
     <Image Include="papier.tga">
       <Filter>assets</Filter>
     </Image>
@@ -331,24 +328,9 @@
     <Image Include="KhaoticIcon.ico">
       <Filter>Assets</Filter>
     </Image>
-    <Image Include="water01.tga">
-      <Filter>Assets</Filter>
-    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="refraction.ps">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="refraction.vs">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="..\KhaoticDemo\water.ps">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="water.vs">
-      <Filter>shader</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="sphere.txt">
@@ -483,6 +465,33 @@
     </CopyFileToFolders>
     <CopyFileToFolders Include="alphamap.ps">
       <Filter>Texture</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="refraction.ps">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="refraction.vs">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="..\KhaoticDemo\water.ps">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="water.vs">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="wall.tga">
+      <Filter>assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="water01.tga">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="bath.txt">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="marble01.tga">
+      <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="water.txt">
+      <Filter>Assets</Filter>
     </CopyFileToFolders>
   </ItemGroup>
 </Project>

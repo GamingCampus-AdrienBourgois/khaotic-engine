@@ -267,7 +267,8 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 		// Set the file names of the bath model.
 		strcpy_s(modelFilename, "bath.txt");
-		Filename.push_back("marble01.tga");
+		// replace first element with the new filename
+		Filename[0] = "marble01.tga";
 
 		// Create and initialize the bath model object.
 		m_BathModel = new ModelClass;
@@ -281,7 +282,8 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 		// Set the file names of the water model.
 		strcpy_s(modelFilename, "water.txt");
-		Filename.push_back("water01.tga");
+		// replace first element with the new filename
+		Filename[0] = "water01.tga";
 
 		// Create and initialize the water model object.
 		m_WaterModel = new ModelClass;

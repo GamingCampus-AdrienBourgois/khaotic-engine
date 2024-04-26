@@ -151,7 +151,9 @@
     <CopyFileToFolders Include="normalmap.vs">
       <FileType>Document</FileType>
     </CopyFileToFolders>
-    <None Include="..\KhaoticDemo\water.ps" />
+    <CopyFileToFolders Include="..\KhaoticDemo\water.ps">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
     <None Include="packages.config" />
     <CopyFileToFolders Include="reflection.ps">
       <FileType>Document</FileType>
@@ -177,9 +179,15 @@
     <CopyFileToFolders Include="transparent.vs">
       <FileType>Document</FileType>
     </CopyFileToFolders>
-    <None Include="refraction.ps" />
-    <None Include="refraction.vs" />
-    <None Include="water.vs" />
+    <CopyFileToFolders Include="refraction.ps">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="refraction.vs">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="water.vs">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="Color.ps">
@@ -205,6 +213,7 @@
     <CopyFileToFolders Include="light01.tga" />
     <CopyFileToFolders Include="moss01.tga" />
     <CopyFileToFolders Include="normal01.tga" />
+    <CopyFileToFolders Include="marble01.tga" />
     <Image Include="papier.tga" />
     <CopyFileToFolders Include="spec02.tga" />
     <CopyFileToFolders Include="sprite01.tga" />
@@ -212,17 +221,19 @@
     <CopyFileToFolders Include="sprite03.tga" />
     <CopyFileToFolders Include="sprite04.tga" />
     <CopyFileToFolders Include="stone01.tga" />
-    <Image Include="wall.tga" />
-    <Image Include="water01.tga" />
+    <CopyFileToFolders Include="wall.tga" />
+    <CopyFileToFolders Include="water01.tga" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="cube.txt" />
     <CopyFileToFolders Include="font01.txt" />
     <CopyFileToFolders Include="plane.txt" />
+    <CopyFileToFolders Include="bath.txt" />
     <Text Include="chunk.txt" />
     <Text Include="sphere.txt" />
     <CopyFileToFolders Include="sprite_data_01.txt" />
     <Text Include="square.txt" />
+    <CopyFileToFolders Include="water.txt" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="translate.ps">
