@@ -16,6 +16,7 @@
 !enginecustom/isosphere.obj
 !enginecustom/cone.obj
 !enginecustom/vaisseau.obj
+!enginecustom/86.obj
 
 # Precompiled Headers
 *.gch
