@@ -249,19 +249,15 @@
     <ResourceCompile Include="resources.rc" />
   </ItemGroup>
   <ItemGroup>
+    <CopyFileToFolders Include="cone.obj">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
     <CopyFileToFolders Include="isosphere.obj">
       <FileType>Document</FileType>
     </CopyFileToFolders>
     <CopyFileToFolders Include="monke.obj">
       <FileType>Document</FileType>
     </CopyFileToFolders>
-  </ItemGroup>
-  <ItemGroup>
-    <CopyFileToFolders Include="cone.obj">
-      <FileType>Document</FileType>
-    </CopyFileToFolders>
-  </ItemGroup>
-  <ItemGroup>
     <CopyFileToFolders Include="vaisseau.obj">
       <FileType>Document</FileType>
     </CopyFileToFolders>

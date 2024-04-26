@@ -12,7 +12,10 @@
 *.obj
 
 # Don't ignore 3d model in OBJ
-!enginecustom/3dAssetsObj/*
+!enginecustom/monke.obj
+!enginecustom/isosphere.obj
+!enginecustom/cone.obj
+!enginecustom/vaisseau.obj
 
 # Precompiled Headers
 *.gch
