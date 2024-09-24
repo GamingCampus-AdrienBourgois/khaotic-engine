@@ -1,8 +1,8 @@
-#  Khaotic Engine - C++ Custom Engine
+#  Khaotic Engine Reborn - C++ Custom Engine
 
-Khaotic Engine est un moteur de rendu fait en **C++** réalisé par une petite équipe dans le but d'apprendre à utiliser les API de rendu (OpenGL,DirectX 11/12 et Vulkan).
+Khaotic Engine Reborn reprend comme base le moteur Khaotic Engine pour lui ajouter plus de fonctionalité.
 
-Ce moteur est basé sur **DirectX11** utilise **ImGui** et **Boost** avec une couche d'abstraction pour permetre son usage avec d'autres API.
+Ce moteur est basé sur **DirectX11** utilise **ImGui** avec une couche d'abstraction pour permetre son usage avec d'autres API.
 
 ---
 
@@ -31,77 +31,23 @@ This **DirectX11** based engine uses **ImGui** with an abstraction layer to enab
 
 
 
-## Shaders list:
+## Nouvauté Aporté par Khaotic Engine Reborn
 
+**SHADER** :
 
- - **Diffuse Lighting**
- - **Ambiant Lighting**
- - **Specular Lighting**
- - **Light Shader**
- - **Light Map Shader**
- - **Alpha Mapping**
- - **Normal Mapping**
- - **Specular Mapping**
- - **Clipping Planes** 
- - **Texture Translation** 
- - **Transparency**
- - **Water**
-   - **Refraction**
-   - *Reflection (cassé / broken)*
- 
+- Cel Shading
 
-*Plus de shaders seront disponibles dans le futur*
+**Interface Graphique** :
 
----
-
-*More shaders will be added in the future*
-
-
-
-## ImGui:
-
-*Cette partie du moteur est encore en développement, d'autres fonctionnalitées seront ajoutées dans le futur*
-
-La librairie ImGui est utilisée afin d'intéragir avec les éléments du moteur comme les objets.
-
-### Fonctionnalitées:
-- Importer des objets 3D sous format **.obj**
-- Ajout d'un cube à la scène
-- Modifier les propriétées d'un objet (Position, Rotation, Taille)
-- Modifier les objets présents dans la scène
-- Création d'un terrain
-- Modifier les propriétées des lumières (Position, Couleur RVB)
-
-----
-*This part of the engine is still in development, other features will be added in the future*
-
-ImGui is used to allow interaction between the user and the objects in the scene.
-
-### Features:
-- Import 3D objects with the **.obj** format
-- Can add a cube to the scene
-- Edit an object properties (Position, Rotation, Scale)
-- Edit objects in the current scene
-- Terrain generation
-- Edit lights properties (Position, RGB Color)
-
-
+- Shader Manager
 
 ## Demo :
 
 [![Demo Video](https://img.youtube.com/vi/qCOCTyB_97c/0.jpg)](https://www.youtube.com/watch?v=qCOCTyB_97c)
 
-
-## Bug Report :
-
-Vous pouvez signalez les problèmes en ouvrant un ticket dans [Issues](https://github.com/GamingCampus-AdrienBourgois/khaotic-engine/issues)
-
-----
-You can report bugs with the program by creating a ticket in [Issues](https://github.com/GamingCampus-AdrienBourgois/khaotic-engine/issues)
-
 ## Engine Build by :
 
-[](https://github.com/GamingCampus-AdrienBourgois/khaotic-engine?tab=readme-ov-file#engine-build-by-)
+**Moteur D'origine** :
 
 -   [@CatChow0](https://github.com/CatChow0)
 -   [@miragefr0st](https://github.com/miragefr0st)
@@ -113,6 +59,6 @@ You can report bugs with the program by creating a ticket in [Issues](https://gi
 -  [@sutabasuto](https://github.com/sutabasuto)
 
 
+**Moteur Reborn** :
 
-
-
+-   [@CatChow0](https://github.com/CatChow0)
