@@ -1,0 +1,44 @@
+// celshading.ps
+cbuffer LightBuffer
+{
+    float4 diffuseColor;
+    float3 lightDirection;
+    float padding; // Padding to ensure the structure is a multiple of 16 bytes.
+};
+
+Texture2D shaderTexture;
+SamplerState SampleType;
+
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+    float2 tex : TEXCOORD0;
+};
+
+float4 CelShadingPixelShader(PixelInputType input) : SV_TARGET
+{
+    float4 textureColor;
+    float lightIntensity;
+    float4 finalColor;
+
+    // Sample the pixel color from the texture.
+    textureColor = shaderTexture.Sample(SampleType, input.tex);
+
+    // Calculate the light intensity based on the light direction.
+    lightIntensity = saturate(dot(normalize(lightDirection), float3(0.0f, 0.0f, -1.0f)));
+
+    // Apply a step function to create the cel shading effect.
+    if (lightIntensity > 0.5f)
+    {
+        lightIntensity = 1.0f;
+    }
+    else
+    {
+        lightIntensity = 0.3f;
+    }
+
+    // Calculate the final color by combining the texture color with the light intensity and diffuse color.
+    finalColor = textureColor * diffuseColor * lightIntensity;
+
+    return finalColor;
+}

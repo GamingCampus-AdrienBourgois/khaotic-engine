@@ -15,6 +15,7 @@
 #include "lightmapshaderclass.h"
 #include "refractionshaderclass.h"
 #include "watershaderclass.h"
+#include "CelShadingShader.h"
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -43,6 +44,7 @@ public:
         XMFLOAT3, XMFLOAT4[], XMFLOAT4[], XMFLOAT4[], XMFLOAT4);
     bool RenderWaterShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*,
         ID3D11ShaderResourceView*, ID3D11ShaderResourceView*, float, float);
+	bool RenderCelShadingShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, XMFLOAT3, XMFLOAT4[]);
 private:
     TextureShaderClass* m_TextureShader;
     NormalMapShaderClass* m_NormalMapShader;
@@ -56,6 +58,7 @@ private:
     LightMapShaderClass* m_LightMapShader;
     RefractionShaderClass* m_RefractionShader;
     WaterShaderClass* m_WaterShader;
+	CelShadingShader* m_CelShadingShader;
 };
 
 #endif

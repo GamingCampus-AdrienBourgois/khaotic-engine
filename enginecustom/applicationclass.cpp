@@ -1021,6 +1021,17 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
 		diffuseColor, lightPosition, ambientColor);
 
+	// Render cel shading globally to the scene using the cel shader if the checkbox is checked.
+	if (m_enableCelShading) {
+		result = m_ShaderManager->RenderCelShadingShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
+			m_Lights[0]->GetDirection(), ambientColor);
+		if (!result)
+		{
+			Logger::Get().Log("Could not render the model using the cel shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+			return false;
+		}
+	}
+
 	for (auto cube : m_cubes)
 	{
 
@@ -1055,6 +1066,7 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 			Logger::Get().Log("Could not render the cube model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);
 			return false;
 		}
+
 	}
 
 	for (auto& object : m_object)
