@@ -1,4 +1,5 @@
 #include "CelShadingShader.h"
+#include <iostream>
 
 CelShadingShader::CelShadingShader()
 {
@@ -63,14 +64,14 @@ void CelShadingShader::Shutdown()
 }
 
 bool CelShadingShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
-    ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor[])
+	ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor, XMFLOAT3 lightPosition)
 {
     bool result;
-
     // Set the shader parameters that it will use for rendering.
-    result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, lightDirection, diffuseColor);
+    result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, lightDirection, diffuseColor, lightPosition);
     if (!result)
     {
+        Logger::Get().Log("CelShading Error", __FILE__, __LINE__, Logger::LogLevel::Error);
         return false;
     }
 
@@ -86,7 +87,7 @@ bool CelShadingShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
     ID3D10Blob* errorMessage = nullptr;
     ID3D10Blob* vertexShaderBuffer = nullptr;
     ID3D10Blob* pixelShaderBuffer = nullptr;
-    D3D11_INPUT_ELEMENT_DESC polygonLayout[2];
+    D3D11_INPUT_ELEMENT_DESC polygonLayout[3];
     unsigned int numElements;
     D3D11_BUFFER_DESC matrixBufferDesc;
     D3D11_SAMPLER_DESC samplerDesc;
@@ -146,19 +147,27 @@ bool CelShadingShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
     // This setup needs to match the VertexType structure in the ModelClass and in the shader.
     polygonLayout[0].SemanticName = "POSITION";
     polygonLayout[0].SemanticIndex = 0;
-    polygonLayout[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+    polygonLayout[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
     polygonLayout[0].InputSlot = 0;
     polygonLayout[0].AlignedByteOffset = 0;
     polygonLayout[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
     polygonLayout[0].InstanceDataStepRate = 0;
 
-    polygonLayout[1].SemanticName = "TEXCOORD";
+    polygonLayout[1].SemanticName = "NORMAL";
     polygonLayout[1].SemanticIndex = 0;
-    polygonLayout[1].Format = DXGI_FORMAT_R32G32_FLOAT;
+    polygonLayout[1].Format = DXGI_FORMAT_R32G32B32_FLOAT;
     polygonLayout[1].InputSlot = 0;
     polygonLayout[1].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
     polygonLayout[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
     polygonLayout[1].InstanceDataStepRate = 0;
+
+    polygonLayout[2].SemanticName = "TEXCOORD";
+    polygonLayout[2].SemanticIndex = 0;
+    polygonLayout[2].Format = DXGI_FORMAT_R32G32_FLOAT;
+    polygonLayout[2].InputSlot = 0;
+    polygonLayout[2].AlignedByteOffset = D3D11_APPEND_ALIGNED_ELEMENT;
+    polygonLayout[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+    polygonLayout[2].InstanceDataStepRate = 0;
 
     // Get a count of the elements in the layout.
     numElements = sizeof(polygonLayout) / sizeof(polygonLayout[0]);
@@ -312,13 +321,14 @@ void CelShadingShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND h
 
 
 bool CelShadingShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
-    ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor[])
+    ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor, XMFLOAT3 lightPosition)
 {
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     MatrixBufferType* dataPtr;
     LightBufferType* dataPtr2;
     unsigned int bufferNumber;
+
 
     // Transpose the matrices to prepare them for the shader.
     worldMatrix = XMMatrixTranspose(worldMatrix);
@@ -363,9 +373,16 @@ bool CelShadingShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
     dataPtr2 = (LightBufferType*)mappedResource.pData;
 
     // Copy the lighting variables into the constant buffer.
-    dataPtr2->diffuseColor = diffuseColor[0];
+    dataPtr2->diffuseColor = diffuseColor;
     dataPtr2->lightDirection = lightDirection;
+    dataPtr2->lightPosition = lightPosition;
     dataPtr2->padding = 0.0f;
+    dataPtr2->padding2 = 0.0f;
+
+    // store the light direction in a string
+	std::string lightDirectionString = std::to_string(lightDirection.x) + ", " + std::to_string(lightDirection.y) + ", " + std::to_string(lightDirection.z);
+	Logger::Get().Log(lightDirectionString, __FILE__, __LINE__, Logger::LogLevel::Debug);
+
 
     // Unlock the constant buffer.
     deviceContext->Unmap(m_lightBuffer, 0);

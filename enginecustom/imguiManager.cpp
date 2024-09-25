@@ -118,7 +118,7 @@ void imguiManager::WidgetShaderWindow(ApplicationClass* app)
 	// Checkbox for toggling cel shading globally in the application class by calling the SetCelShading function in the application class when the checkbox state changes
 	ImGui::Checkbox("Enable Cel Shading", &m_EnableCelShading);
 	app->SetCelShading(m_EnableCelShading);
-
+	
 	ImGui::End();
 }
 
@@ -373,7 +373,6 @@ void imguiManager::WidgetLightWindow(ApplicationClass* app)
 				app->SetLightColor(index, XMVectorSet(col[0], col[1], col[2], 0.0f));
 			}
 
-			ImGui::Separator();
 		}
 		index++;
 	};

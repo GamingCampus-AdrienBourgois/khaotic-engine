@@ -1006,6 +1006,11 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		ambientColor[i] = m_Lights[i]->GetPosition();
 	}
 
+	//Add the 3 first value of the light position to the TrueLightPosition XMFLOAT3
+	TrueLightPosition.x = lightPosition[0].x;
+	TrueLightPosition.y = lightPosition[0].y;
+	TrueLightPosition.z = lightPosition[0].z;
+
 	scaleMatrix = XMMatrixScaling(0.5f, 0.5f, 0.5f);  // Build the scaling matrix.
 	rotateMatrix = XMMatrixRotationY(rotation);  // Build the rotation matrix.
 	translateMatrix = XMMatrixTranslation(x, y, z);  // Build the translation matrix.
@@ -1020,17 +1025,6 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 	// Render the model using the light shader.
 	result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
 		diffuseColor, lightPosition, ambientColor);
-
-	// Render cel shading globally to the scene using the cel shader if the checkbox is checked.
-	if (m_enableCelShading) {
-		result = m_ShaderManager->RenderCelShadingShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
-			m_Lights[0]->GetDirection(), ambientColor);
-		if (!result)
-		{
-			Logger::Get().Log("Could not render the model using the cel shader", __FILE__, __LINE__, Logger::LogLevel::Error);
-			return false;
-		}
-	}
 
 	for (auto cube : m_cubes)
 	{
@@ -1051,20 +1045,26 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 
 		cube->Render(m_Direct3D->GetDeviceContext());
 
-		// render the texture using the texture shader.
-		result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), cube->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, cube->GetTexture(0));
-		if (!result)
-		{
-			Logger::Get().Log("Could not render the cube model using the texture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
-			return false;
+
+		if (!m_enableCelShading) {
+			result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), cube->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, cube->GetTexture(0),
+				diffuseColor, lightPosition, ambientColor);
+			if (!result)
+			{
+				Logger::Get().Log("Could not render the cube model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+				return false;
+			}
 		}
 
-		result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, cube->GetTexture(0),
-			diffuseColor, lightPosition,ambientColor);
-		if (!result)
-		{
-			Logger::Get().Log("Could not render the cube model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);
-			return false;
+		// Render cel shading globally to the scene using the cel shader if the checkbox is checked.
+		if (m_enableCelShading) {
+			result = m_ShaderManager->RenderCelShadingShader(m_Direct3D->GetDeviceContext(), cube->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, cube->GetTexture(0),
+				m_Lights[0]->GetDirection(), m_Lights[0]->GetDiffuseColor(), TrueLightPosition);
+			if (!result)
+			{
+				Logger::Get().Log("Could not render the model using the cel shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+				return false;
+			}
 		}
 
 	}
@@ -1084,21 +1084,26 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 
 		object->Render(m_Direct3D->GetDeviceContext());
 
-		// render the texture using the texture shader.
-		result = m_ShaderManager->RenderTextureShader(m_Direct3D->GetDeviceContext(), object->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, object->GetTexture(0));
-		if (!result)
-		{
-			Logger::Get().Log("Could not render the cube model using the texture shader", __FILE__, __LINE__, Logger::LogLevel::Error);
-			return false;
+		if (!m_enableCelShading) {
+			result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, object->GetTexture(0),
+				diffuseColor, lightPosition, ambientColor);
+
+			if (!result)
+			{
+				Logger::Get().Log("Could not render the object model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+				return false;
+			}
 		}
 
-		result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture(0),
-			diffuseColor, lightPosition, ambientColor);
-
-		if (!result)
-		{
-			Logger::Get().Log("Could not render the object model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);
-			return false;
+		// Render cel shading globally to the scene using the cel shader if the checkbox is checked.
+		if (m_enableCelShading) {
+			result = m_ShaderManager->RenderCelShadingShader(m_Direct3D->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, object->GetTexture(0),
+				m_Lights[0]->GetDirection(), m_Lights[0]->GetDiffuseColor(), TrueLightPosition);
+			if (!result)
+			{
+				Logger::Get().Log("Could not render the model using the cel shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+				return false;
+			}
 		}
 	}
 
@@ -1114,14 +1119,27 @@ bool ApplicationClass::Render(float rotation, float x, float y, float z, float t
 		worldMatrix = XMMatrixMultiply(srMatrix, translateMatrix);
 
 		chunk->Render(m_Direct3D->GetDeviceContext());
+		if (!m_enableCelShading) {
+			result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), chunk->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, chunk->GetTexture(5),
+				diffuseColor, lightPosition, ambientColor);
 
-		result = m_ShaderManager->RenderlightShader(m_Direct3D->GetDeviceContext(), chunk->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, chunk->GetTexture(5),
-			diffuseColor, lightPosition, ambientColor);
-			
-		if (!result)
-		{
-			Logger::Get().Log("Could not render the terrain model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);
-			return false;
+			if (!result)
+			{
+				Logger::Get().Log("Could not render the terrain model using the light shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+				return false;
+			}
+		}
+		
+
+		// Render cel shading globally to the scene using the cel shader if the checkbox is checked.
+		if (m_enableCelShading) {
+			result = m_ShaderManager->RenderCelShadingShader(m_Direct3D->GetDeviceContext(), chunk->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, chunk->GetTexture(5),
+				m_Lights[0]->GetDirection(), m_Lights[0]->GetDiffuseColor(), TrueLightPosition);
+			if (!result)
+			{
+				Logger::Get().Log("Could not render the model using the cel shader", __FILE__, __LINE__, Logger::LogLevel::Error);
+				return false;
+			}
 		}
 	}
 

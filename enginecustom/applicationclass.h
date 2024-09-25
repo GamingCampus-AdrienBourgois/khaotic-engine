@@ -136,6 +136,8 @@ private :
 	std::vector<LightClass*> m_Lights;
 	int m_numLights;
 
+	XMFLOAT3 TrueLightPosition;
+
 	// ----------------------------------- //
 	// ------------- SHADERS ------------- //
 	// ----------------------------------- //

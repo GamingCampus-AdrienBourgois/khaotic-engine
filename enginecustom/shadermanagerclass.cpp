@@ -429,11 +429,11 @@ bool ShaderManagerClass::RenderWaterShader(ID3D11DeviceContext* deviceContext, i
 }
 
 bool ShaderManagerClass::RenderCelShadingShader(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
-    ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor[])
+    ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor, XMFLOAT3 lightPosition)
 {
     bool result;
 
-    result = m_CelShadingShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture, lightDirection, diffuseColor);
+    result = m_CelShadingShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture, lightDirection, diffuseColor, lightPosition);
 	if (!result)
 	{
 		return false;

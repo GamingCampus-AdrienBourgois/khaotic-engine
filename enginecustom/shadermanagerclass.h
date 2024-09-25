@@ -44,7 +44,7 @@ public:
         XMFLOAT3, XMFLOAT4[], XMFLOAT4[], XMFLOAT4[], XMFLOAT4);
     bool RenderWaterShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*,
         ID3D11ShaderResourceView*, ID3D11ShaderResourceView*, float, float);
-	bool RenderCelShadingShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, XMFLOAT3, XMFLOAT4[]);
+	bool RenderCelShadingShader(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, XMFLOAT3, XMFLOAT4, XMFLOAT3);
 private:
     TextureShaderClass* m_TextureShader;
     NormalMapShaderClass* m_NormalMapShader;
