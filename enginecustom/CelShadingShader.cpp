@@ -372,6 +372,9 @@ bool CelShadingShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
     dataPtr2->diffuseColor = diffuseColor;
     dataPtr2->lightDirection = lightDirection;
     dataPtr2->lightPosition = lightPosition;
+    dataPtr2->constantAttenuation = 0.5f; // Set your attenuation values here
+    dataPtr2->linearAttenuation = 0.1f;
+    dataPtr2->quadraticAttenuation = 0.01f;
 
     // Unlock the constant buffer.
     deviceContext->Unmap(m_lightBuffer, 0);
@@ -387,6 +390,7 @@ bool CelShadingShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
 
     return true;
 }
+
 
 
 void CelShadingShader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)

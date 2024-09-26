@@ -32,7 +32,12 @@ private:
         float padding;  // Padding to ensure the structure is a multiple of 16 bytes.
         XMFLOAT3 lightPosition; // Add light position
         float padding2; // Padding to ensure the structure is a multiple of 16 bytes.
+        float constantAttenuation;
+        float linearAttenuation;
+        float quadraticAttenuation;
+        float padding3; // Padding to ensure the structure is a multiple of 16 bytes.
     };
+
 
 public:
     CelShadingShader();

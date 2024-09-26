@@ -5,6 +5,10 @@ cbuffer LightBuffer
     float padding; // Padding to ensure the structure is a multiple of 16 bytes.
     float3 lightPosition; // Add light position
     float padding2; // Padding to ensure the structure is a multiple of 16 bytes.
+    float constantAttenuation;
+    float linearAttenuation;
+    float quadraticAttenuation;
+    float padding3; // Padding to ensure the structure is a multiple of 16 bytes.
 };
 
 Texture2D shaderTexture;
@@ -40,6 +44,15 @@ float4 CelShadingPixelShader(PixelInputType input) : SV_TARGET
 
     // Combine the directional and positional light intensities.
     lightIntensity = max(directionalLightIntensity, positionalLightIntensity);
+
+    // Calculate the distance from the light to the fragment.
+    float distance = length(lightPosition - input.worldPos);
+
+    // Apply an attenuation factor based on the distance.
+    float attenuation = 1.0f / (constantAttenuation + linearAttenuation * distance + quadraticAttenuation * distance * distance);
+
+    // Combine the light intensity with the attenuation factor.
+    lightIntensity *= attenuation;
 
     // Apply a step function to create the cel shading effect.
     if (lightIntensity > 0.75f)
