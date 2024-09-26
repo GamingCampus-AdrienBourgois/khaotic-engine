@@ -27,25 +27,44 @@ float4 CelShadingPixelShader(PixelInputType input) : SV_TARGET
     // Sample the pixel color from the texture.
     textureColor = shaderTexture.Sample(SampleType, input.tex);
 
-    // Normalize the normal
     float3 normal = normalize(input.normal);
 
-    // Calculate the vector from the pixel to the light source
-    float3 lightVector = lightPosition - input.worldPos;
-    float distance = length(lightVector);
-    lightVector = normalize(lightVector);
+    // Calculate the light vector from the light position to the world position
+    float3 lightVector = normalize(lightPosition - input.worldPos);
 
     // Calculate the light intensity based on the light direction.
-    lightIntensity = saturate(dot(normal, lightVector));
+    float directionalLightIntensity = saturate(dot(normal, normalize(lightDirection)));
+
+    // Calculate the light intensity based on the light position.
+    float positionalLightIntensity = saturate(dot(normal, lightVector));
+
+    // Combine the directional and positional light intensities.
+    lightIntensity = max(directionalLightIntensity, positionalLightIntensity);
 
     // Apply a step function to create the cel shading effect.
-    if (lightIntensity > 0.5f)
+    if (lightIntensity > 0.75f)
     {
-        lightIntensity = 1.0f;
+        lightIntensity = 1.0f; // Brightest level
+    }
+    else if (lightIntensity > 0.5f)
+    {
+        lightIntensity = 0.7f; // Mid-bright level
+    }
+    else if (lightIntensity > 0.25f)
+    {
+        lightIntensity = 0.4f; // Mid-dark level
     }
     else
     {
-        lightIntensity = 0.3f;
+        lightIntensity = 0.1f; // Darkest level
+    }
+
+    // Simple shadow calculation: if the fragment is behind the light source, it is in shadow.
+    float3 toLight = normalize(lightPosition - input.worldPos);
+    float shadow = saturate(dot(normal, toLight));
+    if (shadow < 0.1f)
+    {
+        lightIntensity *= 0.5f; // Darken the fragment if it is in shadow
     }
 
     // Calculate the final color by combining the texture color with the light intensity and diffuse color.

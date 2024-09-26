@@ -329,7 +329,6 @@ bool CelShadingShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
     LightBufferType* dataPtr2;
     unsigned int bufferNumber;
 
-
     // Transpose the matrices to prepare them for the shader.
     worldMatrix = XMMatrixTranspose(worldMatrix);
     viewMatrix = XMMatrixTranspose(viewMatrix);
@@ -359,9 +358,6 @@ bool CelShadingShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
     // Finally set the constant buffer in the vertex shader with the updated values.
     deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
 
-    // Set shader texture resource in the pixel shader.
-    deviceContext->PSSetShaderResources(0, 1, &texture);
-
     // Lock the light constant buffer so it can be written to.
     result = deviceContext->Map(m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
@@ -376,13 +372,6 @@ bool CelShadingShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
     dataPtr2->diffuseColor = diffuseColor;
     dataPtr2->lightDirection = lightDirection;
     dataPtr2->lightPosition = lightPosition;
-    dataPtr2->padding = 0.0f;
-    dataPtr2->padding2 = 0.0f;
-
-    // store the light direction in a string
-	std::string lightDirectionString = std::to_string(lightDirection.x) + ", " + std::to_string(lightDirection.y) + ", " + std::to_string(lightDirection.z);
-	Logger::Get().Log(lightDirectionString, __FILE__, __LINE__, Logger::LogLevel::Debug);
-
 
     // Unlock the constant buffer.
     deviceContext->Unmap(m_lightBuffer, 0);
@@ -392,6 +381,9 @@ bool CelShadingShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
 
     // Finally set the light constant buffer in the pixel shader with the updated values.
     deviceContext->PSSetConstantBuffers(bufferNumber, 1, &m_lightBuffer);
+
+    // Set shader texture resource in the pixel shader.
+    deviceContext->PSSetShaderResources(0, 1, &texture);
 
     return true;
 }

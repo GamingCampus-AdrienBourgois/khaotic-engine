@@ -137,6 +137,7 @@ private :
 	int m_numLights;
 
 	XMFLOAT3 TrueLightPosition;
+	ModelClass* m_LightModel;
 
 	// ----------------------------------- //
 	// ------------- SHADERS ------------- //

@@ -28,15 +28,15 @@ PixelInputType CelShadingVertexShader(VertexInputType input)
     input.position.w = 1.0f;
 
     // Calculate the position of the vertex against the world, view, and projection matrices.
-    output.position = mul(input.position, worldMatrix);
-    output.position = mul(output.position, viewMatrix);
+    float4 worldPosition = mul(input.position, worldMatrix);
+    output.position = mul(worldPosition, viewMatrix);
     output.position = mul(output.position, projectionMatrix);
 
     // Pass the normal to the pixel shader
-    output.normal = mul(input.normal, (float3x3)worldMatrix);
+    output.normal = mul((float3x3)worldMatrix, input.normal);
 
     // Pass the world position to the pixel shader
-    output.worldPos = mul(input.position, worldMatrix).xyz;
+    output.worldPos = worldPosition.xyz;
 
     // Store the texture coordinates for the pixel shader.
     output.tex = input.tex;
