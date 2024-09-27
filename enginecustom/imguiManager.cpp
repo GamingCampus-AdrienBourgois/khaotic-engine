@@ -111,6 +111,17 @@ void imguiManager::WidgetAddObject(ApplicationClass* app)
 	}
 }
 
+void imguiManager::WidgetShaderWindow(ApplicationClass* app)
+{
+	ImGui::Begin("Shader Manager");
+
+	// Checkbox for toggling cel shading globally in the application class by calling the SetCelShading function in the application class when the checkbox state changes
+	ImGui::Checkbox("Enable Cel Shading", &m_EnableCelShading);
+	app->SetCelShading(m_EnableCelShading);
+	
+	ImGui::End();
+}
+
 void imguiManager::WidgetObjectWindow(ApplicationClass* app)
 {
 	ImGui::Begin("Objects", &showObjectWindow);
@@ -300,6 +311,11 @@ bool imguiManager::ImGuiWidgetRenderer(ApplicationClass* app)
 		showLightWindow = true;
 	}
 
+	if (ImGui::Button("Open Shader Window"))
+	{
+		showShaderWindow = true;
+	}
+
 	ImGui::End();
 
 	// Show windows if their corresponding variables are true
@@ -316,6 +332,11 @@ bool imguiManager::ImGuiWidgetRenderer(ApplicationClass* app)
 	if (showLightWindow)
 	{
 		WidgetLightWindow(app);
+	}
+
+	if (showShaderWindow)
+	{
+		WidgetShaderWindow(app);
 	}
 
 	//render imgui
@@ -352,7 +373,6 @@ void imguiManager::WidgetLightWindow(ApplicationClass* app)
 				app->SetLightColor(index, XMVectorSet(col[0], col[1], col[2], 0.0f));
 			}
 
-			ImGui::Separator();
 		}
 		index++;
 	};

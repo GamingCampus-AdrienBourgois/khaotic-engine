@@ -171,6 +171,9 @@
     <ClCompile Include="normalmapshaderclass.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="CelShadingShader.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="systemclass.h">
@@ -315,6 +318,9 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="physics.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="CelShadingShader.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
@@ -507,6 +513,12 @@
     </CopyFileToFolders>
     <CopyFileToFolders Include="86.obj">
       <Filter>Assets</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="celshading.vs">
+      <Filter>shader</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="celshading.ps">
+      <Filter>shader</Filter>
     </CopyFileToFolders>
   </ItemGroup>
 </Project>

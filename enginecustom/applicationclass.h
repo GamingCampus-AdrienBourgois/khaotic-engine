@@ -83,6 +83,8 @@ public:
 	bool GetShouldQuit() const { return m_ShouldQuit; };
 	void SetShouldQuit(bool shouldQuit) { m_ShouldQuit = shouldQuit; };
 
+	void SetCelShading(bool enable) { m_enableCelShading = enable; };
+
 private:
 	bool Render(float, float, float, float, float);
 	bool UpdateMouseStrings(int, int, bool);
@@ -134,6 +136,9 @@ private :
 	std::vector<LightClass*> m_Lights;
 	int m_numLights;
 
+	XMFLOAT3 TrueLightPosition;
+	ModelClass* m_LightModel;
+
 	// ----------------------------------- //
 	// ------------- SHADERS ------------- //
 	// ----------------------------------- //
@@ -142,6 +147,8 @@ private :
 	FontShaderClass* m_FontShader;
 	BitmapClass* m_Bitmap;
 	SpriteClass* m_Sprite;
+	
+	bool m_enableCelShading;
 
 	// ----------------------------------- //
 	// ------------ VARIABLES ------------ //

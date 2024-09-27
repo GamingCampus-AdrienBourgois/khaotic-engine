@@ -329,7 +329,7 @@ void SpriteClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 
 bool SpriteClass::LoadTextures(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* filename)
 {
-    std::string textureFilename;
+    std::string textureFilename(256, '0');
     std::ifstream fin;
     int i, j;
     char input;

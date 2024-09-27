@@ -31,13 +31,19 @@ public:
 	void WidgetObjectWindow(ApplicationClass* app);
 	void WidgetTerrainWindow(ApplicationClass* app);
 	void WidgetLightWindow(ApplicationClass* app);
+	void WidgetShaderWindow(ApplicationClass* app);
 
 	bool ImGuiWidgetRenderer(ApplicationClass* app);
+
+	// Shader toggles
+
+	bool m_EnableCelShading;
 
 private :
 	bool showObjectWindow = false;
 	bool showTerrainWindow = false;
 	bool showLightWindow = false;
+	bool showShaderWindow = false;
 
 private:
 	ImGuiIO* io;

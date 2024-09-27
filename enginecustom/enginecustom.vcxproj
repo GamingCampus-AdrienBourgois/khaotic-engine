@@ -23,6 +23,7 @@
     <ClCompile Include="applicationclass.cpp" />
     <ClCompile Include="bitmapclass.cpp" />
     <ClCompile Include="Cameraclass.cpp" />
+    <ClCompile Include="CelShadingShader.cpp" />
     <ClCompile Include="Colorshaderclass.cpp" />
     <ClCompile Include="d3dclass.cpp" />
     <ClCompile Include="imguiManager.cpp" />
@@ -70,6 +71,7 @@
     <ClInclude Include="applicationclass.h" />
     <ClInclude Include="bitmapclass.h" />
     <ClInclude Include="Cameraclass.h" />
+    <ClInclude Include="CelShadingShader.h" />
     <ClInclude Include="Colorshaderclass.h" />
     <ClInclude Include="d3dclass.h" />
     <ClInclude Include="imguiManager.h" />
@@ -152,6 +154,12 @@
       <FileType>Document</FileType>
     </CopyFileToFolders>
     <CopyFileToFolders Include="..\KhaoticDemo\water.ps">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="celshading.ps">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="celshading.vs">
       <FileType>Document</FileType>
     </CopyFileToFolders>
     <None Include="packages.config" />

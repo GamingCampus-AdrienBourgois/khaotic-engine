@@ -13,6 +13,7 @@ ShaderManagerClass::ShaderManagerClass()
     m_LightMapShader = 0;
     m_RefractionShader = 0;
     m_WaterShader = 0;
+	m_CelShadingShader = 0;
 }
 
 
@@ -139,6 +140,14 @@ bool ShaderManagerClass::Initialize(ID3D11Device* device, HWND hwnd)
     {
         return false;
     }
+
+	m_CelShadingShader = new CelShadingShader;
+
+	result = m_CelShadingShader->Initialize(device, hwnd);
+	if (!result)
+	{
+		return false;
+	}
 
     Logger::Get().Log("ShaderManagerClass initialized", __FILE__, __LINE__, Logger::LogLevel::Initialize);
 
@@ -417,4 +426,18 @@ bool ShaderManagerClass::RenderWaterShader(ID3D11DeviceContext* deviceContext, i
     }
 
     return true;
+}
+
+bool ShaderManagerClass::RenderCelShadingShader(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix,
+    ID3D11ShaderResourceView* texture, XMFLOAT3 lightDirection, XMFLOAT4 diffuseColor, XMFLOAT3 lightPosition)
+{
+    bool result;
+
+    result = m_CelShadingShader->Render(deviceContext, indexCount, worldMatrix, viewMatrix, projectionMatrix, texture, lightDirection, diffuseColor, lightPosition);
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
 }
