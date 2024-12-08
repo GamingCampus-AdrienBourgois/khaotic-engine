@@ -1,0 +1,10 @@
+namespace enginecustom
+{
+    [bindable]
+    [default_interface]
+    runtimeclass Color 
+    {
+        Color();
+        Int32 MyProperty;
+    }
+}
